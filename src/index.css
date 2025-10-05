@@ -12,6 +12,50 @@
 	}
 }
 
+@font-face {
+	font-family: Alibaba;
+	font-style: normal;
+	font-weight: 900;
+	src: url("./assets/fonts/eot/Alibaba-Black.eot");
+	src: url("./assets/fonts/eot/Alibaba-Black.eot?#iefix")
+		format("embedded-opentype"), url("./assets/fonts/woff2/Alibaba-Black.woff2")
+		format("woff2"), url("./assets/fonts/woff/Alibaba-Black.woff")
+		format("woff"), url("./assets/fonts/ttf/Alibaba-Black.ttf")
+		format("truetype");
+}
+@font-face {
+	font-family: Alibaba;
+	font-style: normal;
+	font-weight: bold;
+	src: url("./assets/fonts/eot/Alibaba-Bold.eot");
+	src: url("./assets/fonts/eot/Alibaba-Bold.eot?#iefix")
+		format("embedded-opentype"), url("./assets/fonts/woff2/Alibaba-Bold.woff2")
+		format("woff2"), url("./assets/fonts/woff/Alibaba-Bold.woff") format("woff"),
+		url("./assets/fonts/ttf/Alibaba-Bold.ttf") format("truetype");
+}
+@font-face {
+	font-family: Alibaba;
+	font-style: normal;
+	font-weight: 300;
+	src: url("./assets/fonts/eot/Alibaba-Light.eot");
+	src: url("./assets/fonts/eot/Alibaba-Light.eot?#iefix")
+		format("embedded-opentype"), url("./assets/fonts/woff2/Alibaba-Light.woff2")
+		format("woff2"), url("./assets/fonts/woff/Alibaba-Light.woff")
+		format("woff"), url("./assets/fonts/ttf/Alibaba-Light.ttf")
+		format("truetype");
+}
+@font-face {
+	font-family: Alibaba;
+	font-style: normal;
+	font-weight: normal;
+	src: url("./assets/fonts/eot/Alibaba-Regular.eot");
+	src: url("./assets/fonts/eot/Alibaba-Regular.eot?#iefix")
+		format("embedded-opentype"),
+		url("./assets/fonts/woff2/Alibaba-Regular.woff2") format("woff2"),
+		url("./assets/fonts/woff/Alibaba-Regular.woff") format("woff"),
+		url("./assets/fonts/ttf/Alibaba-Regular.ttf") format("truetype");
+}
+
 :root {
 	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -42,6 +86,7 @@
 	--primary-disabled-foreground: #9ea2ae;
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
+	--placeholder: #8e8e93;
 	--muted: oklch(0.97 0 0);
 	--muted-foreground: oklch(0.556 0 0);
 	--accent: oklch(0.97 0 0);
@@ -86,6 +131,7 @@
 	--color-primary-foreground: var(--primary-foreground);
 	--color-secondary: var(--secondary);
 	--color-secondary-foreground: var(--secondary-foreground);
+	--color-placeholder: var(--placeholder);
 	--color-muted: var(--muted);
 	--color-muted-foreground: var(--muted-foreground);
 	--color-accent: var(--accent);
