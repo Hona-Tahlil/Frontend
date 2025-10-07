@@ -9,15 +9,10 @@ export interface InputProps
 }
 function Checkbox({ className, text, ...props }: InputProps) {
 	return (
-		<div className="flex gap-1">
+		<div className={cn("flex gap-1", className)}>
 			<label className="font-[Alibaba] h-auto">{text}</label>
 			<label className={cn(customStyles["ios-checkbox"], customStyles.red)}>
-				<input
-					type="checkbox"
-					data-slot="input"
-					className={cn(className)}
-					{...props}
-				/>
+				<input type="checkbox" data-slot="input" {...props} />
 				<div className={customStyles["checkbox-wrapper"]}>
 					<div className={customStyles["checkbox-bg"]}></div>
 					<svg

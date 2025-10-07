@@ -1,38 +1,23 @@
-import { Checkbox } from "@/components/Custom/Checkbox";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Button } from "@/components/Custom/Button/Button";
+import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
+import { Input } from "@/components/Custom/Input/Input";
 
 function Test() {
 	return (
 		<>
-			<Input
-				className="w-100"
-				shadow={true}
-				onChange={() => {
-					console.log("fsdaf");
-				}}
-				placeholder="ایمیل"
-			/>
-			<br />
-			<Checkbox text={"من را به خاطر بسپار"} />
-			<br />
-			<Button bold={true} size={"giant"} shadow={true}>
+			<Button shadow={true} size={"giant"} bold={true}>
 				ورود
 			</Button>
 			<br />
 			<br />
-			<Button bold={true} size={"giant"}>
-				ورود
-			</Button>
+			<Input className="w-80" shadow={true} placeholder="ایمیل" />
 			<br />
 			<br />
-			<Button bold={true} size={"giant"} disabled>
-				ورود
-			</Button>
+			<Checkbox text={"آقا عشق"} />
 			<br />
 			<br />
-			<Button bold={true} size={"giant"} disabled shadow={true}>
-				ورود
+			<Button variant={"link"} shadow={false} bold={true}>
+				فراموشی رمز عبور
 			</Button>
 		</>
 	);
