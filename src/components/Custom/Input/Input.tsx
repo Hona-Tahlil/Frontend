@@ -54,7 +54,7 @@ function Input({
 		hasError = Boolean(meta.touched && meta.error);
 		formikvalue = field.value || "";
 	}
-	hasError = true;
+	hasError = false;
 	return (
 		<div className="relative flex gap-3 flex-col items-center justify-center w-fit">
 			<div className="relative flex gap-3 flex-col items-center justify-center w-fit">
