@@ -3,6 +3,7 @@ import PublicLayout from "@/layouts/PublicLayout/PublicLayout";
 import Landing from "@/pages/Landing";
 import Temp from "@/pages/Temp";
 import Test from "@/pages/Test";
+import Login from "@/pages/Login";
 
 export const router = createBrowserRouter([
 	{
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
 				path: "/test",
 				element: <Test />,
 			},
+			{
+				path: "/login",
+				element : <Login />,
+			}
 			// {
 			// 	path: "/AboutUs",
 			// 	element: <AboutUs />,
