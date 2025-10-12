@@ -8,20 +8,20 @@ export function useDesktop() {
 
 export function useTablet() {
     return useMediaQuery({
-        minWidth: 728,
+        minWidth: 640,
         maxWidth: 1023,
     });
 }
 
 export function useMobile() {
     return useMediaQuery({
-        maxWidth: 727,
+        maxWidth: 639,
     });
 }
 
 export function useDesktopTablet(){
     return useMediaQuery({
-        minWidth: 728,
+        minWidth: 640,
     })
 }
 
