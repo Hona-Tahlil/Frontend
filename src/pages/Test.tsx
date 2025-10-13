@@ -1,14 +1,23 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
+import { useDesktop, useDesktopTablet, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 
 function Test() {
 	function onChange(e: React.ChangeEvent<HTMLInputElement>) {
 		console.log(e.target.value);
 	}
+	const isDesktop = useDesktop();
+	const isMobile = useMobile();
+	const isTablet = useTablet();
 	return (
 		<div className="flex flex-col items-center">
+
+			{isDesktop && <p> desktop mode</p>}
+			{isMobile && <p> mobile mode</p>}
+			{isTablet && <p> tablet mode</p>}
+
 			<Button shadow={true} size={"giant"} bold={true}>
 				ورود
 			</Button>
