@@ -33,7 +33,7 @@ export interface ButtonProps
 		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
 	isLoading?: boolean;
-	loadingSize?: number;
+	loadingClassName?: string;
 }
 function Button({
 	className,
@@ -41,8 +41,8 @@ function Button({
 	shadow,
 	bold,
 	variant,
+	loadingClassName,
 	isLoading = false,
-	loadingSize = 4,
 	children,
 	...props
 }: ButtonProps) {
@@ -54,7 +54,7 @@ function Button({
 		>
 			{isLoading && (
 				<Spinner
-					className={`text-primary-disabled-foreground !size-${loadingSize}`}
+					className={cn("text-primary-disabled-foreground", loadingClassName)}
 				/>
 			)}
 			{children}
