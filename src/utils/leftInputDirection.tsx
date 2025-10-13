@@ -1,6 +1,4 @@
-const adjustInputDirectionOnChange = (
-	e: React.ChangeEvent<HTMLInputElement>,
-) => {
+const leftInputDirectionOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 	const value = e.currentTarget.value;
 	if (value === "") {
 		e.currentTarget.dir = "rtl";
@@ -13,7 +11,7 @@ export default function leftInputDirection(
 	fn: (e: React.ChangeEvent<HTMLInputElement>) => void,
 ) {
 	return (e: React.ChangeEvent<HTMLInputElement>) => {
-		adjustInputDirectionOnChange(e);
+		leftInputDirectionOnChange(e);
 		return fn(e);
 	};
 }
