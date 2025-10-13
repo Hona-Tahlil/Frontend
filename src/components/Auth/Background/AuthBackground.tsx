@@ -2,7 +2,7 @@ import { useMediaQuery } from "react-responsive";
 
 export default function AuthBackground() {
   const isDesktopOrTablet = useMediaQuery({
-    query: "(min-width: 640px)",
+    minWidth: 640
   });
   return (
     <>
