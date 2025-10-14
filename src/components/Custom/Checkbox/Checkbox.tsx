@@ -5,16 +5,36 @@ import customStyles from "./Checkbox.module.css";
 
 export interface InputProps
 	extends React.InputHTMLAttributes<HTMLInputElement> {
-	text?: String;
+	text?: string;
+	checkboxSize?: string;
+	textClassName?: string;
+	backGroundClassName?: string;
+	checkboxClassName?: string;
+	size?: string;
 }
-function Checkbox({ className, text, ...props }: InputProps) {
+function Checkbox({
+	className,
+	size,
+	textClassName,
+	backGroundClassName,
+	checkboxClassName,
+	text,
+	...props
+}: InputProps) {
 	return (
-		<div className={cn("flex gap-1", className)}>
-			<label className="font-[Alibaba] h-auto">{text}</label>
+		<div className={cn("flex gap-1 items-center", className)}>
+			<label className={cn("font-[Alibaba] h-auto", textClassName)}>
+				{text}
+			</label>
 			<label className={cn(customStyles["ios-checkbox"], customStyles.red)}>
 				<input type="checkbox" data-slot="input" {...props} />
-				<div className={customStyles["checkbox-wrapper"]}>
-					<div className={customStyles["checkbox-bg"]}></div>
+				<div
+					className={cn(customStyles["checkbox-wrapper"], checkboxClassName)}
+					style={{ width: size, height: size }}
+				>
+					<div
+						className={cn(customStyles["checkbox-bg"], backGroundClassName)}
+					></div>
 					<svg
 						fill="none"
 						viewBox="0 0 24 24"
