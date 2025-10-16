@@ -3,7 +3,6 @@ import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
-import leftInputDirection from "@/utils/leftInputDirection";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
