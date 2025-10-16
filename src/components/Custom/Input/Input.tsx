@@ -42,6 +42,9 @@ export interface InputProps
 export interface InputClass {
 	className?: string;
 	errorClassName?: string;
+	onChangeWrapper?: (
+		handler: (event: React.ChangeEvent<HTMLInputElement>) => void,
+	) => (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 function Input({
