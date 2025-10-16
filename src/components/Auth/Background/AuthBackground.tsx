@@ -1,9 +1,7 @@
-import { useMediaQuery } from "react-responsive";
+import { useDesktopTablet } from "@/hooks/ResponsiveHooks";
 
 export default function AuthBackground() {
-  const isDesktopOrTablet = useMediaQuery({
-    minWidth: 640
-  });
+  const isDesktopOrTablet = useDesktopTablet();
   return (
     <>
       {isDesktopOrTablet && (

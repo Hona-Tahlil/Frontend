@@ -4,55 +4,34 @@ import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 
 import React from "react";
+import { useMobile } from "@/hooks/ResponsiveHooks";
+import { Form, Formik, type FormikHelpers, type FormikValues } from "formik";
+import * as Yup from "yup";
+import LoginForm from "@/components/Auth/LoginForm/LoginForm";
+
+
+
+
+const validationSchema = Yup.object({
+  email: Yup.string()
+    .email("ایمیل معتبر نمی باشد")
+    .required("ایمیل اجباری است"),
+  password: Yup.string()
+    .min(6, "پسورد باید حداقل 6 کاراکتر باشد")
+    .required("رمز عبور اجباری است"),
+});
 
 export default function Login() {
+  const isMobile = useMobile();
   return (
-    <div className="relative w-screen h-screen bg-background overflow-hidden justify-center  flex">
+    <div className="w-screen h-screen bg-background overflow-hidden justify-center flex">
       {/* Fixed SVGs */}
       <AuthBackground></AuthBackground>
 
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen text-center w-fit">
-        <h1 className="text-5xl font-bold text-gray-800 font-[Alibaba]">
-          ورود
-        </h1>
-        <p className="text-sm text-gray-600 mt-3 font-[Alibaba]">!خوش آمدید</p>
-        <p className="text-sm text-gray-600 font-[Alibaba]">
-          لطفا به حساب کاربری خود وارد شوید
-        </p>
 
-        <Input
-          placeholder="ایمیل"
-          className="h-10 mt-5 w-full"
-          shadow={true}
-        ></Input>
-        <Input
-          placeholder="رمز عبور"
-          className="h-10 mt-3"
-          shadow={true}
-        ></Input>
-        <div className="w-full flex justify-end ">
-          <Checkbox className="mt-5" text="مرا بخاطر بسپار"></Checkbox>
-        </div>
-
-        <Button
-          className="font-[Alibaba] font-bold h-7 mt-4 px-5 py-6"
-          size="giant"
-        >
-          ورود
-        </Button>
-
-        <div className="flex gap-4 mt-3 items-center">
-          <Button variant={"link"} shadow={false} bold={true}>
-            فراموشی رمز عبور
-          </Button>
-          <div className="h-[60%] bg-primary w-1 rounded-xs">
-          </div>
-          <Button variant={"link"} shadow={false} bold={true}>
-            ثبت نام در سایت
-          </Button>
-        </div>
-      </div>
+      <LoginForm></LoginForm>
+      
     </div>
   );
 }
