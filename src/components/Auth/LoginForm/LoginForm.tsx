@@ -37,21 +37,30 @@ export default function LoginForm() {
               <Input
                 name="email"
                 placeholder="ایمیل"
-                className="h-10 w-full"
+                classes={{
+                  className:"h-10 w-full"
+                }}
                 shadow={true}
               ></Input>
               <Input
+                type="password"
                 name="password"
                 placeholder="رمز عبور"
-                className="h-10 w-full"
+                
+                classes={{
+                  className:"h-10 w-full"
+                }}
                 shadow={true}
               ></Input>
               <div className="w-full flex justify-end ">
                 <Checkbox
-                  className="mt-2"
+                  classes={{
+                    className: "mt-2",
+                    textClassName:"text-xs font-[Alibaba]"
+                  }}
                   text="مرا بخاطر بسپار"
                   size="20px"
-                  textClassName="text-xs font-[Alibaba]"
+                  
                 ></Checkbox>
               </div>
 
