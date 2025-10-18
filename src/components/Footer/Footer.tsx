@@ -1,4 +1,4 @@
-import { useDesktop, useTablet, useMobile } from "@/hooks/ResponsiveHooks";
+import { useMobile } from "@/hooks/ResponsiveHooks";
 import { Button } from "@/components/Custom/Button/Button";
 import { FaTelegram, FaLinkedin, FaInstagram } from "react-icons/fa";
 
