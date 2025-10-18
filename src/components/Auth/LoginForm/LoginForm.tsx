@@ -79,7 +79,7 @@ export default function LoginForm() {
 					)}
 				</Formik>
 
-				<div className="flex gap-2 mt-3 items-center">
+				<div className="flex gap-2 mt-3 items-center justify-center">
 					<Button variant={"link"} shadow={false} bold={true}>
 						ثبت نام در سایت
 					</Button>
