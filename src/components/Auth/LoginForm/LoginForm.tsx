@@ -16,12 +16,13 @@ const validationSchema = Yup.object({
 const initialValues = {
 	email: "",
 	password: "",
+	rememberMe: false,
 };
 
 export default function LoginForm() {
 	return (
-		<div className="flex relative z-11 flex-col items-center justify-center min-h-screen text-center w-fit">
-			<div className="h-fit bg-background sm:bg-transparent p-8 rounded-4xl">
+		<div className="flex relative z-11 flex-col items-center justify-center min-h-screen text-center w-7/8 max-w-100 sm:w-100">
+			<div className="h-fit bg-background sm:bg-transparent p-8 rounded-4xl w-full">
 				<h1 className="text-5xl font-bold text-gray-800 font-[Alibaba]">
 					ورود
 				</h1>
@@ -57,6 +58,7 @@ export default function LoginForm() {
 							/>
 							<div className="w-full flex justify-end ">
 								<Checkbox
+									name="remeberMe"
 									classes={{
 										className: "mt-2",
 										textClassName: "text-xs font-[Alibaba]",
