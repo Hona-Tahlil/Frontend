@@ -17,6 +17,8 @@ import { useMobile } from "@/hooks/ResponsiveHooks";
 import { boolean } from "yup";
 import { motion, AnimatePresence } from "framer-motion";
 
+import logoImage from "@/assets/images/Logo.svg"
+
 type NavbarProps = {
   isUserLoggedin: boolean;
 };
@@ -33,7 +35,7 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
   return (
       <nav
         dir="rtl"
-        className="flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-full "
+        className="flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-screen "
       >
         <div className="flex h-full items-center">
           {isMobile && (
@@ -49,27 +51,27 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
               <span className="sr-only">Toggle menu</span>
             </button>
           )}
-          <img src="src/assets/images/Logo.svg" alt="" className="h-[70%]" />
+          <img src={logoImage} alt="" className="h-[70%]" />
           {!isMobile && (
             <ul className="mr-5 flex h-full items-center">
-              <NavbarItem route="" icon={<Home className="h-5"></Home>}>
+              <NavbarItem route="" icon={<Home className="h-5"/>}>
                 خانه
               </NavbarItem>
               <NavbarItem
                 route=""
-                icon={<HandHeart className="h-5"></HandHeart>}
+                icon={<HandHeart className="h-5"/>}
               >
                 رزرو
               </NavbarItem>
               <NavbarItem
                 route=""
-                icon={<NotebookPen className="h-5"></NotebookPen>}
+                icon={<NotebookPen className="h-5"/>}
               >
                 بلاگ
               </NavbarItem>
               <NavbarItem
                 route=""
-                icon={<CircleAlert className="h-5"></CircleAlert>}
+                icon={<CircleAlert className="h-5"/>}
               >
                 درباره ما
               </NavbarItem>
@@ -79,7 +81,7 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
         {isUserLoggedin ? (
           <div className="flex h-full items-center">
             <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
-              <LogOut strokeWidth={3}></LogOut>
+              <LogOut strokeWidth={3}/>
               <span className="font-bold text-sm w-fit">ورود</span>
               <div className="bg-white w-0.5 h-full rounded-4xl"></div>
               <span className="font-bold text-sm">ثبت نام</span>
@@ -88,7 +90,7 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
         ) : (
           <div className="flex h-full items-center">
             <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
-              <LogOut strokeWidth={3}></LogOut>
+              <LogOut strokeWidth={3}/>
               <span className="font-bold text-sm w-fit">ورود</span>
               <div className="bg-white w-0.5 h-full rounded-4xl"></div>
               <span className="font-bold text-sm">ثبت نام</span>
