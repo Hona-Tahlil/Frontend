@@ -18,12 +18,6 @@ export interface LoginResponseErrors {
 
 export interface LoginResponseData {
 	accessToken: string;
-	role: RoleResponse;
-}
-
-export interface RoleResponse {
-	id: number;
-	name: string;
 	permissions: PermissionResponse[];
 }
 
