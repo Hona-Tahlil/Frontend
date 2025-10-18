@@ -3,6 +3,7 @@ import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+import { useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -20,6 +21,10 @@ const initialValues = {
 };
 
 export default function LoginForm() {
+	const navigate = useNavigate();
+	function navigateToSignupPage() {
+		navigate("/signup");
+	}
 	return (
 		<div className="flex relative z-11 flex-col items-center justify-center min-h-screen text-center w-7/8 max-w-100 sm:w-100">
 			<div className="h-fit bg-background sm:bg-transparent p-8 rounded-4xl w-full">
@@ -82,7 +87,12 @@ export default function LoginForm() {
 				</Formik>
 
 				<div className="flex gap-2 mt-3 items-center justify-center">
-					<Button variant={"link"} shadow={false} bold={true}>
+					<Button
+						onClick={navigateToSignupPage}
+						variant={"link"}
+						shadow={false}
+						bold={true}
+					>
 						ثبت نام در سایت
 					</Button>
 					<div className="h-6 bg-primary w-1 rounded-xs z-12"></div>
