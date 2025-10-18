@@ -1,6 +1,5 @@
 import AuthBackground from "@/components/Auth/Background/AuthBackground";
 
-import LoginForm from "@/components/Auth/LoginForm/LoginForm";
 import SignupForm from "@/components/Auth/SignupForm/SignupForm";
 
 export default function Signup() {

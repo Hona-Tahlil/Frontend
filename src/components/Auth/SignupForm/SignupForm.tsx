@@ -1,4 +1,3 @@
-import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
