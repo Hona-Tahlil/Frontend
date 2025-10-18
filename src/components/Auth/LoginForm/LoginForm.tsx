@@ -14,6 +14,11 @@ const validationSchema = Yup.object({
     .required("رمز عبور اجباری است"),
 });
 
+const initialValues = {
+  email: "",
+  password:"",
+}
+
 export default function LoginForm() {
   return (
     <div className="flex relative z-11 flex-col items-center justify-center min-h-screen text-center w-fit">
@@ -26,7 +31,7 @@ export default function LoginForm() {
           لطفا به حساب کاربری خود وارد شوید
         </p>
         <Formik
-          initialValues={{ email: "", password: "", password2: "" }}
+          initialValues={initialValues}
           validationSchema={validationSchema}
           onSubmit={(values) => {
             console.log("Form values:", values);
@@ -41,7 +46,7 @@ export default function LoginForm() {
                   className:"h-10 w-full"
                 }}
                 shadow={true}
-              ></Input>
+              />
               <Input
                 type="password"
                 name="password"
@@ -51,7 +56,7 @@ export default function LoginForm() {
                   className:"h-10 w-full"
                 }}
                 shadow={true}
-              ></Input>
+              />
               <div className="w-full flex justify-end ">
                 <Checkbox
                   classes={{
@@ -61,7 +66,7 @@ export default function LoginForm() {
                   text="مرا بخاطر بسپار"
                   size="20px"
                   
-                ></Checkbox>
+                />
               </div>
 
               <Button
@@ -78,7 +83,7 @@ export default function LoginForm() {
         </Formik>
 
         <div className="flex gap-2 mt-3 items-center">
-          <Button variant={"link"} shadow={false} bold={true}>
+          <Button variant={"link"}  shadow={false} bold={true}>
             ثبت نام در سایت
           </Button>
           <div className="h-6 bg-primary w-1 rounded-xs z-12"></div>
