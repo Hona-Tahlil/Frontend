@@ -86,8 +86,9 @@ export default function LoginForm() {
 					)}
 				</Formik>
 
-				<div className="flex gap-2 mt-3 items-center justify-center">
+				<div className="flex gap-[4vw] sm:gap-6 mt-3 items-center justify-center">
 					<Button
+						className="px-0"
 						onClick={navigateToSignupPage}
 						variant={"link"}
 						shadow={false}
@@ -96,7 +97,7 @@ export default function LoginForm() {
 						ثبت نام در سایت
 					</Button>
 					<div className="h-6 bg-primary w-1 rounded-xs z-12"></div>
-					<Button variant={"link"} shadow={false} bold={true}>
+					<Button className="px-0" variant={"link"} shadow={false} bold={true}>
 						بازیابی رمز عبور
 					</Button>
 				</div>
