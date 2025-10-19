@@ -198,7 +198,7 @@ function FooterMobile() {
 
         <div className="mt-20 w-4/5 mx-auto">
           <div className="border-b-2 border-white"></div>
-          <p className="text-center py-4 text-sm">
+          <p className="text-right py-4 text-sm">
             کلیه حقوق مادی و معنوی این سایت متعلق به پت‌یار است.
           </p>
         </div>
