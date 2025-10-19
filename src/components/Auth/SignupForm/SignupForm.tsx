@@ -90,7 +90,7 @@ export default function SignupForm() {
 									ثبت نام شما به معنای پذیرش
 									<a
 										onClick={openTermsAndServicesPage}
-										className="text-primary hover:underline hover:decoration-1 hover:underline-offset-5 cursor-pointer"
+										className="text-primary hover:underline hover:decoration-1 hover:underline-offset-5 cursor-pointer active:text-primary-press active:underline"
 									>
 										{" "}
 										قوانین و مقررات{" "}
