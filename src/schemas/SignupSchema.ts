@@ -22,9 +22,9 @@ const initialValues = {
 	repeatPassword: "",
 };
 
-const LoginSchema = {
+const SignupSchema = {
 	initialValues,
 	validationSchema,
 };
 
-export default LoginSchema;
+export default SignupSchema;
