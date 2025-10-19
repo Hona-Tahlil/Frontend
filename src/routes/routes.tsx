@@ -5,6 +5,7 @@ import Temp from "@/pages/Temp";
 import Test from "@/pages/Test";
 import Login from "@/pages/Login";
 import AboutUs from "@/pages/AboutUs";
+import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 
 export const router = createBrowserRouter([
@@ -35,12 +36,12 @@ export const router = createBrowserRouter([
 				path: "/signup",
 				element: <Signup />,
 			},
-			// {
-			// 	path: "/AboutUs",
-			// 	element: <AboutUs />,
-			// },
-			// {
 			{
+				path: "/Terms",
+				element: <Terms />,
+			},
+			
+      {
 				path: "/AboutUs",
 				element: <AboutUs />,
 			},
