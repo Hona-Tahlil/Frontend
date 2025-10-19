@@ -2,23 +2,8 @@ import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
-
-const validationSchema = Yup.object({
-	email: Yup.string()
-		.email("ایمیل معتبر نمی باشد")
-		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد")
-		.required("رمز عبور اجباری است"),
-});
-
-const initialValues = {
-	email: "",
-	password: "",
-	rememberMe: false,
-};
+import LoginSchema from "@/schemas/SignupSchema";
 
 export default function LoginForm() {
 	const navigate = useNavigate();
@@ -36,8 +21,7 @@ export default function LoginForm() {
 					لطفا به حساب کاربری خود وارد شوید
 				</p>
 				<Formik
-					initialValues={initialValues}
-					validationSchema={validationSchema}
+					{...LoginSchema}
 					onSubmit={(values) => {
 						console.log("Form values:", values);
 					}}
