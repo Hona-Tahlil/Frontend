@@ -6,7 +6,7 @@ const SUPPORT_PHONE = "0XX-XXXXXXX-21";
 
 export default function Terms() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[var(--second-background)]">
+    <main dir="rtl" className="min-h-screen bg-second-background">
       <section className="container mx-auto max-w-4xl px-4 md:px-8 py-10 md:py-14">
      
         <p className="text-hero text-center mb-8 md:mb-10">
