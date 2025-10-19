@@ -1,6 +1,7 @@
 import { GlobalProviders } from "@/providers/GlobalProviders";
 import { Toaster } from "@/components/ui/sonner";
 import { Outlet } from "react-router-dom";
+import Footer from "@/components/Footer/Footer";
 
 const PublicLayout = () => {
 	return (
@@ -17,7 +18,9 @@ const PublicLayout = () => {
 			/>
 			<GlobalProviders>
 				<Outlet />
+				<Footer />
 			</GlobalProviders>
+      		
 		</div>
 	);
 };
