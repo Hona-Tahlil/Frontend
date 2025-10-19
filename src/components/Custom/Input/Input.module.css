@@ -1,3 +1,17 @@
 .input::placeholder {
 	color: var(--placeholder);
 }
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+	/* Change the color here (e.g., to your desired background color) */
+	-webkit-box-shadow: 0 0 0 1000px var(--color-input-autocomplete) inset !important;
+
+	/* Set the text color to ensure readability, as it's often forced to black */
+	-webkit-text-fill-color: #000000 !important;
+
+	/* Optional: Hide the Chrome autofill transition (helps prevent a flash of color) */
+	transition: background-color 5000s ease-in-out 0s;
+}
