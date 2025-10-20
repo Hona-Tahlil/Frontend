@@ -4,8 +4,26 @@ import { Form, Formik } from "formik";
 import { CircleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import SignupSchema from "@/schemas/SignupSchema";
+import { useState } from "react";
+
+import {
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/ui/dialog";
+
+import {
+	InputOTP,
+	InputOTPGroup,
+	InputOTPSeparator,
+	InputOTPSlot,
+} from "@/components/ui/input-otp";
 
 export default function SignupForm() {
+	const [open, setOpen] = useState(false);
+	const openDialog = () => setOpen(true);
+	const closeDialog = () => setOpen(false);
 	const navigate = useNavigate();
 	function navigateToLoginPage() {
 		navigate("/login");
@@ -23,6 +41,7 @@ export default function SignupForm() {
 					{...SignupSchema}
 					onSubmit={(values) => {
 						console.log("Form values:", values);
+						setTimeout(openDialog, 1000);
 					}}
 				>
 					{({ isSubmitting }) => (
@@ -98,6 +117,37 @@ export default function SignupForm() {
 					>
 						ورود به سایت
 					</Button>
+					<Dialog open={open} onOpenChange={setOpen}>
+						<DialogContent className="flex items-center flex-col w-7/8 max-w-150 sm:w-150 rounded-lg">
+							<DialogHeader>
+								<DialogTitle>تایید ایمیل</DialogTitle>
+							</DialogHeader>
+							<p className="text-center">
+								لطفا کدی که برای ایمیل شما ارسال شده است را وارد کنید
+							</p>
+							<InputOTP maxLength={6}>
+								<InputOTPGroup>
+									<InputOTPSlot index={0} />
+								</InputOTPGroup>
+								<InputOTPGroup>
+									<InputOTPSlot index={1} />
+								</InputOTPGroup>
+								<InputOTPGroup>
+									<InputOTPSlot index={2} />
+								</InputOTPGroup>
+								<InputOTPGroup>
+									<InputOTPSlot index={3} />
+								</InputOTPGroup>
+								<InputOTPGroup>
+									<InputOTPSlot index={4} />
+								</InputOTPGroup>
+								<InputOTPGroup>
+									<InputOTPSlot index={5} />
+								</InputOTPGroup>
+							</InputOTP>
+							<Button onClick={closeDialog}>تایید</Button>
+						</DialogContent>
+					</Dialog>
 				</div>
 			</div>
 		</div>
