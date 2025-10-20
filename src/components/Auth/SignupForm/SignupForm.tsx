@@ -1,31 +1,9 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
 import { CircleAlert } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
-const validationSchema = Yup.object({
-	username: Yup.string()
-		.min(5, "پسورد باید حداقل 5 کاراکتر باشد")
-		.required("نام کاربری اجباری است"),
-	email: Yup.string()
-		.email("ایمیل معتبر نمی باشد")
-		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد")
-		.required("رمز عبور اجباری است"),
-	repeatPassword: Yup.string()
-		.oneOf([Yup.ref("password")], "رمز عبور مطابقت ندارد")
-		.required("تکرار رمز عبور اجباری است"),
-});
-
-const initialValues = {
-	username: "",
-	email: "",
-	password: "",
-	repeatPassword: "",
-};
+import SignupSchema from "@/schemas/SignupSchema";
 
 export default function SignupForm() {
 	const navigate = useNavigate();
@@ -42,8 +20,7 @@ export default function SignupForm() {
 					ثبت نام
 				</h1>
 				<Formik
-					initialValues={initialValues}
-					validationSchema={validationSchema}
+					{...SignupSchema}
 					onSubmit={(values) => {
 						console.log("Form values:", values);
 					}}
@@ -90,7 +67,7 @@ export default function SignupForm() {
 									ثبت نام شما به معنای پذیرش
 									<a
 										onClick={openTermsAndServicesPage}
-										className="text-primary hover:underline hover:decoration-1 hover:underline-offset-5 cursor-pointer"
+										className="text-primary hover:underline hover:decoration-1 hover:underline-offset-5 cursor-pointer active:text-primary-press active:underline"
 									>
 										{" "}
 										قوانین و مقررات{" "}
