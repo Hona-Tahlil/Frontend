@@ -7,6 +7,7 @@ import Login from "@/pages/Login";
 import AboutUs from "@/pages/AboutUs";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
+import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 
 export const router = createBrowserRouter([
 	{
@@ -29,21 +30,26 @@ export const router = createBrowserRouter([
 				element: <Test />,
 			},
 			{
+				path: "/Terms",
+				element: <Terms />,
+			},
+
+			{
+				path: "/AboutUs",
+				element: <AboutUs />,
+			},
+		],
+	},
+	{
+		element: <AuthLayout />,
+		children: [
+			{
 				path: "/login",
 				element: <Login />,
 			},
 			{
 				path: "/signup",
 				element: <Signup />,
-			},
-			{
-				path: "/Terms",
-				element: <Terms />,
-			},
-			
-      {
-				path: "/AboutUs",
-				element: <AboutUs />,
 			},
 		],
 	},
