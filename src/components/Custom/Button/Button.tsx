@@ -9,7 +9,7 @@ const buttonVariants = cva("font-[Alibaba]", {
 		variant: {
 			default:
 				"bg-primary rounded-[27px] text-primary-foreground border-[3.5px] border-transparent hover:bg-primary-hover disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground active:bg-primary-press active:border-transparent focus:border-primary-focus-outline",
-			link: "bg-transparent shadow-none hover:bg-transparent border-[0px] text-primary underline-offset-6 hover:underline",
+			link: "bg-transparent shadow-none hover:bg-transparent border-[0px] text-primary underline-offset-6 hover:underline active:text-primary-press active:underline",
 		},
 		shadow: {
 			true: "drop-shadow-lg",

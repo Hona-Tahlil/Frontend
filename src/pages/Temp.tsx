@@ -43,7 +43,7 @@ export default function Temp() {
 					className="cursor-pointer bg-accent rounded-md p-2"
 					onClick={login}
 				>
-					{loading ? <p>Logging in...</p> : <p>Login</p>}
+					{loading ? <p>Logging in....</p> : <p>Login</p>}
 				</button>
 			</div>
 			<div className="bg-neutral-400 w-fit p-4 rounded-md flex flex-col place-self-center gap-4">
