@@ -5,10 +5,11 @@ import {
   Hand,
   HandHeart,
   Home,
-  Link,
   LogOut,
   Menu,
   NotebookPen,
+  Scale,
+  Undo2,
   X,
 } from "lucide-react";
 import NavbarItem from "./NavbarItem";
@@ -16,87 +17,147 @@ import { Button } from "../Custom/Button/Button";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { boolean } from "yup";
 import { motion, AnimatePresence } from "framer-motion";
+import navbarImage from "@/assets/images/mobile-navbar-background.png";
 
-import logoImage from "@/assets/images/Logo.svg"
+import { Link } from "react-router-dom";
+
+import logoImage from "@/assets/images/Logo.svg";
 
 type NavbarProps = {
   isUserLoggedin: boolean;
 };
 const NAV_LINKS = [
-  { label: "Home", href: "#home" },
-  { label: "About", href: "#about" },
-  { label: "Services", href: "#services" },
-  { label: "Contact", href: "#contact" },
+  {
+    label: "خانه",
+    href: "/landing",
+    icon: <Home className="h-5" />,
+    showDesktop: true,
+  },
+  {
+    label: "رزرو",
+    href: "#services",
+    icon: <HandHeart className="h-5" />,
+    showDesktop: true,
+  },
+  {
+    label: "بلاگ",
+    href: "#blog",
+    icon: <NotebookPen className="h-5" />,
+    showDesktop: true,
+  },
+  {
+    label: "درباره ما",
+    href: "/AboutUs",
+    icon: <CircleAlert className="h-5" />,
+    showDesktop: true,
+  },
+  {
+    label: "قوانین و مقررات",
+    href: "",
+    icon: <Scale className="h-5" />,
+    showDesktop: false,
+  },
 ];
 
 export default function Navbar({ isUserLoggedin }: NavbarProps) {
   const isMobile = useMobile();
   const [open, setOpen] = useState(false);
   return (
-      <nav
-        dir="rtl"
-        className="flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-screen "
-      >
-        <div className="flex h-full items-center">
-          {isMobile && (
-            <button
-              type="button"
-              aria-label="Open menu"
-              aria-expanded={open}
-              aria-controls="mobile-menu"
-              onClick={() => setOpen((o) => !o)}
-              className="md:hidden inline-flex items-center justify-center rounded-xl p-2 border border-neutral-200 dark:border-neutral-700 shadow-sm hover:shadow transition active:scale-95"
-            >
-              {open ? <X className="size-5" /> : <Menu className="size-5" />}
-              <span className="sr-only">Toggle menu</span>
-            </button>
-          )}
-          <img src={logoImage} alt="" className="h-[70%]" />
-          {!isMobile && (
-            <ul className="mr-5 flex h-full items-center">
-              <NavbarItem route="" icon={<Home className="h-5"/>}>
-                خانه
-              </NavbarItem>
-              <NavbarItem
-                route=""
-                icon={<HandHeart className="h-5"/>}
+    <nav
+      dir="rtl"
+      className="z-20 flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-screen fixed"
+    >
+      <div className="flex h-full items-center">
+        {isMobile && (
+          <section className=" flex lg:hidden">
+            <Menu
+              className="size-7 ml-4"
+              onClick={() => setOpen((prev) => !prev)}
+            />
+            <div>
+              <div
+                className={
+                  open
+                    ? "-translate-x-[0%] duration-75 absolute right-0 top-0 w-[60%] md:w-[40%] h-screen bg-white z-10 flex  justify-evenly items-start "
+                    : " translate-x-[100%] duration-75 absolute right-0 top-0 w-[60%] md:w-[40%] h-screen bg-white z-10 flex  justify-evenly items-start"
+                }
               >
-                رزرو
-              </NavbarItem>
-              <NavbarItem
-                route=""
-                icon={<NotebookPen className="h-5"/>}
-              >
-                بلاگ
-              </NavbarItem>
-              <NavbarItem
-                route=""
-                icon={<CircleAlert className="h-5"/>}
-              >
-                درباره ما
-              </NavbarItem>
-            </ul>
-          )}
-        </div>
-        {isUserLoggedin ? (
-          <div className="flex h-full items-center">
-            <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
-              <LogOut strokeWidth={3}/>
-              <span className="font-bold text-sm w-fit">ورود</span>
-              <div className="bg-white w-0.5 h-full rounded-4xl"></div>
-              <span className="font-bold text-sm">ثبت نام</span>
-            </Button>
-          </div>
-        ) : (
-          <div className="flex h-full items-center">
-            <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
-              <LogOut strokeWidth={3}/>
-              <span className="font-bold text-sm w-fit">ورود</span>
-              <div className="bg-white w-0.5 h-full rounded-4xl"></div>
-              <span className="font-bold text-sm">ثبت نام</span>
-            </Button>
-          </div>
+                <div
+                  className="absolute top-0 right-0 px-8 py-8"
+                  onClick={() => setOpen(false)} // change isNavOpen state to false to close the menu
+                >
+                  <Undo2 className="size-7 rotate-y-180" color="white" strokeWidth={2}/>
+                </div>
+                <div className="flex flex-col">
+                  <div className="h-full w-full ">
+                    <img src={navbarImage} alt="" />
+                  </div>
+                  <div className="flex flex-col w-full h-full items-center">
+                    <div className="h-auto flex flex-col   justify-start w-[80%] py-5">
+                      <ul>
+                        {NAV_LINKS.map((item) => (
+                          <NavbarItem
+                            icon={item.icon}
+                            route={item.href}
+                            className="w-fit h-10 rounded-lg"
+                          >
+                            {item.label}
+                          </NavbarItem>
+                        ))}
+                      </ul>
+                    </div>
+                    <div className="flex justify-between w-[80%] mt-4 bottom-6 absolute border-t-1 pt-4">
+                      <img src={logoImage} alt="" className="h-8" />
+                      <p>نسخه ۱.۰.۰</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                className={
+                  (open ? "" : "hidden") +
+                  "w-[40%] md:w-[60%] absolute top-0 left-0 h-screen bg-black opacity-50 overscroll-none touch-none z-30"
+                }
+                onClick={() => {
+                  setOpen(false);
+                }}
+              ></div>
+            </div>
+          </section>
         )}
-      </nav>
+        <img src={logoImage} alt="" className="h-[70%]" />
+        {!isMobile && (
+          <ul className="mr-5 flex h-full items-center">
+            {NAV_LINKS.map(
+              (item) =>
+                item.showDesktop && (
+                  <NavbarItem icon={item.icon} route={item.href}>
+                    {item.label}
+                  </NavbarItem>
+                )
+            )}
+          </ul>
+        )}
+      </div>
+      {isUserLoggedin ? (
+        <div className="flex h-full items-center">
+          <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
+            <LogOut strokeWidth={3} />
+            <span className="font-bold text-sm w-fit">ورود</span>
+            <div className="bg-white w-0.5 h-full rounded-4xl"></div>
+            <span className="font-bold text-sm">ثبت نام</span>
+          </Button>
+        </div>
+      ) : (
+        <div className="flex h-full items-center">
+          <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
+            <LogOut strokeWidth={3} />
+            <span className="font-bold text-sm w-fit">ورود</span>
+            <div className="bg-white w-0.5 h-full rounded-4xl"></div>
+            <span className="font-bold text-sm">ثبت نام</span>
+          </Button>
+        </div>
+      )}
+    </nav>
   );
 }
