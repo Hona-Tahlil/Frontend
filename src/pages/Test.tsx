@@ -1,5 +1,6 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
+import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { Input } from "@/components/Custom/Input/Input";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
@@ -88,6 +89,8 @@ function Test() {
 							size="15px"
 							text={"آقا عشق"}
 						/>
+
+						<DatePicker />
 						<Button
 							type="submit"
 							size={"giant"}
