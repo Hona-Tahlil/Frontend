@@ -61,7 +61,7 @@ const team: TeamMember[] = [
 
 export default function AboutUs() {
   return (
-    <main dir="rtl" className="min-h-screen bg-[var(--second-background)]">
+    <div dir="rtl" className="min-h-screen bg-[var(--second-background)]">
       {/* Hero */}
       <section className="container max-w-6xl mx-auto px-4 sm:px-6 md:px-8 pt-10 sm:pt-14 md:pt-16">
         
@@ -140,6 +140,6 @@ export default function AboutUs() {
           ))}
         </ul>
       </section>
-    </main>
+    </div>
   );
 }

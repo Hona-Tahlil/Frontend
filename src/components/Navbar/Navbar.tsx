@@ -1,8 +1,6 @@
 import React, { useState } from "react";
 import {
   CircleAlert,
-  Hamburger,
-  Hand,
   HandHeart,
   Home,
   LogOut,
@@ -10,18 +8,15 @@ import {
   NotebookPen,
   Scale,
   Undo2,
-  X,
 } from "lucide-react";
 import NavbarItem from "./NavbarItem";
 import { Button } from "../Custom/Button/Button";
 import { useMobile } from "@/hooks/ResponsiveHooks";
-import { boolean } from "yup";
-import { motion, AnimatePresence } from "framer-motion";
 import navbarImage from "@/assets/images/mobile-navbar-background.png";
-
-import { Link } from "react-router-dom";
+import navbarBgImage from "@/assets/images/mobie-navbar-bg-2.png";
 
 import logoImage from "@/assets/images/Logo.svg";
+import NavbarProfileDropdonwMenu from "./NavbarProfile";
 
 type NavbarProps = {
   isUserLoggedin: boolean;
@@ -65,7 +60,7 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
   return (
     <nav
       dir="rtl"
-      className="z-20 flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-screen fixed"
+      className="z-20 flex justify-between bg-white h-13 items-center px-10 font-[Alibaba] shadow-lg w-screen fixed "
     >
       <div className="flex h-full items-center">
         {isMobile && (
@@ -86,14 +81,25 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
                   className="absolute top-0 right-0 px-8 py-8"
                   onClick={() => setOpen(false)} // change isNavOpen state to false to close the menu
                 >
-                  <Undo2 className="size-7 rotate-y-180" color="white" strokeWidth={2}/>
+                  <Undo2
+                    className="size-7 rotate-y-180"
+                    color="white"
+                    strokeWidth={2}
+                  />
                 </div>
                 <div className="flex flex-col">
-                  <div className="h-full w-full ">
-                    <img src={navbarImage} alt="" />
-                  </div>
+                  {isUserLoggedin ? (
+                    <div className="h-full w-full ">
+                      <img src={navbarImage} alt="" />
+                    </div>
+                  ) : (
+                    <div className="h-full w-full ">
+                      <img src={navbarImage} alt="" />
+                    </div>
+                  )}
+
                   <div className="flex flex-col w-full h-full items-center">
-                    <div className="h-auto flex flex-col   justify-start w-[80%] py-5">
+                    <div className="h-auto flex flex-colg   justify-start w-[80%] py-5">
                       <ul>
                         {NAV_LINKS.map((item) => (
                           <NavbarItem
@@ -140,13 +146,8 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
         )}
       </div>
       {isUserLoggedin ? (
-        <div className="flex h-full items-center">
-          <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
-            <LogOut strokeWidth={3} />
-            <span className="font-bold text-sm w-fit">ورود</span>
-            <div className="bg-white w-0.5 h-full rounded-4xl"></div>
-            <span className="font-bold text-sm">ثبت نام</span>
-          </Button>
+        <div className="flex h-[70%] items-center">
+          <NavbarProfileDropdonwMenu />
         </div>
       ) : (
         <div className="flex h-full items-center">
