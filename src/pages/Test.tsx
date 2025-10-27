@@ -7,6 +7,15 @@ import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/Custom/Select/Select";
+
 const validationSchema = Yup.object({
 	email: Yup.string()
 		.email("ایمیل معتبر نمی باشد")
@@ -23,8 +32,14 @@ function Test() {
 	return (
 		<div className="flex flex-col items-center">
 			<Formik
-				initialValues={{ email: "", password: "", password2: "", love: false }}
-				validationSchema={validationSchema}
+				initialValues={{
+					email: "",
+					password: "",
+					password2: "",
+					love: false,
+					akhoond: "",
+				}}
+				//validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
@@ -39,7 +54,6 @@ function Test() {
 									className: "h-10",
 									errorClassName: "px-5",
 								}}
-								onChangeWrappers={[adjustInputDirection]}
 								type="email"
 								placeholder="ایمیل"
 							/>
@@ -93,6 +107,24 @@ function Test() {
 						<DatePicker from={10} to={100} relative={false} />
 						<DatePicker />
 						<DatePicker from={2} to={3} />
+
+						<Select name="akhoond">
+							<SelectTrigger className="w-45">
+								<SelectValue placeholder="روز" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectGroup>
+									<SelectItem value={"1"}>1</SelectItem>
+									<SelectItem value={"2"}>2</SelectItem>
+									<SelectItem value={"3"}>3</SelectItem>
+									<SelectItem value={"4"}>4</SelectItem>
+									<SelectItem value={"5"}>5</SelectItem>
+									<SelectItem value={"6"}>6</SelectItem>
+									<SelectItem value={"7"}>7</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+
 						<Button
 							type="submit"
 							size={"giant"}

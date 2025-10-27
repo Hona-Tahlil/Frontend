@@ -50,6 +50,11 @@
 		url("./assets/fonts/ttf/Alibaba-Regular.ttf") format("truetype");
 }
 
+[data-radix-popper-content-wrapper] {
+	width: calc(var(--radix-popper-anchor-width)) !important;
+	min-width: 0px !important;
+}
+
 :root {
 	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
