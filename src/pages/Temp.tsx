@@ -5,7 +5,6 @@ import { translateNumber } from "@/utils/translateNumber";
 import { useState } from "react";
 
 export default function Temp() {
-	const { username, setUsername } = useUserStore();
 	const [email, setEmail] = useState<string>("");
 	const [count, setCounter] = useState<number>(0);
 	const [password, setPassword] = useState<string>("");
@@ -28,7 +27,6 @@ export default function Temp() {
 				</button>
 				<button
 					className="cursor-pointer bg-accent rounded-md p-2"
-					onClick={login}
 				>
 					{loading ? <p>Logging in....</p> : <p>Login</p>}
 				</button>
