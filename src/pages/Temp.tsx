@@ -16,20 +16,7 @@ export default function Temp() {
 	const increaseCounter = () => {
 		setCounter((prev) => prev + 1);
 	};
-	const login = () => {
-		setLoading(true);
-		loginService({ email, username, password })
-			.then((data) => {
-				setUsername(data?.user?.username);
-				CustomToast("Login successful", "success");
-			})
-			.catch((error) => {
-				console.log(error);
-				CustomToast("Login failed", "error");
-			})
-			.finally(() => setLoading(false));
-	};
-
+	
 	return (
 		<div className="w-full h-screen font-3xl flex flex-col place-self-center justify-center gap-4">
 			<div className="flex gap-2 rounded-md place-self-center">
