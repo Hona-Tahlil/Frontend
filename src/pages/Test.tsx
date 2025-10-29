@@ -104,9 +104,7 @@ function Test() {
 							text={"آقا عشق"}
 						/>
 
-						<DatePicker from={10} to={100} relative={false} />
 						<DatePicker />
-						<DatePicker from={2} to={3} />
 
 						<Select name="akhoond">
 							<SelectTrigger className="w-45">
