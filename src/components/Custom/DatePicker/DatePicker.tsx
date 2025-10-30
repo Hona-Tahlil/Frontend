@@ -42,28 +42,25 @@ const DatePicker = ({
 		>
 			<motion.div
 				drag="y"
-				//dragConstraints={{ left: 0, right: 300, top: 0, bottom: 300 }}
 				dragElastic={0.2} // optional, controls how "stretchy" the drag feels
 				dragMomentum={false}
 				style={{
 					y,
-					//width: 100,
-					//height: 100,
-					//backgroundColor: "skyblue",
-					//borderRadius: 10,
 				}}
 				onDragEnd={() => {
 					// Snap y to nearest multiple of `step`
 					const currentY = y.get();
 					const snappedY = Math.round(currentY / step) * step;
+					console.log(snappedY / step);
 					animate(y, snappedY, {
 						type: "spring",
 						stiffness: 300,
 						damping: 30,
 					});
 				}}
+				className="flex flex-col items-center"
 			>
-				{Array.from({ length: 40 }, (_, i) => (
+				{Array.from({ length: 100 }, (_, i) => (
 					<Number key={i} index={i} />
 				))}
 			</motion.div>
@@ -75,12 +72,18 @@ export const Number = ({ index }: { index: number }) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const yRelative = useMotionValue(0);
 	const [grandParentHeight, setGrandParentHeight] = useState(0);
+	const [selfHeight, setSelfHeight] = useState(0);
 
 	useEffect(() => {
 		const el = ref.current;
 		if (!el || !el.parentElement || !el.parentElement.parentElement) return;
 		const height = el.parentElement.parentElement.clientHeight;
 		setGrandParentHeight(height);
+		console.log(height);
+		requestAnimationFrame(() => {
+			setSelfHeight(el.clientHeight);
+			console.log(el.clientHeight);
+		});
 	}, []);
 
 	useAnimationFrame(() => {
@@ -93,20 +96,25 @@ export const Number = ({ index }: { index: number }) => {
 		yRelative.set(rect.top - grandParentRect.top);
 	});
 
-	const scale = useTransform(
+	const fontWeight = useTransform(
 		yRelative,
-		[0, grandParentHeight / 2, grandParentHeight], // Y positions
-		[0.5, 1, 0.5], // scale at those positions
+		[
+			0,
+			grandParentHeight / 2 - selfHeight / 2,
+			grandParentHeight - selfHeight / 2,
+		],
+		[400, 900, 200],
 	);
 
 	return (
 		<motion.div
 			ref={ref}
 			style={{
-				scale,
+				height: grandParentHeight / 3,
+				fontWeight,
 				originY: 0.5,
 			}}
-			className="m-2 p-4 bg-white rounded shadow text-center"
+			className="w-fit bg-transparent text-center flex justify-center items-center"
 		>
 			{index}
 		</motion.div>
