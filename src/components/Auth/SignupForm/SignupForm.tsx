@@ -13,18 +13,14 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 
-import {
-	InputOTP,
-	InputOTPGroup,
-	InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { signupService } from "@/services/authService";
-import CustomToast from "@/components/Custom/CustomToast";
+import { translateAxiosError } from "@/utils/errorTranslator";
 
 export default function SignupForm() {
 	const [open, setOpen] = useState(false);
 	const openDialog = () => setOpen(true);
-	const closeDialog = () => setOpen(false);
+	//const closeDialog = () => setOpen(false);
+	const [overAllError, setOverAllError] = useState<string>("");
 	const navigate = useNavigate();
 	function navigateToLoginPage() {
 		navigate("/login");
@@ -40,24 +36,40 @@ export default function SignupForm() {
 				</h1>
 				<Formik
 					{...SignupSchema}
-					onSubmit={(values, { setErrors }) => {
+					onSubmit={(values, { setErrors, setSubmitting }) => {
 						console.log("Form values:", values);
-						signupService({ ...values }).then((data) => {
-							if (data.statusCode === 200) {
-								openDialog();
-							} else if (data.messages) {
-								setErrors(data.messages);
-							} else if (data.message) {
-								CustomToast(data.message);
-							} else {
-								CustomToast("خطای غیر منتظره");
-							}
-						});
+						signupService({ ...values })
+							.then((data) => {
+								if (data.statusCode === 200) {
+									openDialog();
+								} else if (data.messages) {
+									setErrors(data.messages);
+								} else if (data.message) {
+									setOverAllError(data.message);
+								} else {
+									setOverAllError("خطای غیر منتظره");
+								}
+							})
+							.catch((error) => {
+								const errorText = translateAxiosError(error);
+								setOverAllError(errorText);
+							})
+							.finally(() => {
+								setSubmitting(false);
+							});
 						//setTimeout(openDialog, 1000);
 					}}
 				>
 					{({ isSubmitting }) => (
 						<Form className="mt-6 rounded flex flex-col gap-4 items-center w-full">
+							{overAllError && (
+								<div
+									className="bg-red-500/20 text-red-500 rounded-lg mx-4 px-4"
+									dir="rtl"
+								>
+									<p>{overAllError}</p>
+								</div>
+							)}
 							<Input
 								name="name"
 								placeholder="نام و نام خانوادگی"
