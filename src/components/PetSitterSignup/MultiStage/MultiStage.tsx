@@ -6,6 +6,7 @@ import React, {
 	type ReactNode,
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 type MultiStageContextType = {
 	currentStage: number;
@@ -90,29 +91,20 @@ function StageHeader({
 		</div>
 	);
 }
+interface StageProps {
+	index: number;
+	children: ReactNode;
+	className?: string;
+}
 
-// 🔹 Stage content
-function Stage({ index, children }: { index: number; children: ReactNode }) {
+function Stage({ index, children, className }: StageProps) {
 	const { currentStage, animationDir } = useMultiStage();
 
 	const [stageDir, setStageDir] = useState(0);
 
 	useEffect(() => {
-		//if (currentStage !== prevStageRef.current) {
-		//	setStageDir(animationDir); // freeze direction for this transition
-		//	prevStageRef.current = currentStage;
-		//}
-		//setStageDir(animationDir); // freeze direction for this transition
-		setStageDir(animationDir); // freeze direction for this transition
+		setStageDir(animationDir);
 	}, [animationDir]);
-	useEffect(() => {
-		//if (currentStage !== prevStageRef.current) {
-		//	setStageDir(animationDir); // freeze direction for this transition
-		//	prevStageRef.current = currentStage;
-		//}
-		//console.log("stage " + index + " " + (currentStage - prevStageRef.current));
-		//setStageDir(currentStage - prevStageRef.current); // freeze direction for this transition
-	}, [currentStage]);
 
 	const variants = {
 		enter: () => ({
@@ -134,17 +126,17 @@ function Stage({ index, children }: { index: number; children: ReactNode }) {
 		<AnimatePresence mode="wait">
 			{currentStage === index && (
 				<motion.div
-					key={index} // important for exit animations
+					key={index}
 					custom={stageDir}
 					variants={variants}
 					initial="initial"
 					animate="enter"
 					exit="exit"
-					//initial={{ opacity: 0, x: animationDir < 0 ? "-100%" : "100%" }}
-					//animate={{ opacity: 1, x: 0 }}
-					//exit={{ opacity: 0, x: animationDir < 0 ? "100%" : "-100%" }}
 					transition={{ duration: 1 }}
-					className="w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl mt-4"
+					className={cn(
+						"w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl mt-4",
+						className,
+					)}
 				>
 					{children}
 				</motion.div>
@@ -152,12 +144,17 @@ function Stage({ index, children }: { index: number; children: ReactNode }) {
 		</AnimatePresence>
 	);
 }
-
-function StageHolder({ children }: { children: ReactNode }) {
-	return <div className="w-full h-120 relative">{children}</div>;
+interface StageHolderProps {
+	children: ReactNode;
+	className?: string;
 }
 
-// attach subcomponents
+function StageHolder({ children, className }: StageHolderProps) {
+	return (
+		<div className={cn("w-full h-120 relative", className)}>{children}</div>
+	);
+}
+
 MultiStage.Header = Header;
 MultiStage.StageHeader = StageHeader;
 MultiStage.Stage = Stage;
