@@ -2,7 +2,6 @@ import React, {
 	createContext,
 	useContext,
 	useEffect,
-	useRef,
 	useState,
 	type ReactNode,
 } from "react";
@@ -97,7 +96,6 @@ function Stage({ index, children }: { index: number; children: ReactNode }) {
 	const { currentStage, animationDir } = useMultiStage();
 
 	const [stageDir, setStageDir] = useState(0);
-	const prevStageRef = useRef(currentStage);
 
 	useEffect(() => {
 		//if (currentStage !== prevStageRef.current) {
@@ -105,7 +103,6 @@ function Stage({ index, children }: { index: number; children: ReactNode }) {
 		//	prevStageRef.current = currentStage;
 		//}
 		//setStageDir(animationDir); // freeze direction for this transition
-		console.log("stage " + index + " " + animationDir);
 		setStageDir(animationDir); // freeze direction for this transition
 	}, [animationDir]);
 	useEffect(() => {
@@ -118,7 +115,7 @@ function Stage({ index, children }: { index: number; children: ReactNode }) {
 	}, [currentStage]);
 
 	const variants = {
-		enter: (dir: number) => ({
+		enter: () => ({
 			opacity: 1,
 			x: 0,
 			transition: { duration: 1 },
