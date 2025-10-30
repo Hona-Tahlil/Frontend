@@ -1,11 +1,8 @@
 import CustomToast from "@/components/Custom/CustomToast";
-import { loginService } from "@/services/authService";
-import useUserStore from "@/store/userStore/userStore";
 import { translateNumber } from "@/utils/translateNumber";
 import { useState } from "react";
 
 export default function Temp() {
-	const { username, setUsername } = useUserStore();
 	const [email, setEmail] = useState<string>("");
 	const [count, setCounter] = useState<number>(0);
 	const [password, setPassword] = useState<string>("");
@@ -18,16 +15,6 @@ export default function Temp() {
 	};
 	const login = () => {
 		setLoading(true);
-		loginService({ email, username, password })
-			.then((data) => {
-				setUsername(data?.user?.username);
-				CustomToast("Login successful", "success");
-			})
-			.catch((error) => {
-				console.log(error);
-				CustomToast("Login failed", "error");
-			})
-			.finally(() => setLoading(false));
 	};
 
 	return (
