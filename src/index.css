@@ -204,7 +204,7 @@
   html, body, #root {
     font-family: Alibaba, system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.7; 
-    /* overflow-x: scroll; */
+    overflow-x: hidden;
   }
 
   

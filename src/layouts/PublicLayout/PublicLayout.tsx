@@ -5,7 +5,7 @@ import Navbar from "@/components/Navbar/Navbar";
 
 const PublicLayout = () => {
   return (
-    <div className="font-[alibaba]">
+    <div className="font-[alibaba] w-screen h-screen">
       <Toaster
         position="bottom-right"
         richColors={true}
