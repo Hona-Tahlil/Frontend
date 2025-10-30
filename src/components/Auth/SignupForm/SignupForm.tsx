@@ -64,7 +64,7 @@ export default function SignupForm() {
 						<Form className="mt-6 rounded flex flex-col gap-4 items-center w-full">
 							{overAllError && (
 								<div
-									className="bg-red-500/20 text-red-500 rounded-lg mx-4 px-4"
+									className="bg-red-500/20 text-red-500 rounded-lg w-full px-4 py-2"
 									dir="rtl"
 								>
 									<p>{overAllError}</p>
