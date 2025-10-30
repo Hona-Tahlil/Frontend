@@ -16,7 +16,7 @@ interface DatePickerProps {
 	relative?: boolean;
 }
 
-export default function DatePicker({
+export default function OldDatePicker({
 	from = 10,
 	to = 8,
 	relative = true,

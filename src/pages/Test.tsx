@@ -1,6 +1,5 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
-import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { Input } from "@/components/Custom/Input/Input";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
@@ -15,6 +14,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/Custom/Select/Select";
+import { DatePicker } from "@/components/Custom/DatePicker/DatePicker";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -72,6 +72,7 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
+						<DatePicker from={11} to={10} />
 						<Checkbox
 							name="love"
 							classes={{ textClassName: "text-[17px]" }}
@@ -103,8 +104,6 @@ function Test() {
 							size="15px"
 							text={"آقا عشق"}
 						/>
-
-						<DatePicker />
 
 						<Select name="akhoond">
 							<SelectTrigger className="w-45">

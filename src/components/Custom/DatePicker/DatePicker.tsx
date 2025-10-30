@@ -1,124 +1,83 @@
-import { useEffect, useRef, useState } from "react";
-import {
-	motion,
-	AnimatePresence,
-	useMotionValue,
-	animate,
-	useAnimationFrame,
-	useTransform,
-} from "framer-motion";
-
-const DatePicker = ({
-	min = 0,
-	max = 59,
-	value,
-	onChange,
-}: {
-	min?: number;
-	max?: number;
-	value: number;
-	onChange: (v: number) => void;
-}) => {
-	const ref = useRef<HTMLDivElement>(null);
-	const [cHeight, setCHeight] = useState(0);
-	const [step, setStep] = useState(40);
-
-	useEffect(() => {
-		console.log("This worlds is a wasteland , please let me go");
-		const el = ref.current;
-		console.log(el);
-		if (!el) return;
-		const height = el.clientHeight;
-		setCHeight(height);
-		setStep(height / 3);
-		console.log(height);
-	}, []);
-
-	const y = useMotionValue(0);
+interface DatePickerProps {
+	classes?: {
+		className?: string;
+		numberRollerClassName?: string;
+		textClassName?: string;
+		containerClassName?: string;
+	};
+	from: number;
+	to: number;
+	relative: boolean;
+}
+export function DatePicker({
+	classes,
+	from = 10,
+	to = 8,
+	relative = true,
+}: DatePickerProps) {
+	const currentPersianYear = parseInt(
+		new Intl.DateTimeFormat("fa-IR", {
+			year: "numeric",
+			numberingSystem: "latn",
+		}).format(new Date()),
+	);
+	const [year, setYear] = useState(currentPersianYear);
+	const [month, setMonth] = useState(1);
+	const [day, setDay] = useState(2);
 	return (
-		<div
-			ref={ref}
-			className="relative h-50 w-40 bg-red-400 overflow-hidden text-center select-none"
-		>
-			<motion.div
-				drag="y"
-				dragElastic={0.2} // optional, controls how "stretchy" the drag feels
-				dragMomentum={false}
-				style={{
-					y,
-				}}
-				onDragEnd={() => {
-					// Snap y to nearest multiple of `step`
-					const currentY = y.get();
-					const snappedY = Math.round(currentY / step) * step;
-					console.log(snappedY / step);
-					animate(y, snappedY, {
-						type: "spring",
-						stiffness: 300,
-						damping: 30,
-					});
-				}}
-				className="flex flex-col items-center"
+		<div className={cn("flex gap-4", classes?.className)} dir="rtl">
+			<div
+				className={cn(
+					"flex flex-col items-center justify-center",
+					classes?.containerClassName,
+				)}
 			>
-				{Array.from({ length: 100 }, (_, i) => (
-					<Number key={i} index={i} />
-				))}
-			</motion.div>
+				<div>
+					<p className={cn("text-3xl", classes?.textClassName)}>روز</p>
+				</div>
+				<NumberRoller
+					value={day}
+					onChange={setDay}
+					className={classes?.numberRollerClassName}
+					min={1}
+					max={month > 6 ? 30 : 31}
+				/>
+			</div>
+			<div className={cn("flex flex-col items-center justify-center")}>
+				<div>
+					<p className={cn("text-3xl", classes?.textClassName)}>ماه</p>
+				</div>
+				<NumberRoller
+					value={month}
+					onChange={setMonth}
+					className={classes?.numberRollerClassName}
+					min={1}
+					max={12}
+				/>
+			</div>
+			<div
+				className={cn(
+					"flex flex-col items-center justify-center",
+					classes?.containerClassName,
+				)}
+			>
+				<div>
+					<p className={cn("text-3xl", classes?.textClassName)}>سال</p>
+				</div>
+				<NumberRoller
+					value={year}
+					onChange={setYear}
+					className={classes?.numberRollerClassName}
+					min={relative ? currentPersianYear - from : from}
+					max={relative ? currentPersianYear + to : to}
+					repeat={1}
+					circular={false}
+					startFromMiddle={true}
+				/>
+			</div>
 		</div>
 	);
-};
-
-export const Number = ({ index }: { index: number }) => {
-	const ref = useRef<HTMLDivElement>(null);
-	const yRelative = useMotionValue(0);
-	const [grandParentHeight, setGrandParentHeight] = useState(0);
-	const [selfHeight, setSelfHeight] = useState(0);
-
-	useEffect(() => {
-		const el = ref.current;
-		if (!el || !el.parentElement || !el.parentElement.parentElement) return;
-		const height = el.parentElement.parentElement.clientHeight;
-		setGrandParentHeight(height);
-		console.log(height);
-		requestAnimationFrame(() => {
-			setSelfHeight(el.clientHeight);
-			console.log(el.clientHeight);
-		});
-	}, []);
-
-	useAnimationFrame(() => {
-		const el = ref.current;
-		if (!el || !el.parentElement || !el.parentElement.parentElement) return;
-
-		const grandParentRect =
-			el.parentElement.parentElement.getBoundingClientRect();
-		const rect = el.getBoundingClientRect();
-		yRelative.set(rect.top - grandParentRect.top);
-	});
-
-	const fontWeight = useTransform(
-		yRelative,
-		[
-			0,
-			grandParentHeight / 2 - selfHeight / 2,
-			grandParentHeight - selfHeight / 2,
-		],
-		[400, 900, 200],
-	);
-
-	return (
-		<motion.div
-			ref={ref}
-			style={{
-				height: grandParentHeight / 3,
-				fontWeight,
-				originY: 0.5,
-			}}
-			className="w-fit bg-transparent text-center flex justify-center items-center"
-		>
-			{index}
-		</motion.div>
-	);
-};
-
-export default DatePicker;
+}
+import { cn } from "@/lib/utils";
+import { NumberRoller } from "./NumberRoller";
+import { useState } from "react";
