@@ -1,14 +1,17 @@
-export interface LoginPayload {
+export interface SignupPayload {
+	name: string;
 	email: string;
-	username: string | null;
 	password: string;
 }
 
-export interface LoginResponse {
-	user: {
-		id: number;
-		name: string;
-		email: string;
-		username: string;
-	};
+export interface SignupResponse {
+	statusCode: number;
+	messages?: LoginResponseErrors;
+	message?: string;
+}
+
+export interface SignupResponseErrors {
+	name: string;
+	email?: string;
+	password?: string;
 }

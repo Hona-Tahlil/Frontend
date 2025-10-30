@@ -18,6 +18,8 @@ import {
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
+import { signupService } from "@/services/authService";
+import CustomToast from "@/components/Custom/CustomToast";
 
 export default function SignupForm() {
 	const [open, setOpen] = useState(false);
@@ -38,16 +40,27 @@ export default function SignupForm() {
 				</h1>
 				<Formik
 					{...SignupSchema}
-					onSubmit={(values) => {
+					onSubmit={(values, { setErrors }) => {
 						console.log("Form values:", values);
-						setTimeout(openDialog, 1000);
+						signupService({ ...values }).then((data) => {
+							if (data.statusCode === 200) {
+								openDialog();
+							} else if (data.messages) {
+								setErrors(data.messages);
+							} else if (data.message) {
+								CustomToast(data.message);
+							} else {
+								CustomToast("خطای غیر منتظره");
+							}
+						});
+						//setTimeout(openDialog, 1000);
 					}}
 				>
 					{({ isSubmitting }) => (
 						<Form className="mt-6 rounded flex flex-col gap-4 items-center w-full">
 							<Input
-								name="username"
-								placeholder="نام کاربری"
+								name="name"
+								placeholder="نام و نام خانوادگی"
 								classes={{
 									className: "h-10 w-full",
 								}}
@@ -121,30 +134,7 @@ export default function SignupForm() {
 							<DialogHeader>
 								<DialogTitle>تایید ایمیل</DialogTitle>
 							</DialogHeader>
-							<p className="text-center">
-								لطفا کدی که برای ایمیل شما ارسال شده است را وارد کنید
-							</p>
-							<InputOTP maxLength={6}>
-								<InputOTPGroup>
-									<InputOTPSlot index={0} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={1} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={2} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={3} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={4} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={5} />
-								</InputOTPGroup>
-							</InputOTP>
-							<Button onClick={closeDialog}>تایید</Button>
+							<p className="text-center">لطفا ایمیل خود را چک کنید.</p>
 						</DialogContent>
 					</Dialog>
 				</div>
