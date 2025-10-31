@@ -67,9 +67,6 @@ export const NumberRoller = ({
 		const middleRepeat = Math.floor(repeat / 2);
 		if (value === undefined) {
 			if (startFromMiddle) {
-				//console.log(
-				//	"Current value " + (min + 1 + Math.floor((itemCount * repeat) / 2)),
-				//);
 				onChange?.(min + 1 + Math.floor((itemCount * repeat) / 2));
 				y.set(-(Math.floor((itemCount * repeat) / 2) * step));
 			} else {
@@ -81,7 +78,12 @@ export const NumberRoller = ({
 			console.log("Your thing : " + (value - min));
 			console.log(min);
 			console.log(value);
-			y.set(-((itemCount * middleRepeat - 1 + (value - min)) * step));
+			//y.set(-((itemCount * middleRepeat - 1 + (value - min)) * step));
+			animate(y, -((itemCount * middleRepeat - 1 + (value - min)) * step), {
+				type: "spring",
+				stiffness: 300,
+				damping: 30,
+			});
 		}
 	}, [step, min, max]);
 	const y = useMotionValue(0);

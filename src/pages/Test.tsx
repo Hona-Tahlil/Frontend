@@ -72,7 +72,14 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
-						<PetDatePicker from={10} to={8} relative={true} name="niceone" />
+						<PetDatePicker
+							from={10}
+							to={8}
+							relative={true}
+							name="niceone"
+							smallFontSize="20px"
+							bigFontSize="30px"
+						/>
 
 						<Checkbox
 							name="love"

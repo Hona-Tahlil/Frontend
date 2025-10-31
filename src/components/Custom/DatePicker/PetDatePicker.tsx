@@ -77,6 +77,10 @@ export function PetDatePicker({
 					<p className={cn("text-3xl", classes?.textClassName)}>ماه</p>
 				</div>
 				<NumberRoller
+					smallFontSize={smallFontSize}
+					bigFontSize={bigFontSize}
+					smallFontWeight={smallFontWeight}
+					bigFontWeight={bigFontWeight}
 					value={month}
 					onChange={setMonth}
 					classes={classes?.numberRollerClasses}
@@ -94,6 +98,10 @@ export function PetDatePicker({
 					<p className={cn("text-3xl", classes?.textClassName)}>سال</p>
 				</div>
 				<NumberRoller
+					smallFontSize={smallFontSize}
+					bigFontSize={bigFontSize}
+					smallFontWeight={smallFontWeight}
+					bigFontWeight={bigFontWeight}
 					value={year}
 					onChange={setYear}
 					classes={classes?.numberRollerClasses}
