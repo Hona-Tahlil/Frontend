@@ -8,6 +8,8 @@ import {
   useMobile,
   useTablet,
 } from "@/hooks/ResponsiveHooks";
+import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
+import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -28,7 +30,7 @@ function Test() {
 	return (
 		<div className="flex flex-col items-center">
 			<Formik
-				initialValues={{ email: "", password: "", password2: "", love: false }}
+				initialValues={{ email: "", password: "niceone", love: false }}
 				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
@@ -41,7 +43,8 @@ function Test() {
 								name="email"
 								shadow={true}
 								classes={{
-									className: "h-10",
+									className: "h-20",
+									inputClassName: "!text-[20px]",
 									errorClassName: "px-5",
 								}}
 								onChangeWrappers={[adjustInputDirection]}
@@ -97,9 +100,12 @@ function Test() {
 						<Button
 							type="submit"
 							size={"giant"}
+							variant={"outline"}
+							shadow={false}
+							boxShadow={true}
 							bold={true}
 							isLoading={isSubmitting}
-							className="bg-primary-800"
+							className="mb-3"
 						>
 							ورود
 						</Button>
@@ -136,6 +142,25 @@ function Test() {
 			<Button variant={"link"} shadow={false} bold={true}>
 				فراموشی رمز عبور
 			</Button>
+			<MultiStage>
+				<MultiStage.Header>
+					<MultiStage.StageHeader index={0}>
+						بررسی اطلاعات
+					</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
+				</MultiStage.Header>
+
+				<MultiStage.StageHolder>
+					<MultiStage.Stage index={0}>
+						<p>Account form goes here</p>
+					</MultiStage.Stage>
+
+					<MultiStage.Stage index={1}>
+						<p>Profile form goes here</p>
+					</MultiStage.Stage>
+				</MultiStage.StageHolder>
+			</MultiStage>
 		</div>
 	);
 }
