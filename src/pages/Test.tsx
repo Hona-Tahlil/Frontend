@@ -15,6 +15,7 @@ import {
 	SelectValue,
 } from "@/components/Custom/Select/Select";
 import { PetDatePicker } from "@/components/Custom/DatePicker/PetDatePicker";
+import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -58,6 +59,7 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
+						<DatePicker />
 
 						<div className="mt-5 w-50">
 							<Input
