@@ -23,7 +23,7 @@ function Test() {
 	return (
 		<div className="flex flex-col items-center">
 			<Formik
-				initialValues={{ email: "", password: "", password2: "", love: false }}
+				initialValues={{ email: "", password: "niceone", love: false }}
 				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
@@ -36,7 +36,8 @@ function Test() {
 								name="email"
 								shadow={true}
 								classes={{
-									className: "h-10",
+									className: "h-20",
+									inputClassName: "!text-[20px]",
 									errorClassName: "px-5",
 								}}
 								onChangeWrappers={[adjustInputDirection]}
@@ -92,9 +93,12 @@ function Test() {
 						<Button
 							type="submit"
 							size={"giant"}
+							variant={"outline"}
+							shadow={false}
+							boxShadow={true}
 							bold={true}
 							isLoading={isSubmitting}
-							className="bg-primary-800"
+							className="mb-3"
 						>
 							ورود
 						</Button>

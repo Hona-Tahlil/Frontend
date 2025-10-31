@@ -50,6 +50,10 @@
 		url("./assets/fonts/ttf/Alibaba-Regular.ttf") format("truetype");
 }
 
+.shadow-lg {
+	box-shadow: 0 4px 4px 1px rgba(0, 0, 0, 0.25);
+}
+
 :root {
 	font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
 	line-height: 1.5;
@@ -75,16 +79,16 @@
 	--popover-foreground: oklch(0.145 0 0);
 	--primary: #ff7816;
 	--primary-foreground: oklch(0.985 0 0);
-	--primary-50: #FDF4F1;
-	--primary-100: #FFE4D1;
-	--primary-200: #FED4B9;
-	--primary-300: #FFB985;
-	--primary-400: #FF9E57;
-	--primary-500: #FF8D39;
-	--primary-600: #FF7816;
-	--primary-700: #FF6C00;
-	--primary-800: #EE6500;
-	--primary-900: #D75B00;
+	--primary-50: #fdf4f1;
+	--primary-100: #ffe4d1;
+	--primary-200: #fed4b9;
+	--primary-300: #ffb985;
+	--primary-400: #ff9e57;
+	--primary-500: #ff8d39;
+	--primary-600: #ff7816;
+	--primary-700: #ff6c00;
+	--primary-800: #ee6500;
+	--primary-900: #d75b00;
 	--primary-hover: #e16e19;
 	--primary-focus: #ff7816;
 	--primary-focus-outline: #f5c9a8;
@@ -92,28 +96,28 @@
 	--primary-disabled: #f5c9a8;
 	--primary-disabled-foreground: #9ea2ae;
 	--input-autocomplete: #f9e0cd;
-	--secondary-50: #E6F1ED;
-	--secondary-100: #CAE0DF;
-	--secondary-200: #ABCFCC;
-	--secondary-300: #94BAB8;
-	--secondary-400: #6E9895;
-	--secondary-500: #537F7C;
-	--secondary-600: #386D6A;
-	--secondary-700: #325E5C;
+	--secondary-50: #e6f1ed;
+	--secondary-100: #cae0df;
+	--secondary-200: #abcfcc;
+	--secondary-300: #94bab8;
+	--secondary-400: #6e9895;
+	--secondary-500: #537f7c;
+	--secondary-600: #386d6a;
+	--secondary-700: #325e5c;
 	--secondary-800: #274947;
-	--secondary-900: #22403E;
+	--secondary-900: #22403e;
 	--secondary: oklch(0.97 0 0);
 	--secondary-foreground: oklch(0.205 0 0);
-	--charcoal-50: #E6F1ED;
-	--charcoal-100: #C8C7C3;
-	--charcoal-200: #B4B3AD;
-	--charcoal-300: #A19F98;
-	--charcoal-400: #8E8B83;
-	--charcoal-500: #79776E;
-	--charcoal-600: #64625B;
-	--charcoal-700: #4E4D47;
+	--charcoal-50: #e6f1ed;
+	--charcoal-100: #c8c7c3;
+	--charcoal-200: #b4b3ad;
+	--charcoal-300: #a19f98;
+	--charcoal-400: #8e8b83;
+	--charcoal-500: #79776e;
+	--charcoal-600: #64625b;
+	--charcoal-700: #4e4d47;
 	--charcoal-800: #393834;
-	--charcoal-900: #1C1B19;
+	--charcoal-900: #1c1b19;
 	--placeholder: #8e8e93;
 	--stage-header-inactive-background: #eef2f7;
 	--stage-header-inactive-border: #cbd5e1;
