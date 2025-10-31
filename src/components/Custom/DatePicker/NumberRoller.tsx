@@ -11,20 +11,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDesktop } from "@/hooks/ResponsiveHooks";
 
-export const NumberRoller = ({
-	min = 0,
-	max = 59,
-	repeat = 5,
-	smallFontSize = "15px",
-	bigFontSize = "30px",
-	smallFontWeight = 300,
-	bigFontWeight = 900,
-	className,
-	startFromMiddle = false,
-	onChange,
-	value,
-	circular = true,
-}: {
+export interface NumberRollerClasses {
+	className?: string;
+	seperatorClassName?: string;
+}
+interface NumberRollerProps {
 	min?: number;
 	max?: number;
 	repeat?: number;
@@ -34,10 +25,24 @@ export const NumberRoller = ({
 	bigFontWeight?: number;
 	startFromMiddle?: boolean;
 	circular?: boolean;
-	className?: string;
+	classes?: NumberRollerClasses;
 	onChange?: (v: number) => void;
 	value?: number;
-}) => {
+}
+export const NumberRoller = ({
+	min = 0,
+	max = 59,
+	repeat = 5,
+	smallFontSize = "15px",
+	bigFontSize = "30px",
+	smallFontWeight = 300,
+	bigFontWeight = 900,
+	classes,
+	startFromMiddle = false,
+	onChange,
+	value,
+	circular = true,
+}: NumberRollerProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const [cHeight, setCHeight] = useState(0);
 	const [step, setStep] = useState(0);
@@ -78,18 +83,22 @@ export const NumberRoller = ({
 			console.log(value);
 			y.set(-((itemCount * middleRepeat - 1 + (value - min)) * step));
 		}
-	}, [step]);
+	}, [step, min, max]);
 	const y = useMotionValue(0);
 	function goUp() {
 		const currentY = y.get() + step;
 		const snappedY = Math.round(currentY / step) * step;
 		if (snappedY > bottomConstraint) {
+			const testvalue = min + ((-(bottomConstraint / step) + 1) % itemCount);
+			onChange?.(testvalue);
 			animate(y, bottomConstraint, {
 				type: "spring",
 				stiffness: 300,
 				damping: 30,
 			});
 		} else {
+			const testvalue = min + ((-(snappedY / step) + 1) % itemCount);
+			onChange?.(testvalue);
 			animate(y, snappedY, {
 				type: "spring",
 				stiffness: 300,
@@ -101,12 +110,16 @@ export const NumberRoller = ({
 		const currentY = y.get() - step;
 		const snappedY = Math.round(currentY / step) * step;
 		if (snappedY < topConstraint) {
+			const testvalue = min + ((-(topConstraint / step) + 1) % itemCount);
+			onChange?.(testvalue);
 			animate(y, topConstraint, {
 				type: "spring",
 				stiffness: 300,
 				damping: 30,
 			});
 		} else {
+			const testvalue = min + ((-(snappedY / step) + 1) % itemCount);
+			onChange?.(testvalue);
 			animate(y, snappedY, {
 				type: "spring",
 				stiffness: 300,
@@ -127,14 +140,36 @@ export const NumberRoller = ({
 				ref={ref}
 				className={cn(
 					"relative h-60 w-40 bg-transparent overflow-hidden text-center select-none",
-					className,
+					classes?.className,
 				)}
 			>
 				<div className="absolute w-full h-full pointer-events-none flex flex-col justify-between">
-					<div className="w-full h-[3px] bg-transparent"></div>
-					<div className="w-full h-[3px] bg-black/49"></div>
-					<div className="w-full h-[3px] bg-black/49"></div>
-					<div className="w-full h-[3px] bg-transparent"></div>
+					<div
+						className={cn(
+							"w-full h-[3px]",
+							classes?.seperatorClassName,
+							"bg-transparent",
+						)}
+					></div>
+					<div
+						className={cn(
+							"w-full h-[3px] bg-black/49",
+							classes?.seperatorClassName,
+						)}
+					></div>
+					<div
+						className={cn(
+							"w-full h-[3px] bg-black/49",
+							classes?.seperatorClassName,
+						)}
+					></div>
+					<div
+						className={cn(
+							"w-full h-[3px]",
+							classes?.seperatorClassName,
+							"bg-transparent",
+						)}
+					></div>
 				</div>
 				<motion.div
 					drag="y"

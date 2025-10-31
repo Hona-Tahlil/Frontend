@@ -99,9 +99,12 @@ const SelectContent = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
 >(({ className, children, ...props }, ref) => (
 	<ShadCnSelectContent
+		side="bottom"
+		sideOffset={-10}
+		avoidCollisions={false}
 		ref={ref}
 		className={cn(
-			"rounded-t-none rounded-b-2xl border-1 border-black/40 border-t-transparent !-translate-y-2 min-w-0 max-h-60 overflow-y-auto",
+			"rounded-t-none rounded-b-2xl border-1 border-black/40 border-t-transparent min-w-0 max-h-60 overflow-y-auto",
 			className,
 		)}
 		{...props}

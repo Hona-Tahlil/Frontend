@@ -14,7 +14,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/Custom/Select/Select";
-import { DatePicker } from "@/components/Custom/DatePicker/DatePicker";
+import { PetDatePicker } from "@/components/Custom/DatePicker/PetDatePicker";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -72,7 +72,8 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
-						<DatePicker from={11} to={10} />
+						<PetDatePicker from={10} to={8} relative={true} name="niceone" />
+
 						<Checkbox
 							name="love"
 							classes={{ textClassName: "text-[17px]" }}
