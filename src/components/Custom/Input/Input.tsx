@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
 import { useState } from "react";
+import type { InputProps } from "@/types/inputTypes";
 
 const inputVariants = cva(
 	"flex h-13 w-full !text-[15px] rounded-full border border-[1px] border-black/40 bg-white font-[Alibaba] font-bold px-6 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
@@ -28,25 +29,7 @@ const inputVariants = cva(
 	},
 );
 
-export interface InputProps
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "className">,
-		VariantProps<typeof inputVariants> {
-	asChild?: boolean;
-	width?: number;
-	classes?: InputClass;
-	onChangeWrappers?: ((
-		handler: (event: React.ChangeEvent<HTMLInputElement>) => void,
-	) => (event: React.ChangeEvent<HTMLInputElement>) => void)[];
-}
-
-export interface InputClass {
-	className?: string;
-	errorClassName?: string;
-	inputClassName?: string;
-	onChangeWrapper?: (
-		handler: (event: React.ChangeEvent<HTMLInputElement>) => void,
-	) => (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
+export type InputVariants = VariantProps<typeof inputVariants>;
 
 function Input({
 	classes,
