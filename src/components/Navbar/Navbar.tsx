@@ -24,10 +24,8 @@ import { href } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import sadraUrl from "@/assets/about_us/teamMember/sadra.webp";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import type { NavbarProps } from "@/types/navbarTypes";
-
-
 
 const MOBILE_NAV_LINKS = [
   {
@@ -101,14 +99,13 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
       className="z-20 flex justify-between bg-white h-13 items-center px-10 lg:px-20 font-[Alibaba] shadow-lg w-screen fixed"
     >
       <div className="flex h-full items-center ">
-        {isMobile && (
+        {isMobile ? (
           <MobileSidebar
             isUserLoggedin={true}
             links={MOBILE_NAV_LINKS}
             userOptions={USER_OPTIONS}
           />
-        )}
-        {!isMobile && (
+        ) : (
           <Link to={"/landing"} className="h-[70%]">
             <img src={logoImage} alt="petyar logo" className="h-full" />
           </Link>
