@@ -25,10 +25,9 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import sadraUrl from "@/assets/about_us/teamMember/sadra.webp";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
 import {Link} from 'react-router-dom';
+import type { NavbarProps } from "@/types/navbarTypes";
 
-type NavbarProps = {
-  isUserLoggedin: boolean;
-};
+
 
 const MOBILE_NAV_LINKS = [
   {
@@ -37,7 +36,7 @@ const MOBILE_NAV_LINKS = [
     icon: <Home className="h-5" />,
   },
   {
-    label: "رررررر",
+    label: "رزرو",
     href: "#services",
     icon: <HandHeart className="h-5" />,
   },

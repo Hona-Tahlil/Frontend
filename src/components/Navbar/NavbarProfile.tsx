@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import React from "react";
-import defaultProfileImage from "@/assets/images/profile-circle.png";
-import { ChevronDown, Heart, LogOut, PawPrint } from "lucide-react";
+import { ChevronDown, CircleUser, Heart, LogOut, PawPrint } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -20,6 +19,7 @@ import {
 import { Button } from "@/components/ui/button";
 
 export default function NavbarProfile() {
+  const userImage = "";
   return (
     <div className="h-full flex items-center gap-0.5 text-right lg:ml-7">
       <DropdownMenu>
@@ -28,10 +28,16 @@ export default function NavbarProfile() {
             <Avatar className="h-full">
               <AvatarImage
                 className="h-full"
-                src={defaultProfileImage}
+                src={userImage}
                 loading="lazy"
                 decoding="async"
               />
+              <AvatarFallback>
+                <CircleUser
+                  className="h-full w-full"
+                  strokeWidth={1.5}
+                ></CircleUser>
+              </AvatarFallback>
             </Avatar>
             <ChevronDown className="" size={15} strokeWidth={4} />
           </div>
