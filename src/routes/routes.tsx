@@ -8,6 +8,7 @@ import AboutUs from "@/pages/AboutUs";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import { PetSitterSignup } from "@/pages/PetSitterSignup";
 
 export const router = createBrowserRouter([
 	{
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/AboutUs",
 				element: <AboutUs />,
+			},
+			{
+				path: "/petsittersignup",
+				element: <PetSitterSignup />,
 			},
 		],
 	},

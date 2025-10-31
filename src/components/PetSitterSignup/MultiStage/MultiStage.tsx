@@ -17,7 +17,13 @@ function useMultiStage() {
 	return ctx;
 }
 
-export function MultiStage({ children }: { children: ReactNode }) {
+export function MultiStage({
+	children,
+	className,
+}: {
+	children: ReactNode;
+	className?: string;
+}) {
 	const [currentStage, setCurrentStage] = useState(0);
 	const [animationDir, setAnimationDir] = useState(1);
 
@@ -25,7 +31,10 @@ export function MultiStage({ children }: { children: ReactNode }) {
 		<MultiStageContext.Provider
 			value={{ currentStage, setCurrentStage, animationDir, setAnimationDir }}
 		>
-			<div dir="rtl" className="w-full px-2 py-2">
+			<div
+				dir="rtl"
+				className={cn("w-full flex flex-col items-center px-2 py-2", className)}
+			>
 				{children}
 			</div>
 		</MultiStageContext.Provider>
@@ -36,10 +45,18 @@ function Dot() {
 	return <div className="flex-1 h-[2px] bg-gray-400 mx-2" />;
 }
 
-function Header({ children }: { children: ReactNode }) {
+function Header({
+	children,
+	className,
+}: {
+	children: ReactNode;
+	className?: string;
+}) {
 	const childrenArray = React.Children.toArray(children);
 	return (
-		<div className="flex w-full gap-2 justify-center items-center">
+		<div
+			className={cn("flex w-full gap-2 justify-center items-center", className)}
+		>
 			{childrenArray.flatMap((child, index) => {
 				return (
 					<>
@@ -128,7 +145,7 @@ function Stage({ index, children, className }: StageProps) {
 					exit="exit"
 					transition={{ duration: 1 }}
 					className={cn(
-						"w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl mt-4",
+						"w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl mt-4 right-1/2 translate-x-[50%]",
 						className,
 					)}
 				>
