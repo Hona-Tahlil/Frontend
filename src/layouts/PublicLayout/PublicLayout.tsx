@@ -5,7 +5,7 @@ import Footer from "@/components/Footer/Footer";
 
 const PublicLayout = () => {
 	return (
-		<div className="font-[alibaba]">
+		<div className="font-[alibaba] rtl">
 			<Toaster
 				position="bottom-right"
 				richColors={true}
