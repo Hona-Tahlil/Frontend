@@ -10,9 +10,14 @@ const buttonVariants = cva("font-[Alibaba]", {
 			default:
 				"bg-primary rounded-[27px] text-primary-foreground border-[3.5px] border-transparent hover:bg-primary-hover disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground active:bg-primary-press active:border-transparent focus:border-primary-focus-outline cursor-pointer",
 			link: "bg-transparent shadow-none hover:bg-transparent border-[0px] text-primary underline-offset-6 hover:underline active:text-primary-press active:underline",
+			outline:
+				"border-2 border-primary text-primary rounded-[27px] bg-transparent hover:text-white active:bg-primary-press active:border-transparent",
 		},
 		shadow: {
 			true: "drop-shadow-lg",
+		},
+		boxShadow: {
+			true: "shadow-lg",
 		},
 		bold: {
 			true: "font-bold",
@@ -24,6 +29,7 @@ const buttonVariants = cva("font-[Alibaba]", {
 	},
 	defaultVariants: {
 		shadow: true,
+		boxShadow: false,
 		size: "default",
 		variant: "default",
 	},
@@ -39,6 +45,7 @@ function Button({
 	className,
 	size,
 	shadow,
+	boxShadow,
 	bold,
 	variant,
 	loadingClassName,
@@ -49,7 +56,9 @@ function Button({
 	return (
 		<ShadCnButton
 			disabled={isLoading}
-			className={cn(buttonVariants({ variant, size, shadow, bold, className }))}
+			className={cn(
+				buttonVariants({ variant, size, shadow, boxShadow, bold, className }),
+			)}
 			{...props}
 		>
 			{isLoading && (

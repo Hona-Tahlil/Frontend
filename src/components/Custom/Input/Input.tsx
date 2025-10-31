@@ -42,6 +42,7 @@ export interface InputProps
 export interface InputClass {
 	className?: string;
 	errorClassName?: string;
+	inputClassName?: string;
 	onChangeWrapper?: (
 		handler: (event: React.ChangeEvent<HTMLInputElement>) => void,
 	) => (event: React.ChangeEvent<HTMLInputElement>) => void;
@@ -106,6 +107,7 @@ function Input({
 					className={cn(
 						inputVariants({ shadow }),
 						"h-full",
+						classes?.inputClassName,
 						customStyles.input,
 						hasError ? "border-red-500 text-red-500 drop-shadow-red-500" : "",
 						hasError && isDesktop ? "pr-10.5" : "",
