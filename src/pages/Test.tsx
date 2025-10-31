@@ -1,6 +1,7 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
+import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
@@ -33,14 +34,8 @@ function Test() {
 	return (
 		<div className="flex flex-col items-center">
 			<Formik
-				initialValues={{
-					email: "",
-					password: "",
-					password2: "",
-					love: false,
-					akhoond: "",
-				}}
-				//validationSchema={validationSchema}
+				initialValues={{ email: "", password: "niceone", love: false }}
+				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
@@ -52,7 +47,8 @@ function Test() {
 								name="email"
 								shadow={true}
 								classes={{
-									className: "h-10",
+									className: "h-20",
+									inputClassName: "!text-[20px]",
 									errorClassName: "px-5",
 								}}
 								type="email"
@@ -135,8 +131,12 @@ function Test() {
 						<Button
 							type="submit"
 							size={"giant"}
+							variant={"outline"}
+							shadow={false}
+							boxShadow={true}
 							bold={true}
 							isLoading={isSubmitting}
+							className="mb-3"
 						>
 							ورود
 						</Button>
@@ -173,6 +173,25 @@ function Test() {
 			<Button variant={"link"} shadow={false} bold={true}>
 				فراموشی رمز عبور
 			</Button>
+			<MultiStage>
+				<MultiStage.Header>
+					<MultiStage.StageHeader index={0}>
+						بررسی اطلاعات
+					</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
+				</MultiStage.Header>
+
+				<MultiStage.StageHolder>
+					<MultiStage.Stage index={0}>
+						<p>Account form goes here</p>
+					</MultiStage.Stage>
+
+					<MultiStage.Stage index={1}>
+						<p>Profile form goes here</p>
+					</MultiStage.Stage>
+				</MultiStage.StageHolder>
+			</MultiStage>
 		</div>
 	);
 }
