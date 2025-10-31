@@ -99,6 +99,7 @@ function Test() {
 							size={"giant"}
 							bold={true}
 							isLoading={isSubmitting}
+							className="bg-primary-800"
 						>
 							ورود
 						</Button>
