@@ -7,13 +7,7 @@ import React, {
 } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-type MultiStageContextType = {
-	currentStage: number;
-	animationDir: number;
-	setCurrentStage: (i: number) => void;
-	setAnimationDir: (i: number) => void;
-};
+import type { MultiStageContextType } from "@/types/multiStageComponentTypes";
 
 const MultiStageContext = createContext<MultiStageContextType | null>(null);
 
