@@ -1,6 +1,7 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
+import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
@@ -130,6 +131,25 @@ function Test() {
 			<Button variant={"link"} shadow={false} bold={true}>
 				فراموشی رمز عبور
 			</Button>
+			<MultiStage>
+				<MultiStage.Header>
+					<MultiStage.StageHeader index={0}>
+						بررسی اطلاعات
+					</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
+				</MultiStage.Header>
+
+				<MultiStage.StageHolder>
+					<MultiStage.Stage index={0}>
+						<p>Account form goes here</p>
+					</MultiStage.Stage>
+
+					<MultiStage.Stage index={1}>
+						<p>Profile form goes here</p>
+					</MultiStage.Stage>
+				</MultiStage.StageHolder>
+			</MultiStage>
 		</div>
 	);
 }
