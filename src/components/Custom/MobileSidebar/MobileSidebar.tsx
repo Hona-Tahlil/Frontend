@@ -18,18 +18,7 @@ import sadraUrl from "@/assets/about_us/teamMember/sadra.webp";
 import NavbarItem from "@/components/Navbar/NavbarItem";
 import logoImage from "@/assets/images/Logo.svg";
 import { Link } from "react-router-dom";
-
-type MobileSidebar = {
-  isUserLoggedin: boolean;
-  links: NavLink[];
-  userOptions: NavLink[];
-};
-
-type NavLink = {
-  label: string;
-  href: string;
-  icon: JSX.Element;
-};
+import type { MobileSidebar } from "@/types/navbarTypes";
 
 export default function MobileSidebar({
   isUserLoggedin,
