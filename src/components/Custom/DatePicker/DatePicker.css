@@ -17,6 +17,31 @@
 	background-color: var(--color-primary) !important;
 }
 
+.rmdp-day span:hover {
+	background-color: var(--color-primary-200) !important;
+	color: black !important;
+}
+
 .rmdp-day.rmdp-today span {
-	background-color: var(--color-primary) !important;
+	background-color: white !important;
+	color: black !important;
+	border: 1px solid var(--color-primary);
+}
+
+.rmdp-day.rmdp-today span:hover {
+	background-color: var(--color-primary-300) !important;
+	color: white !important;
+}
+
+.rmdp-week-day {
+	color: var(--color-primary) !important;
+	font-weight: 600;
+}
+
+.rmdp-week .rmdp-week-day {
+	font-weight: bold;
+}
+
+.rmdp-week .rmdp-week-day:nth-child(7) {
+	color: #ef4444 !important;
 }

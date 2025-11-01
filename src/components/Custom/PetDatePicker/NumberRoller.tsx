@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
 	motion,
-	AnimatePresence,
 	useMotionValue,
 	animate,
 	useAnimationFrame,
@@ -10,6 +9,7 @@ import {
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useDesktop } from "@/hooks/ResponsiveHooks";
+import { translateNumber } from "@/utils/translateNumber";
 
 export interface NumberRollerClasses {
 	className?: string;
@@ -70,14 +70,10 @@ export const NumberRoller = ({
 				onChange?.(min + 1 + Math.floor((itemCount * repeat) / 2));
 				y.set(-(Math.floor((itemCount * repeat) / 2) * step));
 			} else {
-				console.log("Current value " + min);
 				onChange?.(min);
 				y.set(-((itemCount * middleRepeat - 1) * step));
 			}
 		} else {
-			console.log("Your thing : " + (value - min));
-			console.log(min);
-			console.log(value);
 			//y.set(-((itemCount * middleRepeat - 1 + (value - min)) * step));
 			animate(y, -((itemCount * middleRepeat - 1 + (value - min)) * step), {
 				type: "spring",
@@ -85,6 +81,7 @@ export const NumberRoller = ({
 				damping: 30,
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [step, min, max]);
 	const y = useMotionValue(0);
 	function goUp() {
@@ -189,8 +186,8 @@ export const NumberRoller = ({
 									? bottomConstraint
 									: topConstraint
 								: Math.round(currentY / step) * step;
-						const testvalue = min + ((-(snappedY / step) + 1) % itemCount);
-						onChange?.(testvalue);
+						const newvalue = min + ((-(snappedY / step) + 1) % itemCount);
+						onChange?.(newvalue);
 
 						//console.log(testvalue);
 
@@ -202,7 +199,7 @@ export const NumberRoller = ({
 							if (circular) {
 								const middleRepeat = Math.floor(repeat / 2);
 								y.set(
-									-((itemCount * middleRepeat - 1 + (testvalue - min)) * step),
+									-((itemCount * middleRepeat - 1 + (newvalue - min)) * step),
 								);
 							}
 						});
@@ -250,18 +247,6 @@ export const Number = ({
 }) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const yRelative = useMotionValue(0);
-	//const [grandParentHeight, setGrandParentHeight] = useState(0);
-	const [selfHeight, setSelfHeight] = useState(0);
-
-	useEffect(() => {
-		const el = ref.current;
-		if (!el || !el.parentElement || !el.parentElement.parentElement) return;
-		const height = el.parentElement.parentElement.clientHeight;
-		//setGrandParentHeight(height);
-		requestAnimationFrame(() => {
-			setSelfHeight(el.clientHeight);
-		});
-	}, []);
 
 	useAnimationFrame(() => {
 		const el = ref.current;
@@ -295,7 +280,7 @@ export const Number = ({
 			}}
 			className="w-fit bg-transparent text-center flex justify-center items-center"
 		>
-			{index}
+			{translateNumber(index)}
 		</motion.div>
 	);
 };

@@ -1,3 +1,13 @@
+import { cn } from "@/lib/utils";
+import { NumberRoller, type NumberRollerClasses } from "./NumberRoller";
+import { useEffect, useState } from "react";
+import {
+	convertGregorianToJalaliDate,
+	convertJalaliToGregorianDate,
+} from "@/utils/convertJalaliToGeorgian";
+import { useField } from "formik";
+import { toTehranISOString } from "@/utils/toTehranISOString";
+
 interface DatePickerProps {
 	classes?: {
 		className?: string;
@@ -48,7 +58,7 @@ export function PetDatePicker({
 				}),
 			),
 		);
-	}, [year, month, day]);
+	}, [year, month, day, helper]);
 	return (
 		<div className={cn("flex gap-4", classes?.className)} dir="rtl">
 			<div
@@ -68,6 +78,7 @@ export function PetDatePicker({
 					value={day}
 					onChange={setDay}
 					classes={classes?.numberRollerClasses}
+					circular={false}
 					min={1}
 					max={month > 6 ? 30 : 31}
 				/>
@@ -84,6 +95,7 @@ export function PetDatePicker({
 					value={month}
 					onChange={setMonth}
 					classes={classes?.numberRollerClasses}
+					circular={false}
 					min={1}
 					max={12}
 				/>
@@ -115,12 +127,3 @@ export function PetDatePicker({
 		</div>
 	);
 }
-import { cn } from "@/lib/utils";
-import { NumberRoller, type NumberRollerClasses } from "./NumberRoller";
-import { useEffect, useState } from "react";
-import {
-	convertGregorianToJalaliDate,
-	convertJalaliToGregorianDate,
-} from "@/utils/convertJalaliToGeorgian";
-import { useField } from "formik";
-import { toTehranISOString } from "@/utils/toTehranISOString";
