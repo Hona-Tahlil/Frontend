@@ -5,7 +5,7 @@ import Footer from "@/components/Footer/Footer";
 
 const PublicLayout = () => {
 	return (
-		<div className="font-[alibaba] ">
+		<div className="font-[alibaba]">
 			<Toaster
 				position="bottom-right"
 				richColors={true}
@@ -18,8 +18,9 @@ const PublicLayout = () => {
 			/>
 			<GlobalProviders>
 				<Outlet />
-				{/*<Footer />*/}
+				<Footer />
 			</GlobalProviders>
+      		
 		</div>
 	);
 };
