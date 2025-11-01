@@ -1,6 +1,7 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
+import { Textarea } from "@/components/Custom/Textarea/Textarea";
 
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
@@ -91,6 +92,14 @@ function Test() {
 							size="15px"
 							text={"آقا عشق"}
 						/>
+						<div className="px-5 w-full">
+							<Textarea
+								rows={6}
+								scrollbarBorderRadius="10px"
+								className="relative drop-shadow-lg py-3"
+								name="betterakhoond"
+							/>
+						</div>
 						<Button
 							type="submit"
 							size={"giant"}
