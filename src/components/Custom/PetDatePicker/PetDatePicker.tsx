@@ -78,7 +78,7 @@ export function PetDatePicker({
 					value={day}
 					onChange={setDay}
 					classes={classes?.numberRollerClasses}
-					circular={false}
+					circular={true}
 					min={1}
 					max={month > 6 ? 30 : 31}
 				/>

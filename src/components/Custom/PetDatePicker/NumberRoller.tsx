@@ -28,11 +28,12 @@ interface NumberRollerProps {
 	classes?: NumberRollerClasses;
 	onChange?: (v: number) => void;
 	value?: number;
+	size?: number;
 }
 export const NumberRoller = ({
 	min = 0,
 	max = 59,
-	repeat = 5,
+	repeat = 3,
 	smallFontSize = "15px",
 	bigFontSize = "30px",
 	smallFontWeight = 300,
@@ -41,6 +42,7 @@ export const NumberRoller = ({
 	startFromMiddle = false,
 	onChange,
 	value,
+	size = 35,
 	circular = true,
 }: NumberRollerProps) => {
 	const ref = useRef<HTMLDivElement>(null);
@@ -131,7 +133,7 @@ export const NumberRoller = ({
 			{isDesktop && (
 				<ChevronUp
 					className="text-gray-500 cursor-pointer"
-					size={35}
+					size={size}
 					onClick={goUp}
 				/>
 			)}
@@ -222,7 +224,7 @@ export const NumberRoller = ({
 			{isDesktop && (
 				<ChevronDown
 					className="text-gray-500 cursor-pointer"
-					size={35}
+					size={size}
 					onClick={goDown}
 				/>
 			)}

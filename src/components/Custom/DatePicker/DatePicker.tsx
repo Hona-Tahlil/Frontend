@@ -37,7 +37,11 @@ export default function DatePicker({
 				value={
 					field.value
 						? new DateObject({
-								date: new Date(field.value),
+								date: new Date(
+									new Date(field.value).getFullYear(),
+									new Date(field.value).getMonth(),
+									new Date(field.value).getDate(),
+								),
 								calendar: persian,
 								locale: persian_fa,
 							})

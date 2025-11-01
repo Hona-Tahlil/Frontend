@@ -35,7 +35,6 @@ function Test() {
 		<div className="flex flex-col items-center">
 			<Formik
 				initialValues={{ email: "", password: "niceone", love: false }}
-				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
@@ -111,11 +110,11 @@ function Test() {
 							text={"آقا عشق"}
 						/>
 
-						<Select name="akhoond">
-							<SelectTrigger className="w-45">
+						<Select name="akhoond" value="2">
+							<SelectTrigger className="w-30">
 								<SelectValue placeholder="روز" />
 							</SelectTrigger>
-							<SelectContent>
+							<SelectContent className="">
 								<SelectGroup>
 									<SelectItem value={"1"}>1</SelectItem>
 									<SelectItem value={"2"}>2</SelectItem>

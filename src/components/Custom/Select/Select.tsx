@@ -22,13 +22,23 @@ type SelectContextType = {
 const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 	dir = "rtl",
 	name,
+	value,
 	...props
 }) => {
 	const [, , helpers] = useField(name);
+	const [selfValue, setSelfValue] = React.useState(value);
+
+	React.useEffect(() => {
+		helpers.setValue(value);
+	}, []);
 	return (
 		<SelectPrimitive.Root
+			value={selfValue}
 			onValueChange={(v) => {
-				requestAnimationFrame(() => helpers.setValue(v));
+				requestAnimationFrame(() => {
+					helpers.setValue(v);
+					setSelfValue(v);
+				});
 			}}
 			dir={dir}
 			{...props}
@@ -104,7 +114,7 @@ const SelectContent = React.forwardRef<
 		avoidCollisions={false}
 		ref={ref}
 		className={cn(
-			"rounded-t-none rounded-b-2xl border-1 border-black/40 border-t-transparent min-w-0 max-h-60 overflow-y-auto",
+			"rounded-t-none rounded-b-2xl border-1 border-black/40 border-t-transparent max-h-60 ",
 			className,
 		)}
 		{...props}
