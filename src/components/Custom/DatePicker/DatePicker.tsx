@@ -5,9 +5,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import "./DatePicker.css";
 import { useField } from "formik";
 import { toTehranISOString } from "@/utils/toTehranISOString";
+import { cn } from "@/lib/utils";
+import { Calendar } from "lucide-react";
 
 const inputVariants = cva(
-	"flex h-13 w-full !text-[15px] rounded-full border border-[1px] border-black/40 bg-white font-[Alibaba] font-bold px-6 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
+	"flex h-13 w-full !text-[15px] rounded-full border border-[1px] border-black/40 bg-white font-[Alibaba] font-bold px-6 pl-10 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
 	{
 		variants: {
 			shadow: {
@@ -21,18 +23,19 @@ const inputVariants = cva(
 	},
 );
 export interface DatePickerProps
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "className">,
+	extends React.InputHTMLAttributes<HTMLInputElement>,
 		VariantProps<typeof inputVariants> {
 	asChild?: boolean;
 }
 export default function DatePicker({
 	shadow,
 	name,
+	className,
 	...props
 }: DatePickerProps) {
 	const [field, , helpers] = useField(name || "");
 	return (
-		<div>
+		<div className="flex items-center relative w-full">
 			<MultiDatePicker
 				value={
 					field.value
@@ -52,7 +55,7 @@ export default function DatePicker({
 				}}
 				calendar={persian}
 				locale={persian_fa}
-				inputClass={inputVariants({ shadow })}
+				inputClass={cn(inputVariants({ shadow }), className)}
 				mapDays={({ date }) => {
 					const props: Partial<{ className?: string }> = {};
 
@@ -63,6 +66,7 @@ export default function DatePicker({
 					return props;
 				}}
 			/>
+			<Calendar className="absolute left-3.5" />
 		</div>
 	);
 }

@@ -5,6 +5,10 @@
 	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08) !important;
 }
 
+.rmdp-container {
+	width: 100% !important;
+}
+
 .rmdp-day {
 	border-radius: 8px !important;
 }

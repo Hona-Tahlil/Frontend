@@ -54,15 +54,18 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
-						<DatePicker name="akhoond2" />
+						<div className="w-35">
+							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
+						</div>
 
 						<div className="mt-5 w-50">
 							<Input
 								name="password"
 								shadow={true}
 								classes={{
-									className: "h-10",
+									className: "h-20",
 									errorClassName: "px-5",
+									inputClassName: "!text-[45px]",
 								}}
 								onChangeWrappers={[adjustInputDirection]}
 								type="password"
