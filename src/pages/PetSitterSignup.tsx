@@ -11,6 +11,7 @@ import {
 } from "@/components/Custom/Select/Select";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
+import UploadDropZone from "@/components/PetSitterSignup/UploadDropZone/UploadDropZone";
 import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
 import { Form, Formik } from "formik";
 import { useState, type ReactNode } from "react";
@@ -31,11 +32,11 @@ export const PetSitterSignup = () => {
 	const [currentStage, setCurrentStage] = useState(0);
 
 	function goNext() {
-		setAnimationDir(1);
+		setAnimationDir(-1);
 		setCurrentStage((prev) => prev + 1);
 	}
 	function goBack() {
-		setAnimationDir(-1);
+		setAnimationDir(1);
 		setCurrentStage((prev) => prev - 1);
 	}
 	return (
@@ -168,8 +169,50 @@ export const PetSitterSignup = () => {
 									)}
 								</MultiStage.Stage>
 
-								<MultiStage.Stage index={1}>
-									<p>Profile form goes here</p>
+								<MultiStage.Stage
+									index={1}
+									className="w-full h-auto flex flex-col py-10 px-5 sm:px-15 xl:px-35 gap-10"
+								>
+									<div>
+										<p className="text-2xl font-bold">مدارک شناسایی</p>
+									</div>
+									<div className="flex flex-col sm:flex-row items-center gap-3">
+										<div className="w-full sm:w-1/2 flex flex-col">
+											<p className="px-5 font-bold">شناسنامه</p>
+											<UploadDropZone />
+										</div>
+										<div className="w-full sm:w-1/2 flex flex-col">
+											<p className="px-5 font-bold">کارت ملی</p>
+											<UploadDropZone />
+										</div>
+									</div>
+									<div>
+										<p className="text-2xl font-bold">مدارک حوزه پت(اختیاری)</p>
+									</div>
+									<div>
+										<div className="flex items-center gap-3">
+											<div className="w-full flex flex-col">
+												<UploadDropZone />
+											</div>
+										</div>
+									</div>
+									<div className="flex w-full justify-between">
+										<Button
+											onClick={goBack}
+											shadow={false}
+											variant={"outline"}
+											className="mr-10 mt-20 border border-black/20 shadow-none text-black"
+										>
+											برگشت
+										</Button>
+										<Button
+											onClick={goNext}
+											shadow={false}
+											className="ml-10 mt-20"
+										>
+											برو مرحله بعد
+										</Button>
+									</div>
 								</MultiStage.Stage>
 							</MultiStage.StageHolder>
 						</Form>
