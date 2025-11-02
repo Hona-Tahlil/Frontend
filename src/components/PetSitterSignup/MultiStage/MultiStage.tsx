@@ -9,6 +9,7 @@ import React, {
 import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { MultiStageContextType } from "@/types/multiStageComponentTypes";
+import { useMobile } from "@/hooks/ResponsiveHooks";
 
 const MultiStageContext = createContext<MultiStageContextType | null>(null);
 
@@ -21,16 +22,29 @@ function useMultiStage() {
 export function MultiStage({
 	children,
 	className,
+	currentStage,
+	setCurrentStage,
+	animationDir,
+	setAnimationDir,
 }: {
 	children: ReactNode;
 	className?: string;
+	currentStage?: number;
+	setCurrentStage?: React.Dispatch<React.SetStateAction<number>>;
+	animationDir?: number;
+	setAnimationDir?: React.Dispatch<React.SetStateAction<number>>;
 }) {
-	const [currentStage, setCurrentStage] = useState(0);
-	const [animationDir, setAnimationDir] = useState(1);
+	const [selfCurrentStage, setSelfCurrentStage] = useState(0);
+	const [selfAnimationDir, setSelfAnimationDir] = useState(1);
 
 	return (
 		<MultiStageContext.Provider
-			value={{ currentStage, setCurrentStage, animationDir, setAnimationDir }}
+			value={{
+				currentStage: currentStage ?? selfCurrentStage,
+				setCurrentStage: setCurrentStage ?? setSelfCurrentStage,
+				animationDir: animationDir ?? selfAnimationDir,
+				setAnimationDir: setAnimationDir ?? setSelfAnimationDir,
+			}}
 		>
 			<div
 				dir="rtl"
@@ -54,19 +68,25 @@ function Header({
 	className?: string;
 }) {
 	const childrenArray = React.Children.toArray(children);
+	const isMobile = useMobile();
 	return (
-		<div
-			className={cn("flex w-full gap-2 justify-center items-center", className)}
-		>
-			{childrenArray.flatMap((child, index) => {
-				return (
-					<>
-						{child}
-						{index != childrenArray.length - 1 && <Dot />}
-					</>
-				);
-			})}
-		</div>
+		<>
+			<div
+				className={cn(
+					"flex w-full gap-0 lg:gap-2 justify-center items-center",
+					className,
+				)}
+			>
+				{childrenArray.flatMap((child, index) => {
+					return (
+						<>
+							{child}
+							{index != childrenArray.length - 1 && <Dot />}
+						</>
+					);
+				})}
+			</div>
+		</>
 	);
 }
 
@@ -79,6 +99,7 @@ function StageHeader({
 }) {
 	const { currentStage, setCurrentStage, setAnimationDir } = useMultiStage();
 	const isActive = currentStage === index;
+	const isMobile = useMobile();
 
 	function setCurrentAsActive() {
 		setAnimationDir(currentStage - index);
@@ -86,21 +107,42 @@ function StageHeader({
 	}
 
 	return (
-		<div
-			className="flex items-center justify-center gap-2 cursor-pointer"
-			onClick={setCurrentAsActive}
-		>
-			<div
-				className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-colors duration-200 ${isActive ? "border-3 border-primary text-primary bg-white" : "border border-stage-header-inactive-border bg-stage-header-inactive-background text-stage-header-inactive-foreground"}`}
-			>
-				{index + 1}
-			</div>
-			<div
-				className={`font-bold transition-all duration-200 ${isActive ? "text-black" : "text-stage-header-inactive-foreground"}`}
-			>
-				{children}
-			</div>
-		</div>
+		<>
+			{!isMobile && (
+				<div
+					className="flex items-center justify-center gap-2 cursor-pointer"
+					onClick={setCurrentAsActive}
+				>
+					<div
+						className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-colors duration-200 ${isActive ? "border-3 border-primary text-primary bg-white" : "border border-stage-header-inactive-border bg-stage-header-inactive-background text-stage-header-inactive-foreground"}`}
+					>
+						{index + 1}
+					</div>
+					<div
+						className={`font-bold transition-all duration-200 ${isActive ? "text-black" : "text-stage-header-inactive-foreground"}`}
+					>
+						{children}
+					</div>
+				</div>
+			)}
+			{isMobile && (
+				<div
+					className="flex items-center justify-center gap-2 cursor-pointer"
+					onClick={setCurrentAsActive}
+				>
+					<div
+						className={`flex items-center justify-center w-7 h-7 rounded-full font-bold transition-colors duration-200 ${isActive ? "border-3 border-primary text-primary bg-white" : "border border-stage-header-inactive-border bg-stage-header-inactive-background text-stage-header-inactive-foreground"}`}
+					>
+						{index + 1}
+					</div>
+					<div
+						className={`font-bold transition-all duration-200 text-sm ${isActive ? "text-black" : "text-stage-header-inactive-foreground"}`}
+					>
+						{children}
+					</div>
+				</div>
+			)}
+		</>
 	);
 }
 interface StageProps {
