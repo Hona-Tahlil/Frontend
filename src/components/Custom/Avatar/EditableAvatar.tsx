@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { PawPrint, Pencil } from "lucide-react";
+import { PawPrint, Pencil, PenLine, SquarePen } from "lucide-react";
 import { cn } from "@/lib/utils"; // shadcn helper for merging class names
 import {
   Dialog,
@@ -12,6 +12,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "../Button/Button";
+import petDefaultImage from "@/assets/images/pet-default-profile.png";
+import { useMobile } from "@/hooks/ResponsiveHooks";
 
 interface EditableAvatarProps {
   className?: string;
@@ -20,6 +22,7 @@ interface EditableAvatarProps {
 const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
   const [image, setImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const isMobile = useMobile();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -36,51 +39,109 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
     fileInputRef.current?.click();
   };
 
-  return (
-    <Dialog >
-      <DialogTrigger asChild>
-        <div
-          className={cn(
-            "relative group rounded-full cursor-pointer select-none",
-            className
-          )}
-        >
-          <Avatar className="w-full h-full shadow-md">
-            <AvatarImage
-              src={image || "/placeholder-cat.jpg"}
-              alt="avatar"
-              className="object-cover"
-            />
-            <AvatarFallback className="flex items-center justify-center w-full h-full bg-gray-100">
-              <PawPrint />
-            </AvatarFallback>
-          </Avatar>
+  if (isMobile) {
+    return (
+      <div
+        className={cn(
+          "relative group rounded-full cursor-pointer select-none",
+          className
+        )}
+      >
+        <Avatar className="w-full h-full shadow-md">
+          <AvatarImage
+            src={image || petDefaultImage}
+            alt="avatar"
+            className="object-cover"
+          />
+          <AvatarFallback>pet image</AvatarFallback>
+        </Avatar>
 
+        {isMobile ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <div className="aspect-square rounded-full h-8 w-8 bg-white justify-center flex items-center absolute -translate-y-[70%]">
+                <PenLine className="h-4" />
+              </div>
+            </DialogTrigger>
+            <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
+              <DialogHeader>
+                <DialogTitle className="text-2xl  mb-10">
+                  تغییر پروفایل
+                </DialogTitle>
+              </DialogHeader>
+              <DialogFooter>
+                <Button onClick={handleClick} className="w-40 h-10  text-md ">
+                  انتخاب عکس
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        ) : (
           <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-100 flex items-center justify-center">
             <Pencil className="text-white w-6 h-6" />
           </div>
+        )}
 
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            className="hidden"
-            onChange={handleFileChange}
-          />
-        </div>
-      </DialogTrigger>
-      <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
-        <DialogHeader>
-          <DialogTitle className="text-2xl  mb-10">تغییر پروفایل</DialogTitle>
-        </DialogHeader>
-        <DialogFooter>
-          <Button onClick={handleClick} className="w-40 h-10  text-md ">
-            انتخاب عکس
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  );
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+      </div>
+    );
+  } else {
+    return (
+      <Dialog>
+        <DialogTrigger asChild>
+          <div
+            className={cn(
+              "relative group rounded-full cursor-pointer select-none",
+              className
+            )}
+          >
+            <Avatar className="w-full h-full shadow-md">
+              <AvatarImage
+                src={image || petDefaultImage}
+                alt="avatar"
+                className="object-cover"
+              />
+              <AvatarFallback>pet image</AvatarFallback>
+            </Avatar>
+
+            {isMobile ? (
+              <div className="aspect-square rounded-full h-8 w-8 bg-white justify-center flex items-center absolute -translate-y-[70%]">
+                <PenLine className="h-4" />
+              </div>
+            ) : (
+              <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-100 flex items-center justify-center">
+                <Pencil className="text-white w-6 h-6" />
+              </div>
+            )}
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
+        </DialogTrigger>
+        <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
+          <DialogHeader>
+            <DialogTitle className="text-2xl  mb-10">تغییر پروفایل</DialogTitle>
+          </DialogHeader>
+          <DialogFooter>
+            <Button onClick={handleClick} className="w-40 h-10  text-md ">
+              انتخاب عکس
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 };
 
 export default EditableAvatar;

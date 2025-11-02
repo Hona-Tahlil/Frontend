@@ -153,6 +153,9 @@ function Test() {
 					<MultiStage.Stage index={1}>
 						<p>Profile form goes here</p>
 					</MultiStage.Stage>
+					<MultiStage.Stage index={2}>
+						<p>salaaaaaaaaaaaam</p>
+					</MultiStage.Stage>
 				</MultiStage.StageHolder>
 			</MultiStage>
 		</div>
