@@ -43,6 +43,22 @@ function Test() {
 			>
 				{({ isSubmitting }) => (
 					<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
+						<Select name="akhoond" value="2">
+							<SelectTrigger className="w-30">
+								<SelectValue placeholder="روز" />
+							</SelectTrigger>
+							<SelectContent className="">
+								<SelectGroup>
+									<SelectItem value={"1"}>1</SelectItem>
+									<SelectItem value={"2"}>2</SelectItem>
+									<SelectItem value={"3"}>3</SelectItem>
+									<SelectItem value={"4"}>4</SelectItem>
+									<SelectItem value={"5"}>5</SelectItem>
+									<SelectItem value={"6"}>6</SelectItem>
+									<SelectItem value={"7"}>7</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
 						<div className="mt-5 w-50">
 							<Input
 								name="email"
@@ -122,23 +138,6 @@ function Test() {
 								name="betterakhoond"
 							/>
 						</div>
-
-						<Select name="akhoond" value="2">
-							<SelectTrigger className="w-30">
-								<SelectValue placeholder="روز" />
-							</SelectTrigger>
-							<SelectContent className="">
-								<SelectGroup>
-									<SelectItem value={"1"}>1</SelectItem>
-									<SelectItem value={"2"}>2</SelectItem>
-									<SelectItem value={"3"}>3</SelectItem>
-									<SelectItem value={"4"}>4</SelectItem>
-									<SelectItem value={"5"}>5</SelectItem>
-									<SelectItem value={"6"}>6</SelectItem>
-									<SelectItem value={"7"}>7</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
 
 						<Button
 							type="submit"
