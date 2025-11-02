@@ -2,6 +2,7 @@ import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { Form, Formik } from "formik";
+import type { ReactNode } from "react";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
@@ -17,7 +18,7 @@ export const PetSitterSignup = () => {
 	return (
 		<div className="flex flex-col items-center gap-4">
 			<p className="text-4xl font-bold">ثبت نام پتیار</p>
-			<MultiStage className="w-7/8">
+			<MultiStage className="w-full">
 				<MultiStage.Header>
 					<MultiStage.StageHeader index={0}>
 						بررسی اطلاعات
@@ -34,107 +35,61 @@ export const PetSitterSignup = () => {
 					}}
 				>
 					{({ isSubmitting }) => (
-						<Form className="w-full">
-							<MultiStage.StageHolder className="h-150">
+						<Form className="w-full flex items-center justify-center">
+							<MultiStage.StageHolder className="w-19/20 max-w-300">
 								<MultiStage.Stage
-									className="w-9/10 h-auto flex p-8 gap-10"
+									className="w-full h-auto flex flex-col py-10 px-35 gap-10"
 									index={0}
 								>
-									<div className="flex flex-col gap-6">
-										<p className="text-2xl font-bold">بازبینی اطلاعات</p>
-										<div className="flex flex-col">
-											<p className="text-gray-500">نام و نام خانوادگی</p>
-											<Input
-												name="name"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
-										</div>
-										<div className="flex flex-col">
-											<p className="text-gray-500">ایمیل</p>
-											<Input
-												name="email"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
-										</div>
-
-										<div className="flex flex-col">
-											<p className="text-gray-500">آدرس</p>
-											<Input
-												name="address"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
-										</div>
-										<Button
-											type="submit"
-											bold={true}
-											variant={"outline"}
-											shadow={false}
-											isLoading={isSubmitting}
-											className="mt-30 w-30 p-2 h-8 border border-[#E5E7EB] shadow-none text-black mr-15"
-										>
-											بازگشت
-										</Button>
+									<div>
+										<p className="text-2xl font-bold">بازیبینی اطلاعات</p>
 									</div>
-									<div className="flex flex-col gap-6">
-										<p className="text-2xl font-bold opacity-0">
-											بازبینی اطلاعات
-										</p>
-										<div className="flex flex-col">
-											<p className="text-gray-500">جنسیت</p>
-											<Input
-												name="name"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
+									<div className="flex items-center gap-10 px-10">
+										<img className="bg-gray-500 w-30 h-30 rounded-full" />
+										<p>ویرایش عکس پروفایل</p>
+									</div>
+									<div className="flex flex-col gap-5 px-10">
+										<div className="w-full flex gap-8">
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="نام" />
+												<InputHolder name="nice" text="نام خانوادگی" />
+											</InputHolderWrapper>
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="جنسیت" />
+												<InputHolder name="nice" text="تاریخ تولد" />
+											</InputHolderWrapper>
 										</div>
-										<div className="flex flex-col">
-											<p className="text-gray-500">تاریخ تولد</p>
-											<Input
-												name="email"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
+										<div>
+											<p className="text-lg font-bold">موقعیت مکانی</p>
 										</div>
-
-										<div className="flex flex-col">
-											<p className="text-gray-500">شماره تماس</p>
-											<Input
-												name="address"
-												classes={{
-													className: "h-10 w-full m-0",
-													inputClassName: "border-0 bg-[#F9FAFB] shadow-none",
-												}}
-												shadow={false}
-											/>
+										<div className="w-full flex gap-8">
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="نام" />
+												<InputHolder name="nice" text="نام خانوادگی" />
+												<InputHolder name="nice" text="نام خانوادگی" />
+											</InputHolderWrapper>
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="جنسیت" />
+												<InputHolder name="nice" text="تاریخ تولد" />
+												<InputHolder name="nice" text="تاریخ تولد" />
+											</InputHolderWrapper>
 										</div>
-										<div className="flex flex-col items-end">
-											<Button
-												type="submit"
-												bold={true}
-												shadow={false}
-												isLoading={isSubmitting}
-												className="mt-30 w-30 p-2 h-8 border shadow-none relative ml-15"
-											>
-												بعدی
-											</Button>
+										<div>
+											<p className="text-lg font-bold">اطلاعات تماس</p>
+										</div>
+										<div className="w-full flex gap-8">
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="شماره تماس" />
+											</InputHolderWrapper>
+											<InputHolderWrapper>
+												<InputHolder name="nice" text="ایمیل" />
+											</InputHolderWrapper>
+										</div>
+										<div>
+											<p className="text-lg font-bold">اطلاعات تماس</p>
+										</div>
+										<div>
+											<p className="text-lg font-bold">اطلاعات تماس</p>
 										</div>
 									</div>
 								</MultiStage.Stage>
@@ -150,3 +105,19 @@ export const PetSitterSignup = () => {
 		</div>
 	);
 };
+function InputHolder({ text, name }: { text: string; name: string }) {
+	return (
+		<div className="flex">
+			<div className="w-3/10 flex items-center justify-center">
+				<p className="text-lg">{text}</p>
+			</div>
+			<div className="w-7/10">
+				<Input name={name} classes={{ className: "h-12" }} shadow />
+			</div>
+		</div>
+	);
+}
+
+function InputHolderWrapper({ children }: { children: ReactNode }) {
+	return <div className="flex flex-col w-1/2 gap-5">{children}</div>;
+}

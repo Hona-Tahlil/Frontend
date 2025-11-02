@@ -2,6 +2,7 @@ import React, {
 	createContext,
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 	type ReactNode,
 } from "react";
@@ -134,25 +135,27 @@ function Stage({ index, children, className }: StageProps) {
 		}),
 	};
 	return (
-		<AnimatePresence mode="wait">
-			{currentStage === index && (
-				<motion.div
-					key={index}
-					custom={stageDir}
-					variants={variants}
-					initial="initial"
-					animate="enter"
-					exit="exit"
-					transition={{ duration: 1 }}
-					className={cn(
-						"w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl mt-4 right-1/2 translate-x-[50%]",
-						className,
-					)}
-				>
-					{children}
-				</motion.div>
-			)}
-		</AnimatePresence>
+		<>
+			<AnimatePresence mode="wait">
+				{currentStage === index && (
+					<motion.div
+						key={index}
+						custom={stageDir}
+						variants={variants}
+						initial="initial"
+						animate="enter"
+						exit="exit"
+						transition={{ duration: 1 }}
+						className={cn(
+							"w-full h-70 absolute bg-white drop-shadow-lg border border-stage-body-border rounded-2xl right-1/2 translate-x-[50%]",
+							className,
+						)}
+					>
+						{children}
+					</motion.div>
+				)}
+			</AnimatePresence>
+		</>
 	);
 }
 interface StageHolderProps {
@@ -160,9 +163,48 @@ interface StageHolderProps {
 	className?: string;
 }
 
-function StageHolder({ children, className }: StageHolderProps) {
+function StageHolder({
+	children,
+	className,
+}: {
+	children: React.ReactNode;
+	className?: string;
+}) {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [maxHeight, setMaxHeight] = useState<number>(0);
+
+	useEffect(() => {
+		const container = containerRef.current;
+		if (!container) return;
+
+		const getMaxHeight = () => {
+			const childElements = Array.from(container.children) as HTMLElement[];
+			let max = 0;
+			for (const el of childElements) {
+				const h = el.scrollHeight;
+				if (h > max) max = h;
+			}
+			setMaxHeight(max);
+		};
+
+		getMaxHeight(); // Initial measurement
+
+		// Observe each stage for height changes
+		const observer = new ResizeObserver(() => getMaxHeight());
+		const childElements = Array.from(container.children) as HTMLElement[];
+		childElements.forEach((el) => observer.observe(el));
+
+		return () => observer.disconnect();
+	}, [children]);
+
 	return (
-		<div className={cn("w-full h-120 relative", className)}>{children}</div>
+		<div
+			ref={containerRef}
+			className={cn("w-full relative mt-4", className)}
+			style={{ height: maxHeight ? `${maxHeight}px` : "auto" }}
+		>
+			{children}
+		</div>
 	);
 }
 
