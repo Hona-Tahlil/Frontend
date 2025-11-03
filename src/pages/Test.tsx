@@ -1,12 +1,24 @@
 import { Button } from "@/components/Custom/Button/Button";
 import { Checkbox } from "@/components/Custom/Checkbox/Checkbox";
 import { Input } from "@/components/Custom/Input/Input";
+import { Textarea } from "@/components/Custom/Textarea/Textarea";
 
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
 import * as Yup from "yup";
+
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/Custom/Select/Select";
+import DatePicker from "@/components/Custom/DatePicker/DatePicker";
+import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -25,13 +37,28 @@ function Test() {
 		<div className="flex flex-col items-center">
 			<Formik
 				initialValues={{ email: "", password: "niceone", love: false }}
-				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
 			>
 				{({ isSubmitting }) => (
 					<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
+						<Select name="akhoond" value="2">
+							<SelectTrigger className="w-30">
+								<SelectValue placeholder="روز" />
+							</SelectTrigger>
+							<SelectContent className="">
+								<SelectGroup>
+									<SelectItem value={"1"}>1</SelectItem>
+									<SelectItem value={"2"}>2</SelectItem>
+									<SelectItem value={"3"}>3</SelectItem>
+									<SelectItem value={"4"}>4</SelectItem>
+									<SelectItem value={"5"}>5</SelectItem>
+									<SelectItem value={"6"}>6</SelectItem>
+									<SelectItem value={"7"}>7</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
 						<div className="mt-5 w-50">
 							<Input
 								name="email"
@@ -41,10 +68,12 @@ function Test() {
 									inputClassName: "!text-[20px]",
 									errorClassName: "px-5",
 								}}
-								onChangeWrappers={[adjustInputDirection]}
 								type="email"
 								placeholder="ایمیل"
 							/>
+						</div>
+						<div className="w-35">
+							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
 						</div>
 
 						<div className="mt-5 w-50">
@@ -52,14 +81,24 @@ function Test() {
 								name="password"
 								shadow={true}
 								classes={{
-									className: "h-10",
+									className: "h-20",
 									errorClassName: "px-5",
+									inputClassName: "!text-[45px]",
 								}}
 								onChangeWrappers={[adjustInputDirection]}
 								type="password"
 								placeholder="ایمیل"
 							/>
 						</div>
+						<PetDatePicker
+							from={10}
+							to={8}
+							relative={true}
+							name="niceone"
+							smallFontSize="20px"
+							bigFontSize="30px"
+						/>
+
 						<Checkbox
 							name="love"
 							classes={{ textClassName: "text-[17px]" }}
@@ -91,6 +130,15 @@ function Test() {
 							size="15px"
 							text={"آقا عشق"}
 						/>
+						<div className="px-5 w-full">
+							<Textarea
+								rows={6}
+								scrollbarBorderRadius="10px"
+								className="relative drop-shadow-lg py-3"
+								name="betterakhoond"
+							/>
+						</div>
+
 						<Button
 							type="submit"
 							size={"giant"}
