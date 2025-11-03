@@ -50,6 +50,23 @@
 		url("./assets/fonts/ttf/Alibaba-Regular.ttf") format("truetype");
 }
 
+[data-radix-popper-content-wrapper] {
+	width: calc(var(--radix-popper-anchor-width)) !important;
+	min-width: 0px !important;
+}
+
+[data-radix-select-viewport] {
+	min-width: 0px !important;
+}
+
+[data-radix-popper-content-wrapper] div {
+	min-width: 0px !important;
+}
+
+html body[data-scroll-locked] {
+	margin-right: 0px !important;
+}
+
 .shadow-lg {
 	box-shadow: 0 4px 4px 1px rgba(0, 0, 0, 0.25);
 }
@@ -273,6 +290,7 @@
 		font-family: Alibaba, system-ui, Avenir, Helvetica, Arial, sans-serif;
 		line-height: 1.7;
 		overflow-x: hidden;
+		min-width: max-content;
 	}
 }
 
