@@ -19,6 +19,7 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+import DashboardPetCard from "@/components/Pet/DashboardPetCard";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -203,6 +204,7 @@ function Test() {
 					</MultiStage.Stage>
 				</MultiStage.StageHolder>
 			</MultiStage>
+			<DashboardPetCard name="فندق" kind="سگ" species="ژرمن" age="۱۲" isAdult={false} gender="male"></DashboardPetCard>
 		</div>
 	);
 }
