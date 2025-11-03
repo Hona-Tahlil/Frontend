@@ -1,5 +1,5 @@
 export interface SignupPayload {
-	name: string;
+	firstname: string;
 	lastname: string;
 	email: string;
 	password: string;
@@ -7,7 +7,7 @@ export interface SignupPayload {
 
 export interface SignupResponse {
 	statusCode: number;
-	messages?: LoginResponseErrors;
+	messages?: SignupResponseErrors;
 	message?: string;
 }
 

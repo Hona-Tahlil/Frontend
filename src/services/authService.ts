@@ -9,7 +9,7 @@ export const signupService = async (
 	credentials: SignupPayload,
 ): Promise<SignupResponse> => {
 	return postData({
-		endPoint: `/v1/auth/signup`,
+		endPoint: `/v1/auth/register`,
 		data: credentials,
 	});
 };

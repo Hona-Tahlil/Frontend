@@ -52,6 +52,12 @@ export default function SignupForm() {
 							})
 							.catch((error) => {
 								const errorText = translateAxiosError(error);
+								console.log(error.response.data.messages);
+								if (error.response.data.messages) {
+									setErrors(error.response.data.messages);
+								} else if (error.response.data.message) {
+									setOverAllError(error.response.data.message);
+								}
 								setOverAllError(errorText);
 							})
 							.finally(() => {
@@ -71,7 +77,7 @@ export default function SignupForm() {
 								</div>
 							)}
 							<Input
-								name="name"
+								name="firstname"
 								placeholder="نام"
 								classes={{
 									className: "h-10 w-full",
