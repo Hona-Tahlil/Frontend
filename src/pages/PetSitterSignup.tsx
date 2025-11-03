@@ -228,10 +228,6 @@ export const PetSitterSignup = () => {
 									</div>
 									<div className="flex flex-col items-center gap-3"></div>
 
-									<div>
-										<p className="text-2xl font-bold">مدارک حوزه پت(اختیاری)</p>
-									</div>
-
 									<div className="w-full">
 										<Textarea
 											className="h-30 drop-shadow-lg"
