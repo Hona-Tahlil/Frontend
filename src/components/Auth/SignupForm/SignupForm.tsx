@@ -42,10 +42,6 @@ export default function SignupForm() {
 							.then((data) => {
 								if (data.statusCode === 200) {
 									openDialog();
-								} else if (data.messages) {
-									setErrors(data.messages);
-								} else if (data.message) {
-									setOverAllError(data.message);
 								} else {
 									setOverAllError("خطای غیر منتظره");
 								}
@@ -63,7 +59,6 @@ export default function SignupForm() {
 							.finally(() => {
 								setSubmitting(false);
 							});
-						//setTimeout(openDialog, 1000);
 					}}
 				>
 					{({ isSubmitting }) => (
