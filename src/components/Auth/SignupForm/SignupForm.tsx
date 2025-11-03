@@ -53,8 +53,9 @@ export default function SignupForm() {
 									setErrors(error.response.data.messages);
 								} else if (error.response.data.message) {
 									setOverAllError(error.response.data.message);
+								} else {
+									setOverAllError(errorText);
 								}
-								setOverAllError(errorText);
 							})
 							.finally(() => {
 								setSubmitting(false);
