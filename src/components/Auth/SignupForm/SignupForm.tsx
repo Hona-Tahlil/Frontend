@@ -37,6 +37,7 @@ export default function SignupForm() {
 				<Formik
 					{...SignupSchema}
 					onSubmit={(values, { setErrors, setSubmitting }) => {
+						setOverAllError("");
 						console.log("Form values:", values);
 						signupService({ ...values })
 							.then((data) => {
