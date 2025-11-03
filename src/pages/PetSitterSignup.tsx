@@ -10,10 +10,13 @@ import {
 	SelectValue,
 } from "@/components/Custom/Select/Select";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
+import IconToggleButton from "@/components/PetSitterSignup/IconToggleButton/IconToggleButton";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
+import ToggleButton from "@/components/PetSitterSignup/ToggleButton/ToggleButton";
 import UploadDropZone from "@/components/PetSitterSignup/UploadDropZone/UploadDropZone";
 import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
 import { Form, Formik } from "formik";
+import { Bird, Cat, Dog, Rabbit } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import * as Yup from "yup";
 
@@ -202,6 +205,86 @@ export const PetSitterSignup = () => {
 											shadow={false}
 											variant={"outline"}
 											className="mr-10 mt-20 border border-black/20 shadow-none text-black"
+										>
+											برگشت
+										</Button>
+										<Button
+											onClick={goNext}
+											shadow={false}
+											className="ml-10 mt-20"
+										>
+											برو مرحله بعد
+										</Button>
+									</div>
+								</MultiStage.Stage>
+								<MultiStage.Stage
+									index={2}
+									className="w-full h-auto flex flex-col py-10 px-5 sm:px-15 xl:px-35 gap-10"
+								>
+									<div>
+										<p className="text-2xl font-bold">
+											بیگورافی / معرفی مختصر (حداقل 20 کاراکتر)
+										</p>
+									</div>
+									<div className="flex flex-col items-center gap-3"></div>
+
+									<div>
+										<p className="text-2xl font-bold">مدارک حوزه پت(اختیاری)</p>
+									</div>
+
+									<div className="w-full">
+										<Textarea
+											className="h-30 drop-shadow-lg"
+											name="biography"
+										/>
+									</div>
+									<div>
+										<p className="text-2xl font-bold">
+											مهارت ها/ خدماتی که ارائه می دهید
+										</p>
+									</div>
+									<div>
+										<div className="flex flex-wrap items-center gap-4 sm:gap-1 lg:gap-4">
+											<IconToggleButton name="walk" text="پیاده روی" />
+											<IconToggleButton name="train" text="آموزش" />
+											<IconToggleButton name="hold" text="نگهداری" />
+											<IconToggleButton
+												name="medical"
+												text="مراقبت های پزشکی"
+											/>
+										</div>
+									</div>
+									<div>
+										<p className="text-2xl font-bold">
+											حیواناتی که ارائه خدمات دارید
+										</p>
+									</div>
+									<div>
+										<div className="flex flex-wrap items-start sm:items-center gap-4 sm:gap-1 lg:gap-4">
+											<ToggleButton name="dog">
+												<Dog></Dog>
+												سگ ها
+											</ToggleButton>
+											<ToggleButton name="cat">
+												<Cat></Cat>
+												گربه ها
+											</ToggleButton>
+											<ToggleButton name="bird">
+												<Bird></Bird>
+												پرندگان
+											</ToggleButton>
+											<ToggleButton name="javandegan">
+												<Rabbit></Rabbit>
+												جوندگان
+											</ToggleButton>
+										</div>
+									</div>
+									<div className="flex w-full justify-between">
+										<Button
+											onClick={goBack}
+											shadow={false}
+											variant={"outline"}
+											className="mr-10 mt-20 border border-black/20 shadow-none trext-black"
 										>
 											برگشت
 										</Button>
