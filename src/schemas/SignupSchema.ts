@@ -2,7 +2,7 @@ import * as Yup from "yup";
 
 const validationSchema = Yup.object({
 	username: Yup.string()
-		.min(5, "پسورد باید حداقل 5 کاراکتر باشد")
+		.min(5, "نام کاربری باید حداقل 5 کاراکتر باشد")
 		.required("نام کاربری اجباری است"),
 	email: Yup.string()
 		.email("ایمیل معتبر نمی باشد")
@@ -26,5 +26,6 @@ const SignupSchema = {
 	initialValues,
 	validationSchema,
 };
+
 
 export default SignupSchema;
