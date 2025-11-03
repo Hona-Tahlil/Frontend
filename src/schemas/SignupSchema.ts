@@ -9,6 +9,12 @@ const validationSchema = Yup.object({
 		.min(2, "نام معتبر نیست.")
 		.max(50, "نام معتبر نیست")
 		.required("نام اجباری است"),
+	lastname: Yup.string()
+		.trim()
+		.matches(nameRegex, "نام معتبر نیست")
+		.min(2, "نام معتبر نیست.")
+		.max(50, "نام معتبر نیست")
+		.required("نام اجباری است"),
 	email: Yup.string()
 		.email("ایمیل معتبر نمی باشد")
 		.required("ایمیل اجباری است"),
@@ -22,6 +28,7 @@ const validationSchema = Yup.object({
 
 const initialValues = {
 	name: "",
+	lastname: "",
 	email: "",
 	password: "",
 	repeatPassword: "",

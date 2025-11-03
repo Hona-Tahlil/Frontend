@@ -72,7 +72,15 @@ export default function SignupForm() {
 							)}
 							<Input
 								name="name"
-								placeholder="نام و نام خانوادگی"
+								placeholder="نام"
+								classes={{
+									className: "h-10 w-full",
+								}}
+								shadow={true}
+							/>
+							<Input
+								name="lastname"
+								placeholder="نام خانوادگی"
 								classes={{
 									className: "h-10 w-full",
 								}}
