@@ -52,7 +52,7 @@
 
 [data-radix-popper-content-wrapper] {
 	width: calc(var(--radix-popper-anchor-width)) !important;
-	min-width: 0px !important;
+	min-width: calc(max-content - 2px) !important;
 }
 
 [data-radix-select-viewport] {
@@ -65,6 +65,7 @@
 
 html body[data-scroll-locked] {
 	margin-right: 0px !important;
+	overflow: visible !important;
 }
 
 .shadow-lg {
