@@ -21,6 +21,7 @@ interface EditableAvatarProps {
 
 const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
   const [image, setImage] = useState<string | null>(null);
+  const [open, setOpen] = useState<boolean>(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useMobile();
 
@@ -37,6 +38,7 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
 
   const handleClick = () => {
     fileInputRef.current?.click();
+    setOpen(false);
   };
 
   if (isMobile) {
@@ -57,7 +59,7 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
         </Avatar>
 
         {isMobile ? (
-          <Dialog>
+          <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
               <div className="aspect-square rounded-full h-8 w-8 bg-white justify-center flex items-center absolute -translate-y-[70%]">
                 <PenLine className="h-4" />
@@ -93,7 +95,7 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className }) => {
     );
   } else {
     return (
-      <Dialog>
+      <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           <div
             className={cn(

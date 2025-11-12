@@ -31,7 +31,7 @@ export default function PetInfoCard({
   const isMobile = useMobile();
   return (
     <div
-      className="bg-white rounded-xl shadow-lg  px-5 py-5 md:p-6  md:px-10  w-full border border-gray-100"
+      className="bg-white rounded-xl shadow-lg px-3 md:px-10 py-5 md:p-6  w-full border border-gray-100"
       dir="rtl"
     >
       {/* Header */}
@@ -60,10 +60,8 @@ export default function PetInfoCard({
       >
         {({ isSubmitting }) => (
           <Form>
-            
-
             <div className="grid grid-cols-2 grid-rows-3 md:grid-cols-3 md:grid-rows-2  border-b border-gray-300">
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
+              <div className="p-3 md:p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
                 <p className="text-xs sm:text-sm text-gray-500">نام</p>
                 {editingMode ? (
                   <Input
@@ -75,12 +73,12 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{name}</p>
+                  <p className="font-medium text-xs sm:text-sm">{name}</p>
                 )}
                 {/* Vertical divider - shorter */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
               </div>
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
+              <div className="p-3 md:p-6  border-b border-gray-300 relative flex flex-col justify-center items-center">
                 <p className="text-xs sm:text-sm text-gray-500">نوع</p>
                 {editingMode ? (
                   <Input
@@ -92,12 +90,14 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{type}</p>
+                  <p className="font-medium text-xs sm:text-sm">{type}</p>
                 )}
                 {/* Vertical divider - shorter */}
-                {!isMobile && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>}
+                {!isMobile && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
+                )}
               </div>
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
+              <div className="p-3 md:p-6  border-b border-gray-300 relative flex flex-col justify-center items-center">
                 <p className="text-xs sm:text-sm text-gray-500">نژاد</p>
                 {editingMode ? (
                   <Input
@@ -109,12 +109,14 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{breed}</p>
+                  <p className="font-medium text-xs sm:text-sm">{breed}</p>
                 )}
-                {isMobile && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>}
+                {isMobile && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
+                )}
               </div>
 
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
+              <div className="p-3 md:p-6  border-b border-gray-300 relative flex flex-col justify-center items-center">
                 <p className="text-xs sm:text-sm text-gray-500">جنسیت</p>
                 {editingMode ? (
                   <Input
@@ -126,13 +128,17 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{gender}</p>
+                  <p className="font-medium text-xs sm:text-sm">{gender}</p>
                 )}
                 {/* Vertical divider - shorter */}
-                {!isMobile && <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>}
+                {!isMobile && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
+                )}
               </div>
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
-                <p className="text-xs sm:text-sm text-gray-500">وزن (کیلوگرم)</p>
+              <div className="p-3 md:p-6  border-b border-gray-300 relative flex flex-col justify-center items-center">
+                <p className="text-xs sm:text-sm text-gray-500">
+                  وزن (کیلوگرم)
+                </p>
                 {editingMode ? (
                   <Input
                     name="weight"
@@ -143,12 +149,12 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{weight}</p>
+                  <p className="font-medium text-xs sm:text-sm">{weight}</p>
                 )}
                 {/* Vertical divider - shorter */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
               </div>
-              <div className="p-6 border-b border-gray-300 relative flex flex-col justify-center items-center">
+              <div className="p-3 md:p-6  border-b border-gray-300 relative flex flex-col justify-center items-center">
                 <p className="text-xs sm:text-sm text-gray-500">تاریخ تولد</p>
                 {editingMode ? (
                   <Input
@@ -160,12 +166,10 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium">{birthDate}</p>
+                  <p className="font-medium text-xs sm:text-sm">{birthDate}</p>
                 )}
               </div>
             </div>
-
-           
 
             {/* Health Section */}
             <div className="mt-4">

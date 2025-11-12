@@ -15,26 +15,25 @@ type PetProps = {
 export default function Pet({ name = "فندق" }: PetProps) {
   const isMobile = useMobile();
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full overflow-hidden">
+    <div className="flex flex-col justify-center items-center w-full h-full mb-5 overflow-x-hidden">
       {isMobile && (
         <div
           dir="rtl"
-          className="relative flex flex-col items-center w-full  pb-6 overflow-hidden"
+          className="relative flex flex-col items-center w-full  pb-6 "
         >
           <div
-            className="bg-orange-400 aspect-square rounded-full w-[160%] -mt-[110%]"
+            className=" aspect-square rounded-full w-[160%] -mt-[110%]"
             style={{ backgroundImage: `url(${petBg})` }}
           >
-            <div className="absolute top-6 right-6 text-lg font-semibold flex items-center gap-2 text-gray-800">
+            <div className=" p-2 bg-primary-100 aspect-square rounded-full absolute top-6 right-10 text-lg font-semibold flex items-center gap-2 text-gray-800">
               <span>
                 <Redo2 />
               </span>
-              <span>پروفایل</span>
             </div>
           </div>
 
           <div className="w-[30%] h-[30%] flex flex-col justify-center items-center">
-            <EditableAvatar className="border-white border-6 -mt-[40%]"></EditableAvatar>
+            <EditableAvatar className="border-white border-6 -mt-[60%]"></EditableAvatar>
             <p className="text-lg mt-2 font-bold">فندق</p>
           </div>
         </div>
@@ -43,7 +42,7 @@ export default function Pet({ name = "فندق" }: PetProps) {
       <div className="flex h-full md:mx-25 lg:mx-35 xl:mx-45 mx-10 justify-center">
         {!isMobile && (
           <aside
-            className="sticky top-20 h-full self-start w-[35%] p-2 pb-3 md:p-5 md:pb-6 lg:p-9 lg:pb-10 bg-cover rounded-xl flex flex-col items-center shadow-lg "
+            className="sticky top-4 h-full self-start w-[35%] p-2 pb-3 md:p-5 md:pb-6 lg:p-9 lg:pb-10 bg-cover rounded-xl flex flex-col items-center shadow-lg "
             style={{ backgroundImage: `url(${petBg})` }}
           >
             <div className="text-lg md:text-2xl lg:text-4xl font-bold mb-5 md:mb-10 lg:mb-15 mt-2 lg:mt-5">
