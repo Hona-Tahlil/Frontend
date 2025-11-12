@@ -207,7 +207,7 @@ export default function PetInfoCard({
 
               {editingMode && (
                 <div className="flex gap-2 justify-end h-10 mt-7 w-full">
-                  <Button type="reset" variant={"outline"}>
+                  <Button type="reset" variant={"outline"} onClick={()=>{setEditingMode(false)}}>
                     انصراف
                   </Button>
                   <Button type="submit" isLoading={isSubmitting}>
