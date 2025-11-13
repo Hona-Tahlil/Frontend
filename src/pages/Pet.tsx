@@ -15,7 +15,7 @@ type PetProps = {
 export default function Pet({ name = "فندق" }: PetProps) {
   const isMobile = useMobile();
   return (
-    <div className="flex flex-col justify-center items-center w-full h-full mb-5 overflow-x-hidden">
+    <div className="flex flex-col justify-center items-center w-full h-full mb-5 overflow-x-clip">
       {isMobile && (
         <div
           dir="rtl"
