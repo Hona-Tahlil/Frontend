@@ -25,34 +25,38 @@ import {
 import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Button } from "@/components/Custom/Button/Button";
 import FeatureCard from "@/components/Landing/FeatureCard";
+import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
 
 function Landing() {
+	const isDesktop = useDesktop();
 	return (
 		<div
 			className="w-full flex flex-col items-center justify-center mt-20"
 			dir="rtl"
 		>
-			<div className="flex w-full h-180 px-7">
-				<div className="w-1/2 flex justify-end">
-					<div className="w-150 flex flex-col items-center gap-10">
-						<div className="text-3xl font-bold">
-							با عشق به حیوانات در آمد بساز
+			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-180 px-7">
+				<div className="lg:w-1/2 flex justify-end">
+					<div className="w-150 flex flex-col items-center gap-1">
+						<div className="text-3xl text-center mt-5">
+							پتیار، پلتفرم امن برای مراقبت از پت شما
 						</div>
-						<div className="text-3xl text-center h-30">
-							زمانهای آزادی که داری رو به مراقبت از پتها تبدیل کن.انعطاف کامل در
-							ساعت کاری و درآمد شفاف و پشتیبانی مستمر.
+						<div className="text-3xl font-bold text-center">
+							به سادگی پرستاری را در نزدیکی خود پیدا کنید، مستقیما چت کنید و با
+							اطمینان رزرو کنید.
 						</div>
-						<div className="flex items-center w-full mt-20">
-							<IconWithText
-								Icon={UserRoundCheckIcon}
-								text="انعطاف در ساعت کاری"
-							/>
-							<IconWithText Icon={IdCard} text="پرداخت امن" />
-							<IconWithText Icon={Headset} text="پشتیبانی 24 ساعته" />
-						</div>
+						{isDesktop && (
+							<div className="flex items-center w-full mt-20">
+								<IconWithText
+									Icon={UserRoundCheckIcon}
+									text="انعطاف در ساعت کاری"
+								/>
+								<IconWithText Icon={IdCard} text="پرداخت امن" />
+								<IconWithText Icon={Headset} text="پشتیبانی 24 ساعته" />
+							</div>
+						)}
 					</div>
 				</div>
-				<div className="w-1/2 flex">
+				<div className="lg:w-1/2 flex">
 					<div className="w-160 flex items-center justify-center">
 						<img src={Image1} alt="Landing" className="w-auto h-auto" />
 					</div>
@@ -60,7 +64,7 @@ function Landing() {
 			</div>
 
 			<div className="bg-secondary-200 w-full flex flex-col items-center gap-3 py-3">
-				<div className="flex w-8/10 justify-between items-center">
+				<div className="flex w-9/10 lg:w-8/10 justify-between items-center">
 					<p className="text-2xl font-bold">پتیار های برگزیده</p>
 					<p className="text-lg flex items-center">
 						مشاهده همه
@@ -69,12 +73,12 @@ function Landing() {
 				</div>
 				<Carousel
 					opts={{ loop: true, direction: "rtl" }}
-					className="w-full flex"
+					className="w-full flex justify-center"
 				>
-					<div className="w-1/10 flex items-center justify-center">
+					<div className="w-1/10 hidden lg:flex items-center justify-center">
 						<CarouselNext className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15" />
 					</div>
-					<div className="w-8/10">
+					<div className="w-9/10 lg:w-8/10">
 						<CarouselContent>
 							{Array.from({ length: 10 }).map((_, index) => (
 								<CarouselItem className="basis-55 w-full" key={index}>
@@ -104,7 +108,7 @@ function Landing() {
 							))}
 						</CarouselContent>
 					</div>
-					<div className="w-1/10 flex items-center justify-center">
+					<div className="w-1/10 hidden lg:flex items-center justify-center">
 						<CarouselPrevious className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15" />
 					</div>
 				</Carousel>
@@ -115,8 +119,8 @@ function Landing() {
 					مجموعهای از سرویسهای کاربردی برای مراقبت بهتر از پتها
 				</p>
 
-				<div className="flex flex-col">
-					<div className="flex gap-15 mt-20">
+				<div className="flex flex-col sm:flex-row lg:flex-col gap-5 lg:gap-0 mt-20 sm:mt-0">
+					<div className="flex flex-col lg:flex-row gap-5 xl:gap-15 sm:mt-20">
 						<FeatureCard
 							Icon={Scissors}
 							text="حمام، کوتاهی مو و ناخن با مراقبین حرفهای."
@@ -133,7 +137,7 @@ function Landing() {
 							title="بازی و اجتماع سازی"
 						/>
 					</div>
-					<div className="flex gap-15 mt-20">
+					<div className="flex flex-col lg:flex-row gap-5 xl:gap-15 sm:mt-20">
 						<FeatureCard
 							Icon={Footprints}
 							text="قدمزدن روزانه با گزارش مسیر و زمان."
@@ -152,14 +156,14 @@ function Landing() {
 					</div>
 				</div>
 			</div>
-			<div className="w-full h-auto flex flex-col items-center px-7 mt-50">
-				<div className="flex w-full">
+			<div className="w-full h-auto flex flex-col items-center px-8 mt-50">
+				<div className="flex w-full max-w-300">
 					<div className="flex justify-end w-1/2">
-						<img src={Image2} className="w-150" />
+						<img src={Image2} className="w-full h-auto object-contain" />
 					</div>
 					<div className="flex justify-start w-1/2">
-						<div className="w-150 flex flex-col items-start justify-center">
-							<div className="w-115 ">
+						<div className="w-full flex flex-col items-start justify-center">
+							<div className="max-w-115 ">
 								<div className="w-full">
 									<p className="font-bold text-2xl">
 										توهم چالش پیدا کردن مراقب برای پت داری؟
@@ -177,11 +181,11 @@ function Landing() {
 					</div>
 				</div>
 			</div>
-			<div className="w-full h-auto flex flex-col items-center px-7 mt-50">
-				<div className="flex w-full">
+			<div className="w-full h-auto flex flex-col items-center px-15 mt-50">
+				<div className="flex w-full max-w-300">
 					<div className="flex justify-end w-1/2">
-						<div className="w-150 flex flex-col items-end justify-center">
-							<div className="w-115 ">
+						<div className="max-w-150 flex flex-col items-end justify-center">
+							<div className="max-w-115 ">
 								<div className="w-full">
 									<p className="font-bold text-2xl">
 										آگاهانه پرستار مناسب رو پیدا کن.
@@ -201,7 +205,7 @@ function Landing() {
 						</div>
 					</div>
 					<div className="flex justify-start w-1/2">
-						<img src={Image3} className="w-150" />
+						<img src={Image3} className="w-full h-auto object-contain" />
 					</div>
 				</div>
 			</div>
