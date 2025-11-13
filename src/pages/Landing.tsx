@@ -1,6 +1,7 @@
 import Image1 from "@/assets/landing/Image1.png";
 import Image2 from "@/assets/landing/Image2.png";
 import Image3 from "@/assets/landing/Image3.png";
+import Image4 from "@/assets/landing/Image4.png";
 import {
 	ChevronDown,
 	ChevronLeft,
@@ -27,9 +28,18 @@ import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Button } from "@/components/Custom/Button/Button";
 import FeatureCard from "@/components/Landing/FeatureCard";
 import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
+import FaqItem from "@/components/Landing/FaqItem";
+import { useState } from "react";
 
 function Landing() {
 	const isDesktop = useDesktop();
+
+	const [faq1Open, setFaq1Open] = useState(true);
+	const [faq2Open, setFaq2Open] = useState(false);
+	const [faq3Open, setFaq3Open] = useState(false);
+	const [faq4Open, setFaq4Open] = useState(false);
+
+	const otherSetStates = [setFaq1Open, setFaq2Open, setFaq3Open, setFaq4Open];
 	return (
 		<div
 			className="w-full flex flex-col items-center justify-center mt-20"
@@ -41,7 +51,7 @@ function Landing() {
 						<div className="text-xl sm:text-3xl text-center mt-5">
 							پتیار، پلتفرم امن برای مراقبت از پت شما
 						</div>
-						<div className="text-xl sm:text-3xl font-bold text-center leading-20">
+						<div className="text-xl sm:text-3xl font-bold text-center leading-20 lg:leading-normal">
 							به سادگی پرستاری را در نزدیکی خود پیدا کنید، مستقیما چت کنید و با
 							اطمینان رزرو کنید.
 						</div>
@@ -217,44 +227,142 @@ function Landing() {
 					</div>
 				</div>
 			</div>
-			<div className="flex items-center justify-center w-full h-auto lg:h-180 px-7">
-				<div className="flex flex-col w-150 h-full bg-secondary-200 rounded-3xl p-7">
-					<div className="w-full h-1/2 bg-secondary-900 rounded-3xl"></div>
-					<p className="font-bold text-3xl mt-2">عنوان</p>
-					<p className="text-xl mt-2">متن...</p>
-					<div className="w-full flex-1 flex items-end">
-						<Button shadow={false} className="bg-secondary-700 w-auto h-8 py-0">
-							مشاهده مقاله
-						</Button>
-					</div>
-				</div>
-				<div className="flex flex-col w-150 lg:h-180 px-7">
-					<div className="flex w-full">
-						<div className="w-1/2 flex flex-col gap-3">
-							<p className="text-2xl font-bold">مجله پتیار</p>
-							<p className="text-2xl">یادگیری بی حد مرز</p>
+			<div className="flex flex-col lg:flex-row gap-10 lg:gap-0 lg:items-stretch items-center justify-center w-full h-auto px-7 mt-20 max-w-250">
+				{isDesktop && (
+					<>
+						<div className="flex flex-col w-full bg-secondary-200 rounded-3xl p-7">
+							<div className="w-full h-1/2 bg-secondary-900 rounded-3xl"></div>
+							<p className="font-bold text-3xl mt-2">عنوان</p>
+							<p className="text-xl mt-2">متن...</p>
+							<div className="w-full flex-1 flex items-end">
+								<Button
+									shadow={false}
+									className="bg-secondary-700 w-auto h-8 py-0"
+								>
+									مشاهده مقاله
+								</Button>
+							</div>
 						</div>
-						<div className="w-1/2 flex justify-end">
-							<p className="text-md">مشاهده همه ی مقالات</p>
-							<ChevronDown />
-						</div>
-					</div>
-					<div className="flex w-full h-1 rounded-full bg-secondary-900 mt-4"></div>
-					<div className="flex-1 w-full py-7 flex flex-col">
-						<div className="w-full h-auto flex gap-2">
-							<div className="size-40 bg-secondary-200 rounded-4xl"></div>
-							<div className="flex-1 py-4 flex flex-col">
-								<p className="text-lg font-bold">عنوان</p>
-								<p className="text-md">متن</p>
-								<div className="flex-1 flex items-end">
-									<p className="text-sm">مشاهده مقاله</p>
+						<div className="flex flex-col w-full h-auto px-7">
+							<div className="flex w-full">
+								<div className="w-1/2 flex flex-col gap-3">
+									<p className="text-2xl font-bold">مجله پتیار</p>
+									<p className="text-2xl">یادگیری بی حد مرز</p>
+								</div>
+								<div className="w-1/2 flex justify-end">
+									<p className="text-md">مشاهده همه ی مقالات</p>
+									<ChevronDown />
 								</div>
 							</div>
-							<div className="flex flex-col justify-end">
-								<p className="text-sm">تاریخ</p>
-								<p className="text-sm">...</p>
+							<div className="flex w-full h-1 rounded-full bg-secondary-900 mt-4"></div>
+							<div className="flex-1 w-full py-7 flex flex-col gap-5">
+								<div className="w-full h-auto flex gap-2">
+									<div className="size-40 bg-secondary-200 rounded-4xl"></div>
+									<div className="flex-1 py-4 flex flex-col">
+										<p className="text-lg font-bold">عنوان</p>
+										<p className="text-md">متن</p>
+										<div className="flex-1 flex items-end">
+											<p className="text-sm">مشاهده مقاله</p>
+										</div>
+									</div>
+									<div className="flex flex-col justify-end">
+										<p className="text-sm">تاریخ</p>
+										<p className="text-sm">...</p>
+									</div>
+								</div>
+								<div className="w-full h-auto flex gap-2">
+									<div className="size-40 bg-secondary-200 rounded-4xl"></div>
+									<div className="flex-1 py-4 flex flex-col">
+										<p className="text-lg font-bold">عنوان</p>
+										<p className="text-md">متن</p>
+										<div className="flex-1 flex items-end">
+											<p className="text-sm">مشاهده مقاله</p>
+										</div>
+									</div>
+									<div className="flex flex-col justify-end">
+										<p className="text-sm">تاریخ</p>
+										<p className="text-sm">...</p>
+									</div>
+								</div>
 							</div>
 						</div>
+					</>
+				)}
+				{!isDesktop && (
+					<>
+						<div className="flex flex-col w-2/3 max-w-120 aspect-[4/5] bg-secondary-200 rounded-3xl p-7">
+							<div className="w-full h-1/2 bg-secondary-900 rounded-3xl"></div>
+							<p className="font-bold text-3xl mt-2">عنوان</p>
+							<p className="text-xl mt-2">متن...</p>
+							<div className="w-full flex-1 flex items-end">
+								<Button
+									shadow={false}
+									className="bg-secondary-700 w-auto h-8 py-0"
+								>
+									مشاهده مقاله
+								</Button>
+							</div>
+						</div>
+						<div className="flex flex-col w-2/3 max-w-120 aspect-[4/5] bg-secondary-200 rounded-3xl p-7">
+							<div className="w-full h-1/2 bg-secondary-900 rounded-3xl"></div>
+							<p className="font-bold text-3xl mt-2">عنوان</p>
+							<p className="text-xl mt-2">متن...</p>
+							<div className="w-full flex-1 flex items-end">
+								<Button
+									shadow={false}
+									className="bg-secondary-700 w-auto h-8 py-0"
+								>
+									مشاهده مقاله
+								</Button>
+							</div>
+						</div>
+						<div className="flex flex-col w-2/3 max-w-120 aspect-[4/5] bg-secondary-200 rounded-3xl p-7">
+							<div className="w-full h-1/2 bg-secondary-900 rounded-3xl"></div>
+							<p className="font-bold text-3xl mt-2">عنوان</p>
+							<p className="text-xl mt-2">متن...</p>
+							<div className="w-full flex-1 flex items-end">
+								<Button
+									shadow={false}
+									className="bg-secondary-700 w-auto h-8 py-0"
+								>
+									مشاهده مقاله
+								</Button>
+							</div>
+						</div>
+					</>
+				)}
+			</div>
+			<div className="flex flex-col w-3/4 lg:w-full h-auto px-7 mt-20 max-w-250 mb-30">
+				<p className="text-xl font-bold">سوالات متداول</p>
+				<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
+					<div className="flex flex-col gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
+						<FaqItem
+							index={0}
+							open={faq1Open}
+							setOpen={setFaq1Open}
+							otherSetStates={otherSetStates}
+							text="یه سری سوال دری وری"
+							answer="دری وری بسیار بیشتر"
+						/>
+						<FaqItem
+							index={1}
+							open={faq2Open}
+							setOpen={setFaq2Open}
+							otherSetStates={otherSetStates}
+							text="یه سری سوال دری وری"
+							answer="دری وری بسیار بیشتر"
+						/>
+						<FaqItem
+							index={2}
+							open={faq3Open}
+							setOpen={setFaq3Open}
+							otherSetStates={otherSetStates}
+							text="یه سری سوال دری وری"
+							answer="دری وری بسیار بیشتر"
+						/>
+					</div>
+					<div className="row-start-1 col-start-1 w-full lg:w-auto flex items-end justify-center">
+						<img src={Image4} />
 					</div>
 				</div>
 			</div>
