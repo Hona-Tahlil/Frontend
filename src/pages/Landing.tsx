@@ -1,6 +1,18 @@
-import { useNavigate } from "react-router-dom";
 import Image1 from "@/assets/landing/Image1.png";
-import { ChevronLeft, Headset, IdCard, UserRoundCheckIcon } from "lucide-react";
+import Image2 from "@/assets/landing/Image2.png";
+import Image3 from "@/assets/landing/Image3.png";
+import {
+	ChevronLeft,
+	Cross,
+	Dumbbell,
+	Footprints,
+	Headset,
+	House,
+	IdCard,
+	Scissors,
+	UserRoundCheckIcon,
+	Volleyball,
+} from "lucide-react";
 import IconWithText from "@/components/Landing/IconWithText";
 
 import {
@@ -12,6 +24,7 @@ import {
 } from "@/components/ui/carousel";
 import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Button } from "@/components/Custom/Button/Button";
+import FeatureCard from "@/components/Landing/FeatureCard";
 
 function Landing() {
 	return (
@@ -95,6 +108,102 @@ function Landing() {
 						<CarouselPrevious className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15" />
 					</div>
 				</Carousel>
+			</div>
+			<div className="w-full h-auto flex flex-col items-center">
+				<p className="text-5xl font-bold mt-35">خدمات محبوب پتیار</p>
+				<p className="text-xl mt-5">
+					مجموعهای از سرویسهای کاربردی برای مراقبت بهتر از پتها
+				</p>
+
+				<div className="flex flex-col">
+					<div className="flex gap-15 mt-20">
+						<FeatureCard
+							Icon={Scissors}
+							text="حمام، کوتاهی مو و ناخن با مراقبین حرفهای."
+							title="آرایشگاه"
+						/>
+						<FeatureCard
+							Icon={Cross}
+							text="ویزیت، واکسن و چکاپ در خانه یا کلینیک."
+							title="دامپزشکی"
+						/>
+						<FeatureCard
+							Icon={Volleyball}
+							text="پلیدیت و تحرک سالم برای انرژیسوزی."
+							title="بازی و اجتماع سازی"
+						/>
+					</div>
+					<div className="flex gap-15 mt-20">
+						<FeatureCard
+							Icon={Footprints}
+							text="قدمزدن روزانه با گزارش مسیر و زمان."
+							title="پیاده روی"
+						/>
+						<FeatureCard
+							Icon={House}
+							text="مراقبت شبانه روزی در خانه یا پانسیون."
+							title="پتنشینی/پانسیون"
+						/>
+						<FeatureCard
+							Icon={Dumbbell}
+							text="فرمانپذیری و اصلاح رفتار با مربی مجرب."
+							title="آموزش"
+						/>
+					</div>
+				</div>
+			</div>
+			<div className="w-full h-auto flex flex-col items-center px-7 mt-50">
+				<div className="flex w-full">
+					<div className="flex justify-end w-1/2">
+						<img src={Image2} className="w-150" />
+					</div>
+					<div className="flex justify-start w-1/2">
+						<div className="w-150 flex flex-col items-start justify-center">
+							<div className="w-115 ">
+								<div className="w-full">
+									<p className="font-bold text-2xl">
+										توهم چالش پیدا کردن مراقب برای پت داری؟
+									</p>
+								</div>
+								<p className="text-justify mt-5">
+									پیدا کردن پرستار مناسب برای پت، میتونه کلی استرس داشته باشه…
+									<br />
+									شاید مهمترین چیزی که مانعت میشه با خیال راحت سفر کنی یا ساعتها
+									تو کارت غرق بشی، اینه که نمیدونی چجوری یک پرستار حرفهای و
+									دلسوز، که با نیازهای پتت هماهنگ باشه پیدا کنی.
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div className="w-full h-auto flex flex-col items-center px-7 mt-50">
+				<div className="flex w-full">
+					<div className="flex justify-end w-1/2">
+						<div className="w-150 flex flex-col items-end justify-center">
+							<div className="w-115 ">
+								<div className="w-full">
+									<p className="font-bold text-2xl">
+										آگاهانه پرستار مناسب رو پیدا کن.
+									</p>
+								</div>
+								<p className="text-justify mt-5">
+									ما پلتفرمی هستیم که به تو کمک میکنه در کمترین زمان، به جامعهای
+									از پرستاران تأییدشده و عاشق حیوانات دسترسی پیدا کنی. پرستارانی
+									که پروفایل، سوابق و نظرات کاربران قبلیشون رو میبینی و میتونی
+									مستقیما باهاشون چت کنی تا درنهایت، با اعتماد کامل انتخاب کنی.
+									<br />
+									<br />
+									همین حالا جستجو رو شروع کن!
+								</p>
+								<Button className="px-7">جستجو</Button>
+							</div>
+						</div>
+					</div>
+					<div className="flex justify-start w-1/2">
+						<img src={Image3} className="w-150" />
+					</div>
+				</div>
 			</div>
 		</div>
 	);
