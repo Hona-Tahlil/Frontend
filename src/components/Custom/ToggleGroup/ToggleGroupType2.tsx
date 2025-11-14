@@ -1,6 +1,5 @@
-import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
-import React, { type ElementType } from 'react'
-
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import React, { type ElementType } from "react";
 
 type item = {
   name: string;
@@ -16,18 +15,27 @@ export default function ToggleGroupType2({ items }: ToggleGroupType1Props) {
       {items.map((item) => (
         <ToggleGroupItem
           value={item.name}
-          className="group h-20 w-40 md:h-50 md:w-100 p-0 flex justify-between gap-0 rounded-2xl cursor-pointer mx-3"
+          className="group h-30 w-40 md:h-50 md:w-80 p-0 flex justify-between rounded-2xl cursor-pointer mx-3 flex-col gap-2 bg-transparent
+                    hover:bg-transparent
+                    data-[state=on]:bg-transparent
+                    text-inherit
+                    hover:text-inherit
+                    data-[state=on]:text-inherit
+                    focus-visible:ring-0"
         >
-          <div className="bg-black/40 group-hover:bg-primary group-data-[state=on]:bg-primary text-white h-full px-1 md:px-5 rounded-tr-2xl rounded-br-2xl flex justify-center items-center">
-            <p className="text-xs md:text-xl font-bold rotate-90"> {item.name} </p>
-          </div>
-          <div className="w-full h-full border-black/40  border-4 group-hover:border-primary group-data-[state=on]:border-primary rounded-tl-2xl rounded-bl-2xl flex justify-center items-center">
+          <div className="group-hover:bg-white group-data-[state=on]:bg-white w-full h-[70%] border-black/40  border-2 md:border-4 group-hover:border-primary group-data-[state=on]:border-primary rounded-lg md:rounded-2xl flex justify-center items-center">
             {
-              <item.icon  className="w-50 group-hover:text-primary group-data-[state=on]:text-primary"></item.icon>
+              <item.icon className="w-50 group-hover:text-primary group-data-[state=on]:text-primary"></item.icon>
             }
+          </div>
+
+          <div className="group-hover:bg-white group-data-[state=on]:bg-white w-full h-[30%] border-black/40  border-2 md:border-4 group-hover:border-primary group-data-[state=on]:border-primary text-black/40  px-1 md:px-5 rounded-lg md:rounded-2xl flex justify-center items-center">
+            <p className="text-xs md:text-xl font-bold group-hover:text-primary group-data-[state=on]:text-primary">
+              {item.name}
+            </p>
           </div>
         </ToggleGroupItem>
       ))}
     </ToggleGroup>
-  )
+  );
 }
