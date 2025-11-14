@@ -19,6 +19,7 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+import DontKnowToggle from "@/components/Pet/DontKnowToggle";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -208,6 +209,8 @@ function Test() {
 					</MultiStage.Stage>
 				</MultiStage.StageHolder>
 			</MultiStage>
+
+			<DontKnowToggle className="mb-10"></DontKnowToggle>
 		</div>
 	);
 }
