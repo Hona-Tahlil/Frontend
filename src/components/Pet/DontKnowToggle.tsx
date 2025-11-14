@@ -14,7 +14,7 @@ export default function DontKnowToggle({ className }: DontKnowToggleProps) {
         "rounded-4xl h-15 bg-primary-200 w-70 flex items-center justify-between px-5"
       )}
     >
-      <Switch className="bg-primary drop-shadow-none" />
+      <Switch className="bg-primary" />
       <p className="text-lg  ">نمیدونم</p>
     </div>
   );
