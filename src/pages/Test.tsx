@@ -19,6 +19,9 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+import ToggleGroupType1 from "@/components/Custom/ToggleGroup/ToggleGroupType1";
+import { Bird, Cat, Dog, Home } from "lucide-react";
+import ToggleGroupType2 from "@/components/Custom/ToggleGroup/ToggleGroupType2";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -208,6 +211,10 @@ function Test() {
 					</MultiStage.Stage>
 				</MultiStage.StageHolder>
 			</MultiStage>
+
+			<ToggleGroupType1 items={[{name: "گربه",icon: Cat}, {name:"سگ", icon:Dog}, {name:"پرنده", icon:Bird}]}/>
+			<ToggleGroupType2 items={[{name: "گربه",icon: Cat}, {name:"سگ", icon:Dog}, {name:"پرنده", icon:Bird}]}/>
+
 		</div>
 	);
 }
