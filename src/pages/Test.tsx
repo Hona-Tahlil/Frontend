@@ -19,7 +19,7 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
-import Toggle from "@/components/Custom/Toggle/DontKnowToggle";
+import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 
 const validationSchema = Yup.object({
