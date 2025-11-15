@@ -10,6 +10,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import type { MultiStageContextType } from "@/types/multiStageComponentTypes";
 import { useMobile } from "@/hooks/ResponsiveHooks";
+import { Check } from "lucide-react";
 
 const MultiStageContext = createContext<MultiStageContextType | null>(null);
 
@@ -57,7 +58,7 @@ export function MultiStage({
 }
 
 function Dot() {
-	return <div className="flex-1 h-[2px] bg-gray-400 mx-2" />;
+	return <div className="flex-1 h-[2px] bg-gray-400/20 mx-2" />;
 }
 
 function Header({
@@ -93,9 +94,11 @@ function Header({
 function StageHeader({
 	index,
 	children,
+	complete = false,
 }: {
 	index: number;
 	children: ReactNode;
+	complete?: boolean;
 }) {
 	const { currentStage, setCurrentStage, setAnimationDir } = useMultiStage();
 	const isActive = currentStage === index;
@@ -116,7 +119,7 @@ function StageHeader({
 					<div
 						className={`flex items-center justify-center w-10 h-10 rounded-full font-bold transition-colors duration-200 ${isActive ? "border-3 border-primary text-primary bg-white" : "border border-stage-header-inactive-border bg-stage-header-inactive-background text-stage-header-inactive-foreground"}`}
 					>
-						{index + 1}
+						{complete ? <Check></Check> : index + 1}
 					</div>
 					<div
 						className={`font-bold transition-all duration-200 ${isActive ? "text-black" : "text-stage-header-inactive-foreground"}`}
@@ -133,7 +136,7 @@ function StageHeader({
 					<div
 						className={`flex items-center justify-center w-7 h-7 rounded-full font-bold transition-colors duration-200 ${isActive ? "border-3 border-primary text-primary bg-white" : "border border-stage-header-inactive-border bg-stage-header-inactive-background text-stage-header-inactive-foreground"}`}
 					>
-						{index + 1}
+						{complete ? <Check></Check> : index + 1}
 					</div>
 					<div
 						className={`font-bold transition-all duration-200 text-sm ${isActive ? "text-black" : "text-stage-header-inactive-foreground"}`}

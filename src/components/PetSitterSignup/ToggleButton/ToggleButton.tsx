@@ -21,7 +21,7 @@ export default function ToggleButton({
 			variant={"outline"}
 			className={cn(
 				"border hover:border-primary",
-				field.value ? "" : "border-black text-black",
+				field.value ? "!border-primary" : "border-black text-black",
 				className,
 			)}
 			{...field}
