@@ -10,206 +10,307 @@ import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Stepper, { Step } from "@/components/Custom/PetRegister/PetMultiStage";
+import { useNavigate } from "react-router-dom";
+import { Avatar } from "@/components/ui/avatar";
+import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
 
 const validationSchema = Yup.object({
-	email: Yup.string()
-		.email("ایمیل معتبر نمی باشد")
-		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
-		.required("رمز عبور اجباری است"),
+  email: Yup.string()
+    .email("ایمیل معتبر نمی باشد")
+    .required("ایمیل اجباری است"),
+  password: Yup.string()
+    .min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
+    .required("رمز عبور اجباری است"),
 });
 
 function Test() {
-	const isDesktop = useDesktop();
-	const isMobile = useMobile();
-	const isTablet = useTablet();
-	return (
-		<div className="flex flex-col items-center">
-			<Formik
-				initialValues={{
-					email: "",
-					akhoond: "2",
-					password: "he",
-					love: false,
-				}}
-				onSubmit={(values) => {
-					console.log("Form values:", values);
-				}}
-			>
-				{({ isSubmitting }) => (
-					<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
-						<Select name="akhoond">
-							<SelectTrigger className="w-30">
-								<SelectValue placeholder="روز" />
-							</SelectTrigger>
-							<SelectContent className="">
-								<SelectGroup>
-									<SelectItem value={"1"}>1</SelectItem>
-									<SelectItem value={"2"}>2</SelectItem>
-									<SelectItem value={"3"}>3</SelectItem>
-									<SelectItem value={"4"}>4</SelectItem>
-									<SelectItem value={"5"}>5</SelectItem>
-									<SelectItem value={"6"}>6</SelectItem>
-									<SelectItem value={"7"}>7</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-						<div className="mt-5 w-50">
-							<Input
-								name="email"
-								shadow={true}
-								classes={{
-									className: "h-20",
-									inputClassName: "!text-[20px]",
-									errorClassName: "px-5",
-								}}
-								type="email"
-								placeholder="ایمیل"
-							/>
-						</div>
-						<div className="w-35">
-							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
-						</div>
+  const isDesktop = useDesktop();
+  const isMobile = useMobile();
+  const isTablet = useTablet();
 
-						<div className="mt-5 w-50">
-							<Input
-								name="password"
-								shadow={true}
-								classes={{
-									className: "h-20",
-									errorClassName: "px-5",
-									inputClassName: "!text-[45px]",
-								}}
-								onChangeWrappers={[adjustInputDirection]}
-								type="password"
-								placeholder="ایمیل"
-							/>
-						</div>
-						<PetDatePicker
-							from={10}
-							to={8}
-							relative={true}
-							name="niceone"
-							smallFontSize="20px"
-							bigFontSize="30px"
-						/>
+  const navigate = useNavigate();
+  return (
+    <div className="flex flex-col items-center">
+      <Formik
+        initialValues={{
+          email: "",
+          akhoond: "2",
+          password: "he",
+          love: false,
+        }}
+        onSubmit={(values) => {
+          console.log("Form values:", values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
+            <Select name="akhoond">
+              <SelectTrigger className="w-30">
+                <SelectValue placeholder="روز" />
+              </SelectTrigger>
+              <SelectContent className="">
+                <SelectGroup>
+                  <SelectItem value={"1"}>1</SelectItem>
+                  <SelectItem value={"2"}>2</SelectItem>
+                  <SelectItem value={"3"}>3</SelectItem>
+                  <SelectItem value={"4"}>4</SelectItem>
+                  <SelectItem value={"5"}>5</SelectItem>
+                  <SelectItem value={"6"}>6</SelectItem>
+                  <SelectItem value={"7"}>7</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <div className="mt-5 w-50">
+              <Input
+                name="email"
+                shadow={true}
+                classes={{
+                  className: "h-20",
+                  inputClassName: "!text-[20px]",
+                  errorClassName: "px-5",
+                }}
+                type="email"
+                placeholder="ایمیل"
+              />
+            </div>
+            <div className="w-35">
+              <DatePicker className="h-15 !text-[35px]" name="akhoond2" />
+            </div>
 
-						<Checkbox
-							name="love"
-							classes={{ textClassName: "text-[17px]" }}
-							text={"آقا عشق"}
-						/>
+            <div className="mt-5 w-50">
+              <Input
+                name="password"
+                shadow={true}
+                classes={{
+                  className: "h-20",
+                  errorClassName: "px-5",
+                  inputClassName: "!text-[45px]",
+                }}
+                onChangeWrappers={[adjustInputDirection]}
+                type="password"
+                placeholder="ایمیل"
+              />
+            </div>
+            <PetDatePicker
+              from={10}
+              to={8}
+              relative={true}
+              name="niceone"
+              smallFontSize="20px"
+              bigFontSize="30px"
+            />
 
-						<Checkbox
-							name="love2"
-							classes={{ textClassName: "text-[17px]" }}
-							text={"آقا عشق"}
-						/>
-						<Checkbox
-							name="love3"
-							classes={{
-								className: "mt-5",
-								backGroundClassName: "!border-5",
-								textClassName: "text-[17px]",
-							}}
-							size="30px"
-							text={"آقا عشق"}
-						/>
-						<Checkbox
-							name="love4"
-							classes={{
-								className: "mt-5 bg-red-500",
-								backGroundClassName: "!border-5",
-								textClassName: "text-[17px] font-bold",
-							}}
-							size="15px"
-							text={"آقا عشق"}
-						/>
-						<div className="px-5 w-full">
-							<Textarea
-								rows={6}
-								scrollbarBorderRadius="10px"
-								className="relative drop-shadow-lg py-3"
-								name="betterakhoond"
-							/>
-						</div>
+            <Checkbox
+              name="love"
+              classes={{ textClassName: "text-[17px]" }}
+              text={"آقا عشق"}
+            />
 
-						<Button
-							type="submit"
-							size={"giant"}
-							variant={"outline"}
-							shadow={false}
-							boxShadow={true}
-							bold={true}
-							isLoading={isSubmitting}
-							className="mb-3"
-						>
-							ورود
-						</Button>
-					</Form>
-				)}
-			</Formik>
-			{isDesktop && <p> desktop mode</p>}
-			{isMobile && <p> mobile mode</p>}
-			{isTablet && <p> tablet mode</p>}
+            <Checkbox
+              name="love2"
+              classes={{ textClassName: "text-[17px]" }}
+              text={"آقا عشق"}
+            />
+            <Checkbox
+              name="love3"
+              classes={{
+                className: "mt-5",
+                backGroundClassName: "!border-5",
+                textClassName: "text-[17px]",
+              }}
+              size="30px"
+              text={"آقا عشق"}
+            />
+            <Checkbox
+              name="love4"
+              classes={{
+                className: "mt-5 bg-red-500",
+                backGroundClassName: "!border-5",
+                textClassName: "text-[17px] font-bold",
+              }}
+              size="15px"
+              text={"آقا عشق"}
+            />
+            <div className="px-5 w-full">
+              <Textarea
+                rows={6}
+                scrollbarBorderRadius="10px"
+                className="relative drop-shadow-lg py-3"
+                name="betterakhoond"
+              />
+            </div>
 
-			<Button shadow={true} size={"giant"} bold={true}>
-				ورود
-			</Button>
-			<br />
-			<br />
-			<Button isLoading={true} shadow={true} size={"giant"} bold={true}>
-				ورود
-			</Button>
-			<br />
-			<br />
-			<Button
-				isLoading={true}
-				loadingClassName="!size-8"
-				shadow={true}
-				size={"giant"}
-				bold={true}
-			>
-				ورود
-			</Button>
-			<br />
-			<br />
-			<br />
-			<br />
-			<Button variant={"link"} shadow={false} bold={true}>
-				فراموشی رمز عبور
-			</Button>
-			<MultiStage>
-				<MultiStage.Header>
-					<MultiStage.StageHeader index={0}>
-						بررسی اطلاعات
-					</MultiStage.StageHeader>
-					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
-					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
-				</MultiStage.Header>
+            <Button
+              type="submit"
+              size={"giant"}
+              variant={"outline"}
+              shadow={false}
+              boxShadow={true}
+              bold={true}
+              isLoading={isSubmitting}
+              className="mb-3"
+            >
+              ورود
+            </Button>
+          </Form>
+        )}
+      </Formik>
+      {isDesktop && <p> desktop mode</p>}
+      {isMobile && <p> mobile mode</p>}
+      {isTablet && <p> tablet mode</p>}
 
-				<MultiStage.StageHolder>
-					<MultiStage.Stage index={0}>
-						<p>Account form goes here</p>
-					</MultiStage.Stage>
+      <Button shadow={true} size={"giant"} bold={true}>
+        ورود
+      </Button>
+      <br />
+      <br />
+      <Button isLoading={true} shadow={true} size={"giant"} bold={true}>
+        ورود
+      </Button>
+      <br />
+      <br />
+      <Button
+        isLoading={true}
+        loadingClassName="!size-8"
+        shadow={true}
+        size={"giant"}
+        bold={true}
+      >
+        ورود
+      </Button>
+      <br />
+      <br />
+      <br />
+      <br />
+      <Button variant={"link"} shadow={false} bold={true}>
+        فراموشی رمز عبور
+      </Button>
+      <MultiStage>
+        <MultiStage.Header>
+          <MultiStage.StageHeader index={0}>
+            بررسی اطلاعات
+          </MultiStage.StageHeader>
+          <MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
+          <MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
+        </MultiStage.Header>
 
-					<MultiStage.Stage index={1}>
-						<p>Profile form goes here</p>
-					</MultiStage.Stage>
-				</MultiStage.StageHolder>
-			</MultiStage>
-		</div>
-	);
+        <MultiStage.StageHolder>
+          <MultiStage.Stage index={0}>
+            <p>Account form goes here</p>
+          </MultiStage.Stage>
+
+          <MultiStage.Stage index={1}>
+            <p>Profile form goes here</p>
+          </MultiStage.Stage>
+        </MultiStage.StageHolder>
+      </MultiStage>
+
+      <Dialog>
+        <DialogTrigger asChild>
+          {!isMobile && <Button>کلیک کن</Button>}
+        </DialogTrigger>
+        <DialogContent className="w-[40%] h-[80%]" dir="rtl">
+          <Stepper
+            initialStep={1}
+            onStepChange={(step) => {
+              console.log(step);
+            }}
+            onFinalStepCompleted={() => console.log("All steps completed!")}
+            backButtonText="مرحله قبل"
+            nextButtonText="مرحله بعد"
+            className="mb-20"
+            backButtonProps={{ className: "" }}
+            stepContainerClassName="hidden"
+          >
+            <Step>
+              <div className="flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+          </Stepper>
+        </DialogContent>
+      </Dialog>
+
+      {isMobile && (
+        <Button
+          onClick={() => {
+            navigate("/RegisterPet");
+          }}
+        >
+          سلام
+        </Button>
+      )}
+    </div>
+  );
 }
 
 export default Test;

@@ -8,76 +8,87 @@ import AboutUs from "@/pages/AboutUs";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import RegisterPetMobile from "@/pages/RegisterPetMobile";
+import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 
 export const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <PublicLayout />,
-		// errorElement: (
-		// 	<Error404 />
-		// ),
-		children: [
-			{
-				index: true,
-				path:"/",
-				element: <Landing />,
-			},
-			{
-				path: "/temp",
-				element: <Temp />,
-			},
-			{
-				path: "/test",
-				element: <Test />,
-			},
-			{
-				path: "/Terms",
-				element: <Terms />,
-			},
+  {
+    path: "/",
+    element: <PublicLayout />,
+    // errorElement: (
+    // 	<Error404 />
+    // ),
+    children: [
+      {
+        index: true,
+        path: "/",
+        element: <Landing />,
+      },
+      {
+        path: "/temp",
+        element: <Temp />,
+      },
+      {
+        path: "/test",
+        element: <Test />,
+      },
+      {
+        path: "/Terms",
+        element: <Terms />,
+      },
 
-			{
-				path: "/AboutUs",
-				element: <AboutUs />,
-			},
-		],
-	},
-	{
-		element: <AuthLayout />,
-		children: [
-			{
-				path: "/login",
-				element: <Login />,
-			},
-			{
-				path: "/signup",
-				element: <Signup />,
-			},
-		],
-	},
-	// {
-	// 	element: <PrivateLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/EditProfile",
-	// 			element: <EditProfile />,
-	// 		},
-	// 		{
-	// 			path: "/DashBoard",
-	// 			element: <DashBoard />,
-	// 		},
-	// 	],
-	// },
-	// {
-	// 	element: <AnotherLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/login",
-	// 			element: <Login />,
-	// 		},
-	// 		{
-	// 			path: "/temp",
-	// 			element: <Temp />,
-	// 		},
-	// 	],
-	// },
+      {
+        path: "/AboutUs",
+        element: <AboutUs />,
+      },
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+    ],
+  },
+  {
+    element: <MobileLayout />,
+    children: [
+      {
+        path: "/RegisterPet",
+        element: <RegisterPetMobile />,
+      },
+    ],
+  },
+  // {
+  // 	element: <PrivateLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/EditProfile",
+  // 			element: <EditProfile />,
+  // 		},
+  // 		{
+  // 			path: "/DashBoard",
+  // 			element: <DashBoard />,
+  // 		},
+  // 	],
+  // },
+  // {
+  // 	element: <AnotherLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/login",
+  // 			element: <Login />,
+  // 		},
+  // 		{
+  // 			path: "/temp",
+  // 			element: <Temp />,
+  // 		},
+  // 	],
+  // },
 ]);
