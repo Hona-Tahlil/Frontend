@@ -7,7 +7,7 @@ import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
+//import * as Yup from "yup";
 
 import {
 	Select,
@@ -20,14 +20,14 @@ import {
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
 
-const validationSchema = Yup.object({
-	email: Yup.string()
-		.email("ایمیل معتبر نمی باشد")
-		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
-		.required("رمز عبور اجباری است"),
-});
+//const validationSchema = Yup.object({
+//	email: Yup.string()
+//		.email("ایمیل معتبر نمی باشد")
+//		.required("ایمیل اجباری است"),
+//	password: Yup.string()
+//		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
+//		.required("رمز عبور اجباری است"),
+//});
 
 function Test() {
 	const isDesktop = useDesktop();

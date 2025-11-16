@@ -1,23 +1,15 @@
 import * as React from "react";
 import * as SelectPrimitive from "@radix-ui/react-select";
-import { Check, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
 import {
-	Select as ShadCnSelect,
 	SelectContent as ShadCnSelectContent,
-	SelectGroup as ShadCnSelectGroup,
 	SelectItem as ShadCnSelectItem,
 	SelectTrigger as ShadCnSelectTrigger,
-	SelectValue as ShadCnSelectValue,
 } from "@/components/ui/select";
-import { useField, useFormikContext, type FormikValues } from "formik";
-
-type SelectContextType = {
-	open: boolean;
-	setOpen: (i: boolean) => void;
-};
+import { useField } from "formik";
 
 const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 	dir = "rtl",
@@ -25,7 +17,7 @@ const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 	value,
 	...props
 }) => {
-	const [field, , helpers] = useField(name);
+	const [field, , helpers] = useField(name || "");
 	const [selfValue, setSelfValue] = React.useState(field.value);
 
 	React.useEffect(() => {
