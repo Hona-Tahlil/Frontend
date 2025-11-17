@@ -205,14 +205,14 @@ function Landing() {
 				className="w-full h-auto flex flex-col items-center px-15 mt-50"
 				dir="ltr"
 			>
-				<div className="flex flex-col lg:flex-row w-full max-w-300">
+				<div className="flex flex-col gap-0 lg:gap-8 lg:flex-row w-full max-w-300">
 					<div className="flex justify-end lg:w-1/2">
 						<img src={Image3} className="w-full h-auto object-contain" />
 					</div>
 					<div className="flex justify-start lg:w-1/2">
 						<div className="w-full flex flex-col items-start justify-center">
 							<div
-								className="mt-20 lg:mt-0 lg:max-w-115 text-center lg:text-right"
+								className="mt-5 lg:mt-20 lg:mt-0 lg:max-w-115 text-center lg:text-right"
 								dir="rtl"
 							>
 								<div className="w-full">
