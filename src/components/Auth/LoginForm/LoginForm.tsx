@@ -3,13 +3,23 @@ import { Button } from "@/components/Custom/Button/Button";
 import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
-import LoginSchema from "@/schemas/SignupSchema";
+import LoginSchema from "@/schemas/LoginSchema";
+import { loginService } from "@/services/authService";
+import useUserStore from "@/store/userStore/userStore";
+import { useState } from "react";
 
 export default function LoginForm() {
 	const navigate = useNavigate();
+	const { setAccessToken } = useUserStore();
+	const [overAllError, setOverAllError] = useState<string>("");
+
 	function navigateToSignupPage() {
 		navigate("/signup");
 	}
+	function navigateToDashboard() {
+		navigate("/temp");
+	}
+
 	return (
 		<div className="flex relative z-11 flex-col items-center justify-center min-h-screen text-center w-7/8 max-w-100 sm:w-100">
 			<div className="h-fit bg-background sm:bg-transparent p-8 rounded-4xl w-full">
@@ -22,12 +32,49 @@ export default function LoginForm() {
 				</p>
 				<Formik
 					{...LoginSchema}
-					onSubmit={(values) => {
+					onSubmit={(values, { setErrors, setSubmitting }) => {
 						console.log("Form values:", values);
+						setOverAllError("");
+						loginService({
+							email: values.email,
+							password: values.password,
+							rememberMe: values.rememberMe,
+						})
+							.then((loginResponse) => {
+								if (loginResponse.messages !== null) {
+									setErrors(loginResponse.messages!);
+								}
+								if (loginResponse.statusCode === 200) {
+									setAccessToken(loginResponse.data?.accessToken);
+									navigateToDashboard();
+								}
+							})
+							.catch((error) => {
+								const errorText = "خطای غیر منتظره";
+								console.log(error.response.data.messages);
+								if (error.response.data.messages) {
+									setErrors(error.response.data.messages);
+								} else if (error.response.data.message) {
+									setOverAllError(error.response.data.message);
+								} else {
+									setOverAllError(errorText);
+								}
+							})
+							.finally(() => {
+								setSubmitting(false);
+							});
 					}}
 				>
 					{({ isSubmitting }) => (
 						<Form className="mt-6 rounded flex flex-col gap-4 items-center">
+							{overAllError && (
+								<div
+									className="bg-red-500/20 text-red-500 rounded-lg w-full px-4 py-2"
+									dir="rtl"
+								>
+									<p>{overAllError}</p>
+								</div>
+							)}
 							<Input
 								name="email"
 								placeholder="ایمیل"
@@ -47,7 +94,7 @@ export default function LoginForm() {
 							/>
 							<div className="w-full flex justify-end ">
 								<Checkbox
-									name="remeberMe"
+									name="rememberMe"
 									classes={{
 										className: "mt-2",
 										textClassName: "text-xs font-[Alibaba]",
