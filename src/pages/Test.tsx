@@ -19,7 +19,7 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
-import { BabyIcon, Bird, Cat, Dog, Home } from "lucide-react";
+import { BabyIcon, Bird, Cat, Dog } from "lucide-react";
 import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
@@ -35,59 +35,62 @@ const validationSchema = Yup.object({
     .required("رمز عبور اجباری است"),
 });
 
-
 function Test() {
-	const isDesktop = useDesktop();
-	const isMobile = useMobile();
-	const isTablet = useTablet();
-	return (
-		<div className="flex flex-col items-center">
-			<Formik
-				initialValues={{
-					email: "",
-					akhoond: "2",
-					password: "he",
-					love: false,
-				}}
-				validationSchema={validationSchema}
-				onSubmit={(values) => {
-					console.log("Form values:", values);
-				}}
-			>
-				{({ isSubmitting }) => (
-					<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
-						<Select name="akhoond">
-							<SelectTrigger className="w-30">
-								<SelectValue placeholder="روز" />
-							</SelectTrigger>
-							<SelectContent className="">
-								<SelectGroup>
-									<SelectItem value={"1"}>1</SelectItem>
-									<SelectItem value={"2"}>2</SelectItem>
-									<SelectItem value={"3"}>3</SelectItem>
-									<SelectItem value={"4"}>4</SelectItem>
-									<SelectItem value={"5"}>5</SelectItem>
-									<SelectItem value={"6"}>6</SelectItem>
-									<SelectItem value={"7"}>7</SelectItem>
-								</SelectGroup>
-							</SelectContent>
-						</Select>
-						<div className="mt-5 w-50">
-							<Input
-								name="email"
-								shadow={true}
-								classes={{
-									className: "h-20",
-									inputClassName: "!text-[20px]",
-									errorClassName: "px-5",
-								}}
-								type="email"
-								placeholder="ایمیل"
-							/>
-						</div>
-						<div className="w-35">
-							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
-						</div>
+  const isDesktop = useDesktop();
+  const isMobile = useMobile();
+  const isTablet = useTablet();
+  const [isChecked, setIsChecked] = useState(false);
+
+  return (
+    <div className="flex flex-col items-center">
+      <Formik
+        initialValues={{
+          email: "",
+          akhoond: "2",
+          password: "he",
+          love: false,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={(values) => {
+          console.log("Form values:", values);
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
+            <Select name="akhoond">
+              <SelectTrigger className="w-30">
+                <SelectValue placeholder="روز" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value={"1"}>1</SelectItem>
+                  <SelectItem value={"2"}>2</SelectItem>
+                  <SelectItem value={"3"}>3</SelectItem>
+                  <SelectItem value={"4"}>4</SelectItem>
+                  <SelectItem value={"5"}>5</SelectItem>
+                  <SelectItem value={"6"}>6</SelectItem>
+                  <SelectItem value={"7"}>7</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+
+            <div className="mt-5 w-50">
+              <Input
+                name="email"
+                shadow={true}
+                classes={{
+                  className: "h-20",
+                  inputClassName: "!text-[20px]",
+                  errorClassName: "px-5",
+                }}
+                type="email"
+                placeholder="ایمیل"
+              />
+            </div>
+
+            <div className="w-35">
+              <DatePicker className="h-15 !text-[35px]" name="akhoond2" />
+            </div>
 
             <div className="mt-5 w-50">
               <Input
@@ -103,6 +106,7 @@ function Test() {
                 placeholder="ایمیل"
               />
             </div>
+
             <PetDatePicker
               from={10}
               to={8}
@@ -123,6 +127,7 @@ function Test() {
               classes={{ textClassName: "text-[17px]" }}
               text={"آقا عشق"}
             />
+
             <Checkbox
               name="love3"
               classes={{
@@ -133,6 +138,7 @@ function Test() {
               size="30px"
               text={"آقا عشق"}
             />
+
             <Checkbox
               name="love4"
               classes={{
@@ -143,6 +149,7 @@ function Test() {
               size="15px"
               text={"آقا عشق"}
             />
+
             <div className="px-5 w-full">
               <Textarea
                 rows={6}
@@ -167,6 +174,7 @@ function Test() {
           </Form>
         )}
       </Formik>
+
       {isDesktop && <p> desktop mode</p>}
       {isMobile && <p> mobile mode</p>}
       {isTablet && <p> tablet mode</p>}
@@ -174,13 +182,17 @@ function Test() {
       <Button shadow={true} size={"giant"} bold={true}>
         ورود
       </Button>
+
       <br />
       <br />
+
       <Button isLoading={true} shadow={true} size={"giant"} bold={true}>
         ورود
       </Button>
+
       <br />
       <br />
+
       <Button
         isLoading={true}
         loadingClassName="!size-8"
@@ -190,13 +202,16 @@ function Test() {
       >
         ورود
       </Button>
+
       <br />
       <br />
       <br />
       <br />
+
       <Button variant={"link"} shadow={false} bold={true}>
         فراموشی رمز عبور
       </Button>
+
       <MultiStage>
         <MultiStage.Header>
           <MultiStage.StageHeader index={0}>
@@ -218,52 +233,39 @@ function Test() {
       </MultiStage>
 
       <Formik
-        initialValues={{ isAdult: "false", petKind:"dog" }}
+        initialValues={{ isAdult: "false", petKind: "dog" }}
         onSubmit={(values) => console.log(values)}
       >
         <Form>
           <IsAdultToggleGroup
             name="isAdult"
             items={[
-              { name: "false", icon: BabyIcon,value:"جوجه" },
-              { name: "true", icon: Dog , value:"بالغ"},
+              { name: "false", icon: BabyIcon, value: "جوجه" },
+              { name: "true", icon: Dog, value: "بالغ" },
             ]}
           />
 
           <PetKindToggleGroup
             name="petKind"
             items={[
-              { name: "dog", icon: Dog , value:"سگ"},
-              { name: "cat", icon: Cat , value: "گربه"},
-              { name: "bird", icon: Bird , value: "پرنده"},
+              { name: "dog", icon: Dog, value: "سگ" },
+              { name: "cat", icon: Cat, value: "گربه" },
+              { name: "bird", icon: Bird, value: "پرنده" },
             ]}
           />
         </Form>
       </Formik>
 
-        <MultiStage.StageHolder>
-          <MultiStage.Stage index={0}>
-            <p>Account form goes here</p>
-          </MultiStage.Stage>
-
-          <MultiStage.Stage index={1}>
-            <p>Profile form goes here</p>
-          </MultiStage.Stage>
-        </MultiStage.StageHolder>
-      </MultiStage>
+      {/* FIXED: Removed the extra broken MultiStage.StageHolder */}
 
       <Toggle
         className="mb-10"
         text="نمیدونم"
         checked={isChecked}
-        onCheckedChange={() => {
-          setIsChecked((checked) => !checked);
-        }}
+        onCheckedChange={() => setIsChecked((checked) => !checked)}
       />
 
-	  {isChecked && <p>salllaaam</p>}
-	  
-	  
+      {isChecked && <p>salllaaam</p>}
     </div>
   );
 }
