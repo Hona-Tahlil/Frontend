@@ -2,11 +2,9 @@ import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { PetKindToggleGroupProps } from "@/types/PetRegister/toggleGroup";
 import { useField } from "formik";
 
-interface FormikToggleProps extends PetKindToggleGroupProps {
-  name: string;
-}
 
-export default function PetKindToggleGroup({ items, name }: FormikToggleProps) {
+
+export default function PetKindToggleGroup({ items, name }: PetKindToggleGroupProps) {
   const [field, meta, helpers] = useField(name);
 
   return (
