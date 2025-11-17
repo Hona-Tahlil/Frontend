@@ -20,7 +20,6 @@ jobs:
       - name: Test Conncetion
         run: |
           ping -c 3 ${{ secrets.SERVER_HOST }} || echo "Ping failed"
-          nc -zv ${{ secrets.SERVER_HOST }} 22 || echo "Port 22 not reachable"
 
       - name: Checkout Code
         uses: actions/checkout@v4
