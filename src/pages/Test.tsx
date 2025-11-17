@@ -19,6 +19,10 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+import { BabyIcon, Bird, Cat, Dog, Home } from "lucide-react";
+import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
+import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
+
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 
@@ -201,6 +205,41 @@ function Test() {
           <MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
           <MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
         </MultiStage.Header>
+
+        <MultiStage.StageHolder>
+          <MultiStage.Stage index={0}>
+            <p>Account form goes here</p>
+          </MultiStage.Stage>
+
+          <MultiStage.Stage index={1}>
+            <p>Profile form goes here</p>
+          </MultiStage.Stage>
+        </MultiStage.StageHolder>
+      </MultiStage>
+
+      <Formik
+        initialValues={{ isAdult: "false", petKind:"dog" }}
+        onSubmit={(values) => console.log(values)}
+      >
+        <Form>
+          <IsAdultToggleGroup
+            name="isAdult"
+            items={[
+              { name: "false", icon: BabyIcon,value:"جوجه" },
+              { name: "true", icon: Dog , value:"بالغ"},
+            ]}
+          />
+
+          <PetKindToggleGroup
+            name="petKind"
+            items={[
+              { name: "dog", icon: Dog , value:"سگ"},
+              { name: "cat", icon: Cat , value: "گربه"},
+              { name: "bird", icon: Bird , value: "پرنده"},
+            ]}
+          />
+        </Form>
+      </Formik>
 
         <MultiStage.StageHolder>
           <MultiStage.Stage index={0}>
