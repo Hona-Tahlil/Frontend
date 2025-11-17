@@ -69,7 +69,6 @@ function Header({
 	className?: string;
 }) {
 	const childrenArray = React.Children.toArray(children);
-	const isMobile = useMobile();
 	return (
 		<>
 			<div
@@ -95,16 +94,19 @@ function StageHeader({
 	index,
 	children,
 	complete = false,
+	clickable = false,
 }: {
 	index: number;
 	children: ReactNode;
 	complete?: boolean;
+	clickable: boolean;
 }) {
 	const { currentStage, setCurrentStage, setAnimationDir } = useMultiStage();
 	const isActive = currentStage === index;
 	const isMobile = useMobile();
 
 	function setCurrentAsActive() {
+		if (!clickable) return;
 		setAnimationDir(currentStage - index);
 		setCurrentStage(index);
 	}
@@ -208,13 +210,7 @@ interface StageHolderProps {
 	className?: string;
 }
 
-function StageHolder({
-	children,
-	className,
-}: {
-	children: React.ReactNode;
-	className?: string;
-}) {
+function StageHolder({ children, className }: StageHolderProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [maxHeight, setMaxHeight] = useState<number>(0);
 

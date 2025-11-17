@@ -3,7 +3,7 @@ export const Gender = {
 	Female: 2,
 };
 export type Gender = (typeof Gender)[keyof typeof Gender];
-export interface SubmitPersonalInfoPayload {
+export interface SubmitPersonalInfoPayload extends AccessTokenPayload {
 	FirstName: string;
 	LastName: string;
 	Email: string;
@@ -17,7 +17,7 @@ export interface SubmitPersonalInfoPayload {
 	Vahed: string;
 	PostalCode: string;
 }
-export interface UploadDocumentsPayload {
+export interface UploadDocumentsPayload extends AccessTokenPayload {
 	CertificateFile: File[] | null;
 	File: File[] | null;
 }
@@ -35,7 +35,7 @@ export const ServiceType = {
 	Watching: 2,
 };
 export type ServiceType = (typeof ServiceType)[keyof typeof ServiceType];
-export interface SubmitSkillsPayload {
+export interface SubmitSkillsPayload extends AccessTokenPayload {
 	Bio: string;
 	Petkinds: PetKind[];
 	Services: ServiceType[];
@@ -56,3 +56,7 @@ export interface PersonalInfoRespnse
 export interface DocumentRespnse
 	extends UploadDocumentsPayload,
 		PetSitterStatusResponse {}
+
+export interface AccessTokenPayload {
+	accessToken: string;
+}

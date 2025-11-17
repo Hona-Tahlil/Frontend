@@ -68,13 +68,25 @@ export const PetSitterSignup = () => {
 				setAnimationDir={setAnimationDir}
 			>
 				<MultiStage.Header className="w-19/20 max-w-300">
-					<MultiStage.StageHeader complete={completedStage > 0} index={0}>
+					<MultiStage.StageHeader
+						clickable={completedStage > 0}
+						complete={completedStage > 0}
+						index={0}
+					>
 						بررسی اطلاعات
 					</MultiStage.StageHeader>
-					<MultiStage.StageHeader complete={completedStage > 1} index={1}>
+					<MultiStage.StageHeader
+						clickable={completedStage > 1}
+						complete={completedStage > 1}
+						index={1}
+					>
 						مدارک
 					</MultiStage.StageHeader>
-					<MultiStage.StageHeader complete={completedStage > 2} index={2}>
+					<MultiStage.StageHeader
+						clickable={completedStage > 2}
+						complete={completedStage > 2}
+						index={2}
+					>
 						بیوگرافی
 					</MultiStage.StageHeader>
 				</MultiStage.Header>
