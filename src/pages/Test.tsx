@@ -21,12 +21,9 @@ import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
 
 const validationSchema = Yup.object({
-	email: Yup.string()
+	betterakhoond: Yup.string()
 		.email("ایمیل معتبر نمی باشد")
 		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
-		.required("رمز عبور اجباری است"),
 });
 
 function Test() {
@@ -42,6 +39,7 @@ function Test() {
 					password: "he",
 					love: false,
 				}}
+				validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
