@@ -19,11 +19,11 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
-import ToggleGroupType1 from "@/components/Custom/ToggleGroup/PetKindToggleGroup";
+import ToggleGroupType1 from "@/components/PetRegister/PetKindToggleGroup";
 import { BabyIcon, Bird, Cat, Dog, Home } from "lucide-react";
-import ToggleGroupType2 from "@/components/Custom/ToggleGroup/IsAdultToggleGroup";
-import IsAdultToggleGroup from "@/components/Custom/ToggleGroup/IsAdultToggleGroup";
-import PetKindToggleGroup from "@/components/Custom/ToggleGroup/PetKindToggleGroup";
+import ToggleGroupType2 from "@/components/PetRegister/IsAdultToggleGroup";
+import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
+import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
 const validationSchema = Yup.object({
   email: Yup.string()
