@@ -21,14 +21,24 @@ import { Bird, Cat, Dog, Rabbit } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import * as Yup from "yup";
 
-const validationSchema = Yup.object({
-	email: Yup.string()
-		.email("ایمیل معتبر نمی باشد")
-		.required("ایمیل اجباری است"),
-	password: Yup.string()
-		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
-		.required("رمز عبور اجباری است"),
-});
+const validationSchemas = [
+	Yup.object({
+		Email: Yup.string()
+			.email("ایمیل معتبر نمی باشد")
+			.required("ایمیل اجباری است"),
+		FirstName: Yup.string()
+			.min(5, "نام باید حداقل 5 کاراکتر باشد")
+			.required("نام اجباری است"),
+		LastName: Yup.string()
+			.min(5, "نام باید حداقل 5 کاراکتر باشد")
+			.required("نام اجباری است"),
+		BirthDate: Yup.string().required("تاریخ تولد اجباری است"),
+		PhoneNumber: Yup.string().required("شماره تماس اجباری است"),
+		Address: Yup.string().required("آدرس اجباری است"),
+		Vahed: Yup.string().required("واحد اجباری است"),
+		Pelak: Yup.string().required("پلاک اجباری است"),
+	}),
+];
 
 export const PetSitterSignup = () => {
 	const isDesktop = useDesktop();
@@ -70,10 +80,25 @@ export const PetSitterSignup = () => {
 				</MultiStage.Header>
 
 				<Formik
-					initialValues={{ email: "", password: "niceone", love: false }}
-					validationSchema={validationSchema}
+					initialValues={{
+						Email: "",
+						FirstName: "",
+						LastName: "",
+						Gender: "",
+						BirthDate: "",
+						PhoneNumber: "",
+						Address: "",
+						Pelak: "",
+						Vahed: "",
+						PostalCode: "",
+						File: null,
+						CertificateFile: null,
+						Bio: "",
+					}}
+					validationSchema={validationSchemas[0]}
 					onSubmit={(values) => {
 						console.log("Form values:", values);
+						goNext();
 					}}
 				>
 					{({ isSubmitting }) => (
@@ -95,12 +120,12 @@ export const PetSitterSignup = () => {
 											<div className="flex flex-col gap-5 px-10">
 												<div className="w-full flex gap-8">
 													<InputHolderWrapper>
-														<InputHolder name="firstname" text="نام" />
-														<SelectHolder name="gender" text="جنسیت" />
+														<InputHolder name="FirstName" text="نام" />
+														<SelectHolder name="Gender" text="جنسیت" />
 													</InputHolderWrapper>
 													<InputHolderWrapper>
-														<InputHolder name="lastname" text="نام خانوادگی" />
-														<DateHolder name="birthdate" text="تاریخ تولد" />
+														<InputHolder name="LastName" text="نام خانوادگی" />
+														<DateHolder name="BirthDate" text="تاریخ تولد" />
 													</InputHolderWrapper>
 												</div>
 												<div>
@@ -109,12 +134,12 @@ export const PetSitterSignup = () => {
 												<div className="w-full flex gap-8">
 													<InputHolderWrapper>
 														<DoubleInputHolder />
-														<InputHolder name="nice" text="پلاک" />
-														<InputHolder name="nice" text="واحد" />
+														<InputHolder name="Pelak" text="پلاک" />
+														<InputHolder name="Vahed" text="واحد" />
 													</InputHolderWrapper>
 													<InputHolderWrapper>
-														<TextareaHolder text="آدرس" name="address" />
-														<InputHolder name="nice" text="کد پستی" />
+														<TextareaHolder text="آدرس" name="Address" />
+														<InputHolder name="PostalCode" text="کد پستی" />
 													</InputHolderWrapper>
 												</div>
 												<div>
@@ -122,17 +147,17 @@ export const PetSitterSignup = () => {
 												</div>
 												<div className="w-full flex gap-8">
 													<InputHolderWrapper>
-														<InputHolder name="phone" text="شماره تماس" />
+														<InputHolder name="PhoneNumber" text="شماره تماس" />
 													</InputHolderWrapper>
 													<InputHolderWrapper>
-														<InputHolder name="email" text="ایمیل" />
+														<InputHolder name="Email" text="ایمیل" />
 													</InputHolderWrapper>
 												</div>
 												<div className="flex w-full justify-end">
 													<Button
-														onClick={goNext}
 														shadow={false}
 														className="ml-10 mt-20"
+														type="submit"
 													>
 														برو مرحله بعد
 													</Button>
@@ -150,26 +175,26 @@ export const PetSitterSignup = () => {
 												<p>ویرایش عکس پروفایل</p>
 											</div>
 											<div className="flex flex-col gap-5 px-3 sm:px-10">
-												<InputHolder name="firstname" text="نام" />
-												<InputHolder name="lastname" text="نام خانوادگی" />
-												<SelectHolder name="gender" text="جنسیت" />
-												<DateHolder name="birthdate" text="تاریخ تولد" />
+												<InputHolder name="FirstName" text="نام" />
+												<InputHolder name="LastName" text="نام خانوادگی" />
+												<SelectHolder name="Gender" text="جنسیت" />
+												<DateHolder name="BirthDate" text="تاریخ تولد" />
 												<div>
 													<p className="text-lg font-bold">موقعیت مکانی</p>
 												</div>
 												<DoubleInputHolder />
-												<InputHolder name="pelak" text="پلاک" />
-												<InputHolder name="vahed" text="واحد" />
-												<TextareaHolder text="آدرس" name="address" />
-												<InputHolder name="postalcode" text="کد پستی" />
+												<InputHolder name="Pelak" text="پلاک" />
+												<InputHolder name="Vahed" text="واحد" />
+												<TextareaHolder text="آدرس" name="Address" />
+												<InputHolder name="Postalcode" text="کد پستی" />
 												<div>
 													<p className="text-lg font-bold">اطلاعات تماس</p>
 												</div>
-												<InputHolder name="phone" text="شماره تماس" />
-												<InputHolder name="email" text="ایمیل" />
+												<InputHolder name="Phone" text="شماره تماس" />
+												<InputHolder name="Email" text="ایمیل" />
 												<div className="flex w-full justify-end">
 													<Button
-														onClick={goNext}
+														type="submit"
 														shadow={false}
 														className="ml-10 mt-20"
 													>
@@ -188,14 +213,11 @@ export const PetSitterSignup = () => {
 									<div>
 										<p className="text-2xl font-bold">مدارک شناسایی</p>
 									</div>
-									<div className="flex flex-col sm:flex-row items-center gap-3">
-										<div className="w-full sm:w-1/2 flex flex-col">
-											<p className="px-5 font-bold">شناسنامه</p>
-											<UploadDropZone />
-										</div>
-										<div className="w-full sm:w-1/2 flex flex-col">
-											<p className="px-5 font-bold">کارت ملی</p>
-											<UploadDropZone />
+									<div>
+										<div className="flex items-center gap-3">
+											<div className="w-full flex flex-col">
+												<UploadDropZone name="File" />
+											</div>
 										</div>
 									</div>
 									<div>
@@ -204,7 +226,7 @@ export const PetSitterSignup = () => {
 									<div>
 										<div className="flex items-center gap-3">
 											<div className="w-full flex flex-col">
-												<UploadDropZone />
+												<UploadDropZone name="CertificateFile" />
 											</div>
 										</div>
 									</div>
@@ -218,7 +240,7 @@ export const PetSitterSignup = () => {
 											برگشت
 										</Button>
 										<Button
-											onClick={goNext}
+											type="submit"
 											shadow={false}
 											className="ml-10 mt-20"
 										>
@@ -240,7 +262,7 @@ export const PetSitterSignup = () => {
 									<div className="w-full">
 										<Textarea
 											className="h-30 drop-shadow-lg border-black/20"
-											name="biography"
+											name="Bio"
 										/>
 									</div>
 									<div>
@@ -251,22 +273,22 @@ export const PetSitterSignup = () => {
 									<div>
 										<div className="flex flex-wrap items-center gap-4 sm:gap-1 lg:gap-4">
 											<IconToggleButton
-												name="walk"
+												name="Walking"
 												text="پیاده روی"
 												className="border-1 border-gray-400/50"
 											/>
 											<IconToggleButton
-												name="train"
+												name="Training"
 												text="آموزش"
 												className="border-1 border-gray-400/50"
 											/>
 											<IconToggleButton
-												name="hold"
+												name="Watching"
 												text="نگهداری"
 												className="border-1 border-gray-400/50"
 											/>
 											<IconToggleButton
-												name="medical"
+												name="Medical"
 												text="مراقبت های پزشکی"
 												className="border-1 border-gray-400/50"
 											/>
@@ -281,27 +303,27 @@ export const PetSitterSignup = () => {
 										<div className="flex flex-wrap items-start sm:items-center gap-4 sm:gap-1 lg:gap-4">
 											<ToggleButton
 												className="border-1 border-gray-400/50"
-												name="dog"
+												name="Dog"
 											>
 												<Dog></Dog>
 												سگ ها
 											</ToggleButton>
 											<ToggleButton
-												name="cat"
+												name="Cat"
 												className="border-1 border-gray-400/50"
 											>
 												<Cat></Cat>
 												گربه ها
 											</ToggleButton>
 											<ToggleButton
-												name="bird"
+												name="Bird"
 												className="border-1 border-gray-400/50"
 											>
 												<Bird></Bird>
 												پرندگان
 											</ToggleButton>
 											<ToggleButton
-												name="javandegan"
+												name="Rabbit"
 												className="border-1 border-gray-400/50"
 											>
 												<Rabbit></Rabbit>
@@ -319,7 +341,7 @@ export const PetSitterSignup = () => {
 											برگشت
 										</Button>
 										<Button
-											onClick={goNext}
+											type="submit"
 											shadow={false}
 											className="ml-10 mt-20"
 										>
@@ -383,8 +405,8 @@ function SelectHolder({ text, name }: { text: string; name: string }) {
 					</SelectTrigger>
 					<SelectContent className="">
 						<SelectGroup>
-							<SelectItem value={"male"}>مرد</SelectItem>
-							<SelectItem value={"female"}>زن</SelectItem>
+							<SelectItem value={"Male"}>مرد</SelectItem>
+							<SelectItem value={"Female"}>زن</SelectItem>
 						</SelectGroup>
 					</SelectContent>
 				</Select>

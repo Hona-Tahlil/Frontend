@@ -1,7 +1,8 @@
-enum Gender {
-	Male = 1,
-	Female = 2,
-}
+export const Gender = {
+	Male: 1,
+	Female: 2,
+};
+export type Gender = (typeof Gender)[keyof typeof Gender];
 export interface SubmitPersonalInfoPayload {
 	FirstName: string;
 	LastName: string;
@@ -21,24 +22,29 @@ export interface UploadDocumentsPayload {
 	File: File[] | null;
 }
 
-enum Petkind {
-	Dog = 1,
-	Cat = 2,
-	Rabbit = 3,
-	Bird = 4,
-}
-enum Service {
-	Walking = 1,
-	Watching = 2,
-}
+export const PetKind = {
+	Dog: 1,
+	Cat: 2,
+	Rabbit: 3,
+	Bird: 4,
+};
+
+export type PetKind = (typeof PetKind)[keyof typeof PetKind];
+export const ServiceType = {
+	Walking: 1,
+	Watching: 2,
+};
+export type ServiceType = (typeof ServiceType)[keyof typeof ServiceType];
 export interface SubmitSkillsPayload {
 	Bio: string;
-	Petkinds: Petkind[];
-	Services: Service[];
+	Petkinds: PetKind[];
+	Services: ServiceType[];
 }
 
-enum PetSitterStatus {}
-enum OnboardingStep {}
+const PetSitterStatus = {};
+type PetSitterStatus = keyof typeof PetSitterStatus;
+const OnboardingStep = {};
+type OnboardingStep = keyof typeof OnboardingStep;
 export interface PetSitterStatusResponse {
 	Status: PetSitterStatus;
 	OnboardingStep: OnboardingStep;
