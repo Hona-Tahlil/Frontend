@@ -1,15 +1,11 @@
 import React from "react";
 import { Switch } from "../../ui/switch";
 import { cn } from "@/lib/utils";
+import type { ToggleProps } from "@/types/toggleTypes";
 
-type DontKnowToggleProps = {
-  className?: string | null;
-  text: string;
-  checked: boolean;
-  onCheckedChange: (checked: boolean) => void;
-};
 
-export default function Toggle({ className, text , checked, onCheckedChange}: DontKnowToggleProps) {
+
+export default function Toggle({ className, text , checked, onCheckedChange}: ToggleProps) {
   return (
     <div
       className={cn(
