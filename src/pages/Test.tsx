@@ -31,58 +31,59 @@ const validationSchema = Yup.object({
     .required("رمز عبور اجباری است"),
 });
 
+
 function Test() {
-  const isDesktop = useDesktop();
-  const isMobile = useMobile();
-  const isTablet = useTablet();
-  const [isChecked, setIsChecked] = useState(false);
-  return (
-    <div className="flex flex-col items-center">
-      <Formik
-        initialValues={{
-          email: "",
-          akhoond: "2",
-          password: "he",
-          love: false,
-        }}
-        onSubmit={(values) => {
-          console.log("Form values:", values);
-        }}
-      >
-        {({ isSubmitting }) => (
-          <Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
-            <Select name="akhoond">
-              <SelectTrigger className="w-30">
-                <SelectValue placeholder="روز" />
-              </SelectTrigger>
-              <SelectContent className="">
-                <SelectGroup>
-                  <SelectItem value={"1"}>1</SelectItem>
-                  <SelectItem value={"2"}>2</SelectItem>
-                  <SelectItem value={"3"}>3</SelectItem>
-                  <SelectItem value={"4"}>4</SelectItem>
-                  <SelectItem value={"5"}>5</SelectItem>
-                  <SelectItem value={"6"}>6</SelectItem>
-                  <SelectItem value={"7"}>7</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <div className="mt-5 w-50">
-              <Input
-                name="email"
-                shadow={true}
-                classes={{
-                  className: "h-20",
-                  inputClassName: "!text-[20px]",
-                  errorClassName: "px-5",
-                }}
-                type="email"
-                placeholder="ایمیل"
-              />
-            </div>
-            <div className="w-35">
-              <DatePicker className="h-15 !text-[35px]" name="akhoond2" />
-            </div>
+	const isDesktop = useDesktop();
+	const isMobile = useMobile();
+	const isTablet = useTablet();
+	return (
+		<div className="flex flex-col items-center">
+			<Formik
+				initialValues={{
+					email: "",
+					akhoond: "2",
+					password: "he",
+					love: false,
+				}}
+				validationSchema={validationSchema}
+				onSubmit={(values) => {
+					console.log("Form values:", values);
+				}}
+			>
+				{({ isSubmitting }) => (
+					<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
+						<Select name="akhoond">
+							<SelectTrigger className="w-30">
+								<SelectValue placeholder="روز" />
+							</SelectTrigger>
+							<SelectContent className="">
+								<SelectGroup>
+									<SelectItem value={"1"}>1</SelectItem>
+									<SelectItem value={"2"}>2</SelectItem>
+									<SelectItem value={"3"}>3</SelectItem>
+									<SelectItem value={"4"}>4</SelectItem>
+									<SelectItem value={"5"}>5</SelectItem>
+									<SelectItem value={"6"}>6</SelectItem>
+									<SelectItem value={"7"}>7</SelectItem>
+								</SelectGroup>
+							</SelectContent>
+						</Select>
+						<div className="mt-5 w-50">
+							<Input
+								name="email"
+								shadow={true}
+								classes={{
+									className: "h-20",
+									inputClassName: "!text-[20px]",
+									errorClassName: "px-5",
+								}}
+								type="email"
+								placeholder="ایمیل"
+							/>
+						</div>
+						<div className="w-35">
+							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
+						</div>
 
             <div className="mt-5 w-50">
               <Input
