@@ -1,14 +1,28 @@
 export interface LoginPayload {
 	email: string;
-	username: string | null;
 	password: string;
+	rememberMe: boolean;
 }
 
 export interface LoginResponse {
-	user: {
-		id: number;
-		name: string;
-		email: string;
-		username: string;
-	};
+	statusCode: number;
+	messages?: LoginResponseErrors;
+	message?: string;
+	data?: LoginResponseData;
+}
+
+export interface LoginResponseErrors {
+	email?: string;
+	password?: string;
+}
+
+export interface LoginResponseData {
+	accessToken: string;
+	permissions: PermissionResponse[];
+}
+
+export interface PermissionResponse {
+	id: number;
+	name: string;
+	description: string;
 }
