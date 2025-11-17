@@ -37,6 +37,9 @@ const validationSchemas = [
 		Address: Yup.string().required("آدرس اجباری است"),
 		Vahed: Yup.string().required("واحد اجباری است"),
 		Pelak: Yup.string().required("پلاک اجباری است"),
+		Gender: Yup.string().required("پلاک اجباری است"),
+		Province: Yup.string().required("پلاک اجباری است"),
+		City: Yup.string().required("پلاک اجباری است"),
 	}),
 ];
 
@@ -459,7 +462,7 @@ function DoubleInputHolder() {
 			</div>
 			<div className="flex justify-between lg:w-7/10 sm:w-6/10 w-full">
 				<div className="w-19/40">
-					<Select name="province" onValueChange={setProvince}>
+					<Select name="Province" onValueChange={setProvince}>
 						<SelectTrigger className="w-full border-1 border-gray-400/20">
 							<SelectValue
 								placeholder="استان"
@@ -486,7 +489,7 @@ function DoubleInputHolder() {
 					</Select>
 				</div>
 				<div className="w-19/40">
-					<Select name="city">
+					<Select name="City">
 						<SelectTrigger className="w-full border-1 border-gray-400/20">
 							<SelectValue placeholder="شهر" />
 						</SelectTrigger>
