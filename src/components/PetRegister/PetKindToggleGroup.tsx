@@ -1,7 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { PetKindToggleGroupProps } from "@/types/PetRegister/toggleGroup";
 import { useField } from "formik";
-import React from "react";
 
 interface FormikToggleProps extends PetKindToggleGroupProps {
   name: string;
