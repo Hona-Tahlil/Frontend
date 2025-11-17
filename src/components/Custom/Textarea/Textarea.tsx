@@ -11,21 +11,15 @@ import { useField } from "formik";
 import { OctagonAlert } from "lucide-react";
 import React from "react";
 
-interface TextareaProps extends React.ComponentProps<"textarea"> {
+interface TextareaProps
+	extends Omit<React.ComponentProps<"textarea">, "className"> {
 	scrollbarBorderRadius?: string;
 	classes?: InputClass;
 }
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 	(
-		{
-			className,
-			classes,
-			scrollbarBorderRadius = "10px",
-			name,
-			dir = "rtl",
-			...props
-		},
+		{ classes, scrollbarBorderRadius = "10px", name, dir = "rtl", ...props },
 		ref,
 	) => {
 		const [field, meta] = useField(name || "");
@@ -59,6 +53,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 
 		return (
 			<div
+				dir={dir}
 				className={cn(
 					"relative flex gap-3 flex-col items-center justify-center w-full h-full",
 				)}

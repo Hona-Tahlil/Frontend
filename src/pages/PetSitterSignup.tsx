@@ -14,7 +14,7 @@ import IconToggleButton from "@/components/PetSitterSignup/IconToggleButton/Icon
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import ToggleButton from "@/components/PetSitterSignup/ToggleButton/ToggleButton";
 import UploadDropZone from "@/components/PetSitterSignup/UploadDropZone/UploadDropZone";
-import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
+import { useDesktop } from "@/hooks/ResponsiveHooks";
 import { iranProvincesFa } from "@/utils/provinces";
 import { Form, Formik } from "formik";
 import { Bird, Cat, Dog, Rabbit } from "lucide-react";
@@ -80,6 +80,7 @@ export const PetSitterSignup = () => {
 				</MultiStage.Header>
 
 				<Formik
+					enableReinitialize
 					initialValues={{
 						Email: "",
 						FirstName: "",
@@ -95,7 +96,7 @@ export const PetSitterSignup = () => {
 						CertificateFile: null,
 						Bio: "",
 					}}
-					validationSchema={validationSchemas[0]}
+					validationSchema={validationSchemas[currentStage]}
 					onSubmit={(values) => {
 						console.log("Form values:", values);
 						goNext();
@@ -155,6 +156,7 @@ export const PetSitterSignup = () => {
 												</div>
 												<div className="flex w-full justify-end">
 													<Button
+														isLoading={isSubmitting}
 														shadow={false}
 														className="ml-10 mt-20"
 														type="submit"
@@ -194,6 +196,7 @@ export const PetSitterSignup = () => {
 												<InputHolder name="Email" text="ایمیل" />
 												<div className="flex w-full justify-end">
 													<Button
+														isLoading={isSubmitting}
 														type="submit"
 														shadow={false}
 														className="ml-10 mt-20"
@@ -261,7 +264,9 @@ export const PetSitterSignup = () => {
 
 									<div className="w-full">
 										<Textarea
-											className="h-30 drop-shadow-lg border-black/20"
+											classes={{
+												className: "h-30 drop-shadow-lg border-black/20",
+											}}
 											name="Bio"
 										/>
 									</div>
@@ -423,7 +428,9 @@ function TextareaHolder({ text, name }: { text: string; name: string }) {
 			</div>
 			<div className="w-6/10 lg:w-7/10">
 				<Textarea
-					className="h-30 drop-shadow-lg border-1 border-gray-400/20"
+					classes={{
+						inputClassName: "h-30 drop-shadow-lg border-1 border-gray-400/20",
+					}}
 					name={name}
 				/>
 			</div>
