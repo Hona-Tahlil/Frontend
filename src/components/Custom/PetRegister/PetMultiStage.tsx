@@ -5,6 +5,7 @@ import { Button } from "../Button/Button";
 import { ArrowLeft, ArrowRight, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMobile } from "@/hooks/ResponsiveHooks";
+import PawIcon from "./PawIcon";
 
 interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   children: ReactNode;
@@ -136,12 +137,10 @@ export default function Stepper({
         </StepContentWrapper>
 
         {!isCompleted && (
-          <div className={`px-8 flex-1 flex mt-5  ${footerClassName}`}>
-            <div
-              className={`mt-10 gap-3 flex ${
-                currentStep !== 1 ? "justify-center" : "justify-start"
-              }`}
-            >
+          <div
+            className={`px-8 flex items-center justify-center mt-5 relative w-full${footerClassName}`}
+          >
+            <div className={`mt-10 gap-3 flex  justify-center w-full`}>
               {/* // <button
                 //   onClick={handleBack}
                 //   className={`duration-350 rounded px-2 py-1 transition ${
@@ -161,7 +160,9 @@ export default function Stepper({
               >
                 {isLastStep ? "ثبت و نهایی کردن اطلاعات" : nextButtonText}
               </button> */}
-
+              {/* {!isMobile && (
+                <PawIcon step={currentStep} className="w-15 h-15"></PawIcon>
+              )} */}
               <Button
                 onClick={isLastStep ? handleComplete : handleNext}
                 className=" duration-500 flex items-center justify-center rounded-full  py-1.5 px-3.5 font-medium tracking-tight text-white transition"
@@ -179,7 +180,7 @@ export default function Stepper({
                   {nextButtonText}
                 </span>
               </Button>
-
+              {isMobile && <PawIcon step={currentStep} className="w-10 h-10"></PawIcon>}
               {isMobile ? (
                 <Button
                   disabled={currentStep === 1}
@@ -225,6 +226,12 @@ export default function Stepper({
                 </Button>
               )}
             </div>
+            {!isMobile && (
+              <PawIcon
+                step={currentStep}
+                className="absolute bottom-0 right-0 w-15 h-15 pointer-events-none"
+              />
+            )}
           </div>
         )}
       </div>

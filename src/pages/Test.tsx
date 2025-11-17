@@ -31,6 +31,7 @@ import Stepper, { Step } from "@/components/Custom/PetRegister/PetMultiStage";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/avatar";
 import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
+import PawIcon from "@/components/Custom/PetRegister/PawIcon";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -296,6 +297,20 @@ function Test() {
                 </div>
               </div>
             </Step>
+            <Step>
+              <div className="flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
           </Stepper>
         </DialogContent>
       </Dialog>
@@ -309,6 +324,8 @@ function Test() {
           سلام
         </Button>
       )}
+
+      <PawIcon step={2} className=""></PawIcon>
     </div>
   );
 }
