@@ -32,6 +32,12 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/avatar";
 import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
 import PawIcon from "@/components/Custom/PetRegister/PawIcon";
+import { BabyIcon, Bird, Cat, Dog } from "lucide-react";
+import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
+import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
+
+import Toggle from "@/components/Custom/Toggle/Toggle";
+import { useState } from "react";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -46,8 +52,9 @@ function Test() {
   const isDesktop = useDesktop();
   const isMobile = useMobile();
   const isTablet = useTablet();
-
+  const [isChecked, setIsChecked] = useState(false);
   const navigate = useNavigate();
+
   return (
     <div className="flex flex-col items-center">
       <Formik
@@ -57,6 +64,7 @@ function Test() {
           password: "he",
           love: false,
         }}
+        validationSchema={validationSchema}
         onSubmit={(values) => {
           console.log("Form values:", values);
         }}
@@ -67,7 +75,7 @@ function Test() {
               <SelectTrigger className="w-30">
                 <SelectValue placeholder="روز" />
               </SelectTrigger>
-              <SelectContent className="">
+              <SelectContent>
                 <SelectGroup>
                   <SelectItem value={"1"}>1</SelectItem>
                   <SelectItem value={"2"}>2</SelectItem>
@@ -79,6 +87,7 @@ function Test() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+
             <div className="mt-5 w-50">
               <Input
                 name="email"
@@ -92,6 +101,7 @@ function Test() {
                 placeholder="ایمیل"
               />
             </div>
+
             <div className="w-35">
               <DatePicker className="h-15 !text-[35px]" name="akhoond2" />
             </div>
@@ -224,6 +234,32 @@ function Test() {
         </MultiStage.StageHolder>
       </MultiStage>
 
+      <Formik
+        initialValues={{ isAdult: "false", petKind: "dog" }}
+        onSubmit={(values) => console.log(values)}
+      >
+        <Form>
+          <IsAdultToggleGroup
+            name="isAdult"
+            items={[
+              { name: "false", icon: BabyIcon, value: "جوجه" },
+              { name: "true", icon: Dog, value: "بالغ" },
+            ]}
+          />
+
+          <PetKindToggleGroup
+            name="petKind"
+            items={[
+              { name: "dog", icon: Dog, value: "سگ" },
+              { name: "cat", icon: Cat, value: "گربه" },
+              { name: "bird", icon: Bird, value: "پرنده" },
+            ]}
+          />
+        </Form>
+      </Formik>
+
+      {/* FIXED: Removed the extra broken MultiStage.StageHolder */}
+
       <Dialog>
         <DialogTrigger asChild>
           {!isMobile && <Button>کلیک کن</Button>}
@@ -326,6 +362,14 @@ function Test() {
       )}
 
       <PawIcon step={2} className=""></PawIcon>
+      <Toggle
+        className="mb-10"
+        text="نمیدونم"
+        checked={isChecked}
+        onCheckedChange={() => setIsChecked((checked) => !checked)}
+      />
+
+      {isChecked && <p>salllaaam</p>}
     </div>
   );
 }
