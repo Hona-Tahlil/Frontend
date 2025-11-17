@@ -1,11 +1,10 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import type { IsAdultToggleGroupProps } from "@/types/PetRegister/toggleGroup";
 import { useField } from "formik";
-import React, { type ElementType } from "react";
 
 
 
-export default function IsAdultToggleGroup({ items, name }: IsAdultToggleGroupProps & { name: string }) {
+export default function IsAdultToggleGroup({ items, name }: IsAdultToggleGroupProps) {
   const [field, meta, helpers] = useField(name)
 
   return (
@@ -33,7 +32,7 @@ export default function IsAdultToggleGroup({ items, name }: IsAdultToggleGroupPr
 
           <div className="group-hover:bg-white group-data-[state=on]:bg-white w-full h-[30%] border-black/40 border-2 md:border-4 group-hover:border-primary group-data-[state=on]:border-primary text-black/40 px-1 md:px-5 rounded-lg md:rounded-2xl flex justify-center items-center">
             <p className="text-xs md:text-xl font-bold group-hover:text-primary group-data-[state=on]:text-primary">
-              {item.name}
+              {item.value}
             </p>
           </div>
         </ToggleGroupItem>

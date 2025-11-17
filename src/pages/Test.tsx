@@ -215,24 +215,24 @@ function Test() {
       </MultiStage>
 
       <Formik
-        initialValues={{ isAdult: "بالغ", petKind:"سگ" }}
+        initialValues={{ isAdult: "false", petKind:"dog" }}
         onSubmit={(values) => console.log(values)}
       >
         <Form>
           <IsAdultToggleGroup
             name="isAdult"
             items={[
-              { name: "بچه", icon: BabyIcon },
-              { name: "بالغ", icon: Dog },
+              { name: "false", icon: BabyIcon,value:"جوجه" },
+              { name: "true", icon: Dog , value:"بالغ"},
             ]}
           />
 
           <PetKindToggleGroup
             name="petKind"
             items={[
-              { name: "سگ", icon: Dog },
-              { name: "گربه", icon: Cat },
-              { name: "پرنده", icon: Bird },
+              { name: "dog", icon: Dog , value:"سگ"},
+              { name: "cat", icon: Cat , value: "گربه"},
+              { name: "bird", icon: Bird , value: "پرنده"},
             ]}
           />
         </Form>

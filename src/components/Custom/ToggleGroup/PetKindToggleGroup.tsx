@@ -26,7 +26,7 @@ export default function PetKindToggleGroup({ items, name }: FormikToggleProps) {
           {/* Left vertical Label */}
           <div className="bg-black/40 group-hover:bg-primary group-data-[state=on]:bg-primary text-white h-full px-1 md:px-5 rounded-tr-md rounded-br-md md:rounded-tr-2xl md:rounded-br-2xl flex justify-center items-center">
             <p className="text-xs md:text-xl font-bold rotate-90">
-              {item.name}
+              {item.value}
             </p>
           </div>
 
