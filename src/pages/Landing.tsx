@@ -73,6 +73,13 @@ function Landing() {
 					</div>
 				</div>
 			</div>
+			{!isDesktop && (
+				<div className="flex gap-2 sm:gap-4 items-center justify-center w-full mt-20 mb-20">
+					<IconWithText Icon={UserRoundCheckIcon} text="انعطاف در ساعت کاری" />
+					<IconWithText Icon={IdCard} text="پرداخت امن" />
+					<IconWithText Icon={Headset} text="پشتیبانی 24 ساعته" />
+				</div>
+			)}
 
 			<div className="bg-secondary-200 w-full flex flex-col items-center gap-3 py-3">
 				<div className="flex w-9/10 lg:w-8/10 justify-between items-center">
@@ -124,9 +131,11 @@ function Landing() {
 					</div>
 				</Carousel>
 			</div>
-			<div className="w-full h-auto flex flex-col items-center">
-				<p className="text-5xl font-bold mt-35">خدمات محبوب پتیار</p>
-				<p className="text-xl mt-5">
+			<div className="w-full h-auto flex flex-col items-center px-7">
+				<p className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mt-35">
+					خدمات محبوب پتیار
+				</p>
+				<p className="text-xl mt-5 text-center">
 					مجموعهای از سرویسهای کاربردی برای مراقبت بهتر از پتها
 				</p>
 
@@ -332,10 +341,10 @@ function Landing() {
 					</>
 				)}
 			</div>
-			<div className="flex flex-col w-3/4 lg:w-full h-auto px-7 mt-20 max-w-250 mb-30">
+			<div className="flex flex-col w-5/6 sm:w-3/4 lg:w-full h-auto sm:px-7 mt-20 max-w-250 mb-30">
 				<p className="text-xl font-bold">سوالات متداول</p>
 				<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
-					<div className="flex flex-col gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
+					<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
 						<FaqItem
 							index={0}
 							open={faq1Open}
