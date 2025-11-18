@@ -16,6 +16,7 @@ export interface SignupResponseErrors {
 	name: string;
 	email?: string;
 	password?: string;
+}
 export interface LoginResponse {
 	statusCode: number;
 	messages?: LoginResponseErrors;
