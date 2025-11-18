@@ -135,10 +135,6 @@ jobs:
         continue-on-error: true
         run: docker compose push
 
-      #################################################
-      #            SSH Key + Cloudflared             #
-      #################################################
-
       - name: Set up SSH key
         if: steps.docker_build.outcome == 'success'
         run: |
