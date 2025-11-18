@@ -25,6 +25,7 @@ import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
+import * as Yup from "yup";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
