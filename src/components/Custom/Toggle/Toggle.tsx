@@ -13,8 +13,9 @@ export default function Toggle({ className, text , checked, onCheckedChange}: To
         "rounded-4xl h-15 bg-primary-200 w-70 flex items-center justify-between px-5"
       )}
     >
-      <Switch className="bg-primary" checked={checked} onCheckedChange={onCheckedChange} />
       <p className="text-lg  ">{text}</p>
+      <Switch dir="ltr" className="bg-primary" checked={checked} onCheckedChange={onCheckedChange} />
+      
     </div>
   );
 }

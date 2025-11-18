@@ -278,7 +278,49 @@ function Test() {
             stepContainerClassName="hidden"
           >
             <Step>
-              <div className="flex justify-center flex-col items-center pb-[20vh]">
+              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg h-10" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-lg mt-10">
+                  نوع و نژاد پت شما چیه؟
+                </p>
+                <Toggle text="نمیدونم" checked={isChecked} onCheckedChange={setIsChecked}/>
+                <div>
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
+                <p className="font-bold text-md mt-10">
+                  نام و عکس پت خود رو وارد کنید
+                </p>
+                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                <div className="h-5">
+                  <p className="text-lg mb-1">نام</p>
+                  <NonFormikInput
+                    classes={{ className: "text-lg" }}
+                  ></NonFormikInput>
+                </div>
+              </div>
+            </Step>
+            <Step>
+              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
                 <p className="font-bold text-md mt-10">
                   نام و عکس پت خود رو وارد کنید
                 </p>
@@ -292,49 +334,7 @@ function Test() {
               </div>
             </Step>
             <Step>
-              <div className="flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="flex justify-center flex-col items-center pb-[20vh]">
+              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
                 <p className="font-bold text-md mt-10">
                   نام و عکس پت خود رو وارد کنید
                 </p>
