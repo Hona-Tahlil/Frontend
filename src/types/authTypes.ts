@@ -3,7 +3,6 @@ export interface SignupPayload {
 	lastname: string;
 	email: string;
 	password: string;
-	rememberMe: boolean;
 }
 
 export interface SignupResponse {

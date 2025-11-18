@@ -1,6 +1,7 @@
 // src/services/authService.ts
 
 import type {
+	LoginPayload,
 	LoginResponse,
 	SignupPayload,
 	SignupResponse,
