@@ -7,7 +7,7 @@ import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
 import { Form, Formik } from "formik";
-import * as Yup from "yup";
+//import * as Yup from "yup";
 
 import {
 	Select,
