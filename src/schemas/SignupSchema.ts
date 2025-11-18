@@ -43,4 +43,5 @@ const SignupSchema = {
 	validationSchema,
 };
 
+
 export default SignupSchema;
