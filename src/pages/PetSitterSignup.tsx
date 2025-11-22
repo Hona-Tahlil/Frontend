@@ -15,10 +15,25 @@ import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import ToggleButton from "@/components/PetSitterSignup/ToggleButton/ToggleButton";
 import UploadDropZone from "@/components/PetSitterSignup/UploadDropZone/UploadDropZone";
 import { useDesktop } from "@/hooks/ResponsiveHooks";
+import {
+	getDocuments,
+	getPersonalInfo,
+	getStatus,
+	submitPersonalInfo,
+	submitSkills,
+	uploadDocuments,
+} from "@/services/petSitterSignupService";
+import useUserStore from "@/store/userStore/userStore";
+import {
+	GenderString,
+	PetSitterStatus,
+	StringToGender,
+} from "@/types/petSitterSignupApiTypes";
 import { iranProvincesFa } from "@/utils/provinces";
 import { Form, Formik } from "formik";
 import { Bird, Cat, Dog, Rabbit } from "lucide-react";
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
 const validationSchemas = [
@@ -48,6 +63,86 @@ export const PetSitterSignup = () => {
 	const [animationDir, setAnimationDir] = useState(1);
 	const [currentStage, setCurrentStage] = useState(0);
 	const [completedStage, setCompletedStage] = useState(0);
+	const [isLoading, setIsLoading] = useState(false);
+	const { accessToken } = useUserStore();
+	const navigate = useNavigate();
+
+	const defaultValues = {
+		Email: "",
+		FirstName: "",
+		LastName: "",
+		Gender: "",
+		BirthDate: "",
+		PhoneNumber: "",
+		Address: "",
+		Pelak: "",
+		Vahed: "",
+		PostalCode: "",
+		City: "",
+		Province: "",
+		Files: [] as File[],
+		ExistingFiles: [] as string[],
+		CertificateFiles: [] as File[],
+		ExistingCertificateFiles: [] as string[],
+		Bio: "",
+	};
+
+	const [initialValues, setInitialValues] = useState(defaultValues);
+
+	async function setInitialFormValues(stage: PetSitterStatus) {
+		const res = await getPersonalInfo({ accessToken: accessToken! });
+		setInitialValues({
+			...initialValues,
+			Email: res.Email || "",
+			FirstName: res.FirstName || "",
+			LastName: res.LastName || "",
+			Gender: GenderString[res.Gender],
+			BirthDate: res.BirthDate || "",
+			PhoneNumber: res.PhoneNumber || "",
+			Address: res.Address || "",
+			Pelak: res.Pelak || "",
+			Vahed: res.Vahed || "",
+			PostalCode: res.PostalCode || "",
+		});
+		if (stage === PetSitterStatus.Review) {
+			setCurrentFormikStage(stage);
+			return;
+		}
+		const res2 = await getDocuments({ accessToken: accessToken! });
+		setInitialValues({
+			...initialValues,
+			ExistingFiles: res2.File || [],
+			ExistingCertificateFiles: res2.CertificateFile || [],
+		});
+		setCurrentFormikStage(stage);
+	}
+	async function setCurrentFormikStage(stage: PetSitterStatus) {
+		if (stage == PetSitterStatus.Review) {
+			setIsLoading(false);
+			setCurrentStage(0);
+			setCompletedStage(0);
+		} else if (stage == PetSitterStatus.Documents) {
+			setIsLoading(false);
+			setCurrentStage(1);
+			setCompletedStage(1);
+		} else if (stage == PetSitterStatus.Skills) {
+			setIsLoading(false);
+			setCurrentStage(2);
+			setCompletedStage(2);
+		} else {
+			navigate("/complete");
+		}
+	}
+	useEffect(() => {
+		if (!accessToken) {
+			//navigate("/login");
+			return;
+		}
+		getStatus({ accessToken }).then((res) => {
+			setInitialFormValues(res.Status);
+		});
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [currentStage]);
 
 	function goNext() {
 		setAnimationDir(-1);
@@ -96,24 +191,38 @@ export const PetSitterSignup = () => {
 
 				<Formik
 					enableReinitialize
-					initialValues={{
-						Email: "",
-						FirstName: "",
-						LastName: "",
-						Gender: "",
-						BirthDate: "",
-						PhoneNumber: "",
-						Address: "",
-						Pelak: "",
-						Vahed: "",
-						PostalCode: "",
-						File: null,
-						CertificateFile: null,
-						Bio: "",
-					}}
+					initialValues={initialValues}
 					validationSchema={validationSchemas[currentStage]}
-					onSubmit={(values) => {
+					onSubmit={(values, { setSubmitting }) => {
 						console.log("Form values:", values);
+						if (currentStage === 0) {
+							submitPersonalInfo({
+								FirstName: values.FirstName,
+								LastName: values.LastName,
+								Email: values.Email,
+								Gender: StringToGender[values.Gender],
+								BirthDate: values.BirthDate,
+								PhoneNumber: values.PhoneNumber,
+								Province: values.Province,
+								City: values.City,
+								Address: values.Address,
+								Pelak: values.Pelak,
+								Vahed: values.Vahed,
+								PostalCode: values.PostalCode,
+								accessToken: accessToken!,
+							});
+						} else if (currentStage === 1) {
+							uploadDocuments({
+								CertificateFile: values.CertificateFiles,
+								File: values.Files,
+								accessToken: accessToken!,
+							});
+						} else if (currentStage === 2) {
+							submitSkills({
+								Bio: values.Bio,
+								Petkinds: [],
+							});
+						}
 						goNext();
 					}}
 				>

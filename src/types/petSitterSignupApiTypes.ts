@@ -3,7 +3,15 @@ export const Gender = {
 	Female: 2,
 };
 export type Gender = (typeof Gender)[keyof typeof Gender];
-export interface SubmitPersonalInfoPayload extends AccessTokenPayload {
+export const GenderString: Record<Gender, string> = {
+	[Gender.Male]: "مرد",
+	[Gender.Female]: "زن",
+};
+export const StringToGender: Record<string, Gender> = {
+	مرد: Gender.Male,
+	زن: Gender.Female,
+};
+export interface PersonalInfo extends AccessTokenPayload {
 	FirstName: string;
 	LastName: string;
 	Email: string;
@@ -17,9 +25,13 @@ export interface SubmitPersonalInfoPayload extends AccessTokenPayload {
 	Vahed: string;
 	PostalCode: string;
 }
-export interface UploadDocumentsPayload extends AccessTokenPayload {
+export interface UploadDocuments extends AccessTokenPayload {
 	CertificateFile: File[] | null;
 	File: File[] | null;
+}
+export interface Documents extends AccessTokenPayload {
+	CertificateFile: string[] | null;
+	File: string[] | null;
 }
 
 export const PetKind = {
@@ -27,6 +39,12 @@ export const PetKind = {
 	Cat: 2,
 	Rabbit: 3,
 	Bird: 4,
+};
+export const StringToPetKind: Record<string, PetKind> = {
+	سگ: PetKind.Dog,
+	گربه: PetKind.Cat,
+	خرگوش: PetKind.Rabbit,
+	پرنده: PetKind.Bird,
 };
 
 export type PetKind = (typeof PetKind)[keyof typeof PetKind];
@@ -41,21 +59,20 @@ export interface SubmitSkillsPayload extends AccessTokenPayload {
 	Services: ServiceType[];
 }
 
-const PetSitterStatus = {};
-type PetSitterStatus = keyof typeof PetSitterStatus;
+export const PetSitterStatus = {
+	Review: 1,
+	Documents: 3,
+	Skills: 2,
+	Done: 4,
+};
+export type PetSitterStatus =
+	(typeof PetSitterStatus)[keyof typeof PetSitterStatus];
 const OnboardingStep = {};
 type OnboardingStep = keyof typeof OnboardingStep;
 export interface PetSitterStatusResponse {
 	Status: PetSitterStatus;
 	OnboardingStep: OnboardingStep;
 }
-
-export interface PersonalInfoRespnse
-	extends SubmitPersonalInfoPayload,
-		PetSitterStatusResponse {}
-export interface DocumentRespnse
-	extends UploadDocumentsPayload,
-		PetSitterStatusResponse {}
 
 export interface AccessTokenPayload {
 	accessToken: string;

@@ -1,11 +1,10 @@
 import type {
 	AccessTokenPayload,
-	DocumentRespnse,
-	PersonalInfoRespnse,
+	Documents,
+	PersonalInfo,
 	PetSitterStatusResponse,
-	SubmitPersonalInfoPayload,
 	SubmitSkillsPayload,
-	UploadDocumentsPayload,
+	UploadDocuments,
 } from "@/types/petSitterSignupApiTypes";
 import { getData, postData, putData } from "./services";
 
@@ -20,7 +19,7 @@ export const createPetSitterData = async (
 };
 
 export const submitPersonalInfo = async (
-	credentials: SubmitPersonalInfoPayload,
+	credentials: PersonalInfo,
 ): Promise<void> => {
 	const { accessToken, ...data } = credentials;
 	return putData({
@@ -31,14 +30,14 @@ export const submitPersonalInfo = async (
 };
 export const getPersonalInfo = async (
 	credentials: AccessTokenPayload,
-): Promise<PersonalInfoRespnse> => {
+): Promise<PersonalInfo> => {
 	return getData({
 		endPoint: `/v1/petsitter/register/personal`,
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
 };
 export const uploadDocuments = async (
-	credentials: UploadDocumentsPayload,
+	credentials: UploadDocuments,
 ): Promise<void> => {
 	const { accessToken, ...data } = credentials;
 	return putData({
@@ -50,7 +49,7 @@ export const uploadDocuments = async (
 
 export const getDocuments = async (
 	credentials: AccessTokenPayload,
-): Promise<DocumentRespnse> => {
+): Promise<Documents> => {
 	return getData({
 		endPoint: `/v1/petsitter/register/documents`,
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
