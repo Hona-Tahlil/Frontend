@@ -83,7 +83,7 @@ export function PetDatePicker({
 					max={month > 6 ? 30 : 31}
 				/>
 			</div>
-			<div className={cn("flex flex-col items-center justify-center")}>
+			<div className={cn("flex flex-col items-center justify-center",classes?.containerClassName)}>
 				<div>
 					<p className={cn("text-3xl", classes?.textClassName)}>ماه</p>
 				</div>

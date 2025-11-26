@@ -131,16 +131,16 @@ export default function Stepper({
           isCompleted={isCompleted}
           currentStep={currentStep}
           direction={direction}
-          className={` px-8 ${contentClassName}`}
+          className={`  ${contentClassName}`}
         >
           {stepsArray[currentStep - 1]}
         </StepContentWrapper>
 
         {!isCompleted && (
           <div
-            className={`px-8 flex items-center justify-center mt-5 relative w-full${footerClassName}`}
+            className={` flex items-center justify-center mt-5 relative w-full h-fit ${footerClassName}`}
           >
-            <div className={`mt-10 gap-3 flex  justify-center w-full`}>
+            <div className={` gap-3 flex  justify-center w-full`}>
               {/* // <button
                 //   onClick={handleBack}
                 //   className={`duration-350 rounded px-2 py-1 transition ${
@@ -333,7 +333,7 @@ interface StepProps {
 }
 
 export function Step({ children }: StepProps) {
-  return <div className="px-8">{children}</div>;
+  return <div className="">{children}</div>;
 }
 
 interface StepIndicatorProps {

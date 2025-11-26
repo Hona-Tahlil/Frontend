@@ -6,7 +6,7 @@ import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
-import { Form, Formik } from "formik";
+import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -32,12 +32,14 @@ import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/avatar";
 import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
 import PawIcon from "@/components/Custom/PetRegister/PawIcon";
-import { BabyIcon, Bird, Cat, Dog } from "lucide-react";
+import { BabyIcon, Bird, Cat, Dog, Mars, Rabbit, Venus } from "lucide-react";
 import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
+import { name } from "react-date-object/calendars/julian";
+import { DropdownMenu } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -52,9 +54,20 @@ function Test() {
   const isDesktop = useDesktop();
   const isMobile = useMobile();
   const isTablet = useTablet();
-  const [isChecked, setIsChecked] = useState(false);
+  const [kindDontKnow, setKindDontKnow] = useState(false);
+  const [genderDontKnow, setGenderDontKnow] = useState(false);
+  const [weightDontKnow, setWeightDontKnow] = useState(false);
+  const [birthDontKnow, setBirthDontKnow] = useState(false);
   const navigate = useNavigate();
+  const [species, setSpecies] = useState([
+    { name: "پرشین", number: 1 },
+    { name: "ژرمن", number: 2 },
+  ]);
 
+  function petKindOnChange(value: string) {
+    // api call
+    console.log(value);
+  }
   return (
     <div className="flex flex-col items-center">
       <Formik
@@ -264,90 +277,208 @@ function Test() {
         <DialogTrigger asChild>
           {!isMobile && <Button>کلیک کن</Button>}
         </DialogTrigger>
-        <DialogContent className="w-[40%] h-[80%]" dir="rtl">
-          <Stepper
-            initialStep={1}
-            onStepChange={(step) => {
-              console.log(step);
+        <DialogContent className="w-200 h-[90%] " dir="rtl">
+          <Formik
+            initialValues={{
+              petKind: kindDontKnow ? "" : "dog",
+              petName: "salam",
+              isAdult: "true",
+              aboutPet: "",
             }}
-            onFinalStepCompleted={() => console.log("All steps completed!")}
-            backButtonText="مرحله قبل"
-            nextButtonText="مرحله بعد"
-            className="mb-20"
-            backButtonProps={{ className: "" }}
-            stepContainerClassName="hidden"
+            onSubmit={(values) => console.log(values)}
+            enableReinitialize
           >
-            <Step>
-              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg h-10" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-lg mt-10">
-                  نوع و نژاد پت شما چیه؟
-                </p>
-                <Toggle text="نمیدونم" checked={isChecked} onCheckedChange={setIsChecked}/>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div className="h-5">
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-            <Step>
-              <div className="h-95 flex justify-center flex-col items-center pb-[20vh]">
-                <p className="font-bold text-md mt-10">
-                  نام و عکس پت خود رو وارد کنید
-                </p>
-                <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
-                <div>
-                  <p className="text-lg mb-1">نام</p>
-                  <NonFormikInput
-                    classes={{ className: "text-lg" }}
-                  ></NonFormikInput>
-                </div>
-              </div>
-            </Step>
-          </Stepper>
+            {({ isSubmitting }) => (
+              <Form>
+                <Stepper
+                  initialStep={1}
+                  onStepChange={(step) => {
+                    console.log(step);
+                  }}
+                  onFinalStepCompleted={() =>
+                    console.log("All steps completed!")
+                  }
+                  backButtonText="مرحله قبل"
+                  nextButtonText="مرحله بعد"
+                  className="mb-20"
+                  backButtonProps={{ className: "" }}
+                  stepContainerClassName="hidden"
+                >
+                  <Step>
+                    <div className="h-120 flex justify-center flex-col items-center pb-[20vh]">
+                      <p className="font-bold text-md mt-10">
+                        نام و عکس پت خود رو وارد کنید
+                      </p>
+                      <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                      <div>
+                        <p className="text-lg mb-1">نام</p>
+                        <Input
+                          name="petName"
+                          classes={{ className: "text-lg h-10" }}
+                        ></Input>
+                      </div>
+                    </div>
+                  </Step>
+                  <Step>
+                    <div className="h-120 w-full flex justify-center flex-col items-center mb-[2vh]">
+                      <p className="font-bold text-lg mt-5">
+                        نوع و نژاد پت شما چیه؟
+                      </p>
+                      <div className="h-15 my-5">
+                        <Toggle
+                          text="نمیدونم"
+                          checked={kindDontKnow}
+                          onCheckedChange={setKindDontKnow}
+                          className="h-full"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <PetKindToggleGroup
+                          disable={kindDontKnow}
+                          onChange={petKindOnChange}
+                          name="petKind"
+                          items={[
+                            { name: "dog", icon: Dog, value: "سگ" },
+                            { name: "cat", icon: Cat, value: "گربه" },
+                            { name: "bird", icon: Bird, value: "پرنده" },
+                            { name: "rabit", icon: Rabbit, value: "جونده" },
+                          ]}
+                          className="grid-cols-2 grid grid-rows-2"
+                        />
+                      </div>
+                      <div className="w-[90%] h-full flex gap-5 justify-between items-center">
+                        <p className="text-lg mb-0.5">نژاد</p>
+                        <Select name="breed">
+                          <SelectTrigger
+                            className="w-full h-9"
+                            disabled={kindDontKnow}
+                          >
+                            <SelectValue
+                              placeholder={
+                                kindDontKnow ? "نژاد و نوع پت را نمیدونم" : ""
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {!kindDontKnow && (
+                              <SelectGroup>
+                                {species.map((item) => (
+                                  <SelectItem value={item.number.toString()}>
+                                    {item.name}
+                                  </SelectItem>
+                                ))}
+                              </SelectGroup>
+                            )}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  </Step>
+                  <Step>
+                    <div className="h-120 flex justify-center flex-col items-center mb-[2vh]">
+                      <p className="font-bold text-lg mt-10">دختره یا پسر؟</p>
+                      <div className="h-13 my-5">
+                        <Toggle
+                          text="نمیدونم"
+                          checked={genderDontKnow}
+                          onCheckedChange={setGenderDontKnow}
+                          className="h-full"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <PetKindToggleGroup
+                          disable={genderDontKnow}
+                          onChange={petKindOnChange}
+                          name="petKind"
+                          items={[
+                            { name: "male", icon: Mars, value: "پسر" },
+                            { name: "femal", icon: Venus, value: "دختر" },
+                          ]}
+                          className="grid-cols-2 grid"
+                        />
+                      </div>
+                      <p className="font-bold text-lg mt-10">وزنش چقدره؟</p>
+                      <div className="my-5 h-13">
+                        <Toggle
+                          text="نمیدونم"
+                          checked={weightDontKnow}
+                          onCheckedChange={setWeightDontKnow}
+                          className=" h-full"
+                        />
+                      </div>
+                      <div className="h-10">
+                        <Input
+                          name="weight"
+                          disabled={weightDontKnow}
+                          classes={{ className: "w-full px-8" }}
+                        ></Input>
+                      </div>
+                    </div>
+                  </Step>
+                  <Step>
+                    <div className="h-120 flex justify-center flex-col items-center mb-[2vh]">
+                      <p className="font-bold text-md mt-10">
+                        چه تاریخی به دنیا اومده؟
+                      </p>
+                      <div className="h-13 my-5">
+                        <Toggle
+                          text="نمیدونم"
+                          checked={birthDontKnow}
+                          onCheckedChange={setBirthDontKnow}
+                          className="h-full text-sm"
+                        />
+                      </div>
+                      <div className="flex flex-1 justify-center w-[80%] mt-5">
+                        {birthDontKnow ? (
+                          <IsAdultToggleGroup
+                            name="isAdult"
+                            items={[
+                              {
+                                name: "false",
+                                icon: BabyIcon,
+                                value: "نابالغ",
+                              },
+                              { name: "true", icon: Dog, value: "بالغ" },
+                            ]}
+                            className="grid grid-cols-2 h-30"
+                          />
+                        ) : (
+                          <PetDatePicker
+                            from={10}
+                            to={8}
+                            relative={true}
+                            name="niceone"
+                            smallFontSize="16px"
+                            bigFontSize="26px"
+                            classes={{
+                              containerClassName: "w-20 mt-4",
+                              textClassName: "text-xl",
+                            }}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </Step>
+                  <Step>
+                    <div className="h-120 flex justify-center flex-col items-center mb-[2vh]">
+                      <p className="font-bold text-md mt-10">
+                        درباره وضعیت سلامت پت بهم بگو
+                      </p>
+                      <div className="w-full mt-10">
+                        <Textarea
+                          rows={6}
+                          scrollbarBorderRadius="10px"
+                          className="relative drop-shadow-lg py-3"
+                          name="aboutPet"
+                          placeholder="داروی مصرفی خاص، وضعیت واکسیناسیون، بیماری خاص..."
+                        />
+                      </div>
+                    </div>
+                  </Step>
+                </Stepper>
+              </Form>
+            )}
+          </Formik>
         </DialogContent>
       </Dialog>
 
@@ -362,14 +493,14 @@ function Test() {
       )}
 
       <PawIcon step={2} className=""></PawIcon>
-      <Toggle
-        className="mb-10"
+      {/* <Toggle
+        className="mb-10 h-50"
         text="نمیدونم"
         checked={isChecked}
         onCheckedChange={() => setIsChecked((checked) => !checked)}
-      />
+      /> */}
 
-      {isChecked && <p>salllaaam</p>}
+      {/* {isChecked && <p>salllaaam</p>} */}
     </div>
   );
 }
