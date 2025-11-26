@@ -1,4 +1,5 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
 import { useField } from "formik";
 import { CircleCheck } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +9,12 @@ interface PetToggleGroupProps {
 	values?: string[];
 	titles?: string[];
 	dir?: "ltr" | "rtl";
+	classes?: PetToggleGroupClasses;
+}
+interface PetToggleGroupClasses {
+	className?: string;
+	toggleClassName?: string;
+	textClassName?: string;
 }
 
 export default function PetToggleGroup({
@@ -15,6 +22,7 @@ export default function PetToggleGroup({
 	values,
 	titles,
 	dir = "rtl",
+	classes,
 }: PetToggleGroupProps) {
 	const [, , helpers] = useField<string[]>(name || "");
 	const [, setSelectedValues] = useState<string[]>([]);
@@ -26,7 +34,7 @@ export default function PetToggleGroup({
 				type="multiple"
 				variant="outline"
 				size="sm"
-				className="flex flex-wrap"
+				className={cn("flex flex-wrap", classes?.className)}
 			>
 				{values?.map((value, index) => {
 					return (
@@ -46,10 +54,13 @@ export default function PetToggleGroup({
 									}
 								});
 							}}
-							className="bg-transparent data-[state=on]:bg-transparent data-[state=on]:border-primary data-[state=on]:text-primary hover:data-[state=on]:bg-primary hover:data-[state=on]:text-white rounded-[27px] text-gray-600 hover:text-white hover:border-primary border-1 border-gray-600 hover:bg-primary disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground active:bg-primary-press active:border-transparent cursor-pointer gap-1"
+							className={cn(
+								"bg-transparent data-[state=on]:bg-transparent data-[state=on]:border-primary data-[state=on]:text-primary hover:data-[state=on]:bg-primary hover:data-[state=on]:text-white rounded-[27px] text-gray-600 hover:text-white hover:border-primary border-1 border-gray-600 hover:bg-primary disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground active:bg-primary-press active:border-transparent cursor-pointer gap-1",
+								classes?.toggleClassName,
+							)}
 						>
 							<CircleCheck size={"auto"} />
-							{titles?.[index] || ""}
+							<p className={classes?.textClassName}>{titles?.[index] || ""}</p>
 						</ToggleGroupItem>
 					);
 				})}
