@@ -85,6 +85,14 @@ export const PetSitterSignup = () => {
 		CertificateFiles: [] as File[],
 		ExistingCertificateFiles: [] as string[],
 		Bio: "",
+		Dog: false,
+		Cat: false,
+		Bird: false,
+		Rabbit: false,
+		Walking: false,
+		Watching: false,
+		Traning: false,
+		Medical: false,
 	};
 
 	const [initialValues, setInitialValues] = useState(defaultValues);
@@ -210,20 +218,64 @@ export const PetSitterSignup = () => {
 								Vahed: values.Vahed,
 								PostalCode: values.PostalCode,
 								accessToken: accessToken!,
-							});
+							})
+								.then(() => {
+									setSubmitting(false);
+									goNext();
+								})
+								.catch((error) => {
+									setSubmitting(false);
+								})
+								.finally(() => {
+									setSubmitting(false);
+									goNext();
+								});
 						} else if (currentStage === 1) {
 							uploadDocuments({
 								CertificateFile: values.CertificateFiles,
 								File: values.Files,
 								accessToken: accessToken!,
-							});
+							})
+								.then(() => {
+									setSubmitting(false);
+									goNext();
+								})
+								.catch((error) => {
+									setSubmitting(false);
+								})
+								.finally(() => {
+									setSubmitting(false);
+									goNext();
+								});
 						} else if (currentStage === 2) {
+							const petKinds = [
+								values.Dog ? 1 : null,
+								values.Cat ? 2 : null,
+								values.Bird ? 4 : null,
+								values.Rabbit ? 3 : null,
+							].filter(Boolean) as number[];
+							const services = [
+								values.Walking ? 1 : null,
+								values.Watching ? 2 : null,
+							].filter(Boolean) as number[];
 							submitSkills({
 								Bio: values.Bio,
-								Petkinds: [],
-							});
+								Petkinds: petKinds,
+								Services: services,
+								accessToken: accessToken!,
+							})
+								.then(() => {
+									setSubmitting(false);
+									goNext();
+								})
+								.catch((error) => {
+									setSubmitting(false);
+								})
+								.finally(() => {
+									setSubmitting(false);
+									goNext();
+								});
 						}
-						goNext();
 					}}
 				>
 					{({ isSubmitting }) => (
