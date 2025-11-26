@@ -1,4 +1,5 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { cn } from "@/lib/utils";
 import { useField } from "formik";
 import { CircleCheck } from "lucide-react";
 import { useState } from "react";
@@ -8,6 +9,12 @@ interface ServiceToggleGroupProps {
 	values?: string[];
 	titles?: string[];
 	dir?: "ltr" | "rtl";
+	classes?: ServiceToggleGroupClasses;
+}
+interface ServiceToggleGroupClasses {
+	className?: string;
+	toggleClassName?: string;
+	textClassName?: string;
 }
 
 export default function ServiceToggleGroup({
@@ -15,9 +22,10 @@ export default function ServiceToggleGroup({
 	values,
 	titles,
 	dir = "rtl",
+	classes,
 }: ServiceToggleGroupProps) {
 	const [, , helpers] = useField<string[]>(name || "");
-	const [selectedValues, setSelectedValues] = useState<string[]>([]);
+	const [, setSelectedValues] = useState<string[]>([]);
 
 	return (
 		<div>
@@ -26,7 +34,7 @@ export default function ServiceToggleGroup({
 				type="multiple"
 				variant="outline"
 				size="sm"
-				className="flex flex-col items-start"
+				className={cn("flex flex-col items-start", classes?.className)}
 			>
 				{values?.map((value, index) => {
 					return (
@@ -46,10 +54,18 @@ export default function ServiceToggleGroup({
 									}
 								});
 							}}
-							className="group bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary hover:data-[state=on]:bg-transparent hover:data-[state=on]:text-primary hover:bg-transparent rounded-[27px] text-gray-600 border-0 hover:text-primary disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground cursor-pointer gap-1 shadow-none"
+							className={cn(
+								"group bg-transparent data-[state=on]:bg-transparent data-[state=on]:text-primary hover:data-[state=on]:bg-transparent hover:data-[state=on]:text-primary hover:bg-transparent rounded-[27px] text-gray-600 border-0 hover:text-primary disabled:opacity-100 disabled:bg-primary-disabled disabled:text-primary-disabled-foreground cursor-pointer gap-1 shadow-none",
+								classes?.toggleClassName,
+							)}
 						>
 							<CircleCheck size={"auto"} />
-							<p className="text-gray-600 transition-all duration-100 group-hover:text-primary">
+							<p
+								className={cn(
+									"text-gray-600 transition-all duration-100 group-hover:text-primary",
+									classes?.textClassName,
+								)}
+							>
 								{titles?.[index] || ""}
 							</p>
 						</ToggleGroupItem>
