@@ -26,6 +26,8 @@ import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 import * as Yup from "yup";
+import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
+import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -54,7 +56,7 @@ function Test() {
 					password: "he",
 					love: false,
 				}}
-				validationSchema={validationSchema}
+				//validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
@@ -77,6 +79,17 @@ function Test() {
 								</SelectGroup>
 							</SelectContent>
 						</Select>
+
+						<PetToggleGroup
+							name="doost"
+							values={["nigga", "what"]}
+							titles={["oh wow", "crazy"]}
+						/>
+						<ServiceToggleGroup
+							name="doost"
+							values={["nigga", "what"]}
+							titles={["oh wow", "crazy"]}
+						/>
 
 						<div className="mt-5 w-50">
 							<Input
