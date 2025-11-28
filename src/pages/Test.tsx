@@ -26,6 +26,11 @@ import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 import * as Yup from "yup";
+import {
+	City,
+	LocationSelector,
+	Province,
+} from "@/components/Custom/Province/Province";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -110,6 +115,11 @@ function Test() {
 								placeholder="ایمیل"
 							/>
 						</div>
+
+						<LocationSelector>
+							<Province />
+							<City />
+						</LocationSelector>
 
 						<PetDatePicker
 							from={10}
