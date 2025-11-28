@@ -31,6 +31,7 @@ import {
 	LocationSelector,
 	Province,
 } from "@/components/Custom/Province/Province";
+import Address from "@/components/Custom/Address/Address";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -120,6 +121,7 @@ function Test() {
 							<Province />
 							<City />
 						</LocationSelector>
+						<Address name="nazinazi" />
 
 						<PetDatePicker
 							from={10}
