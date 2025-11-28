@@ -43,7 +43,7 @@ export const LocationSelector = ({ children }: LocationSelectorProps) => {
 	);
 };
 
-export function Province(className?: string) {
+export function Province({ className }: { className?: string }) {
 	const context = useContext(LocationContext);
 	if (!context)
 		throw new Error("Province must be used within a LocationSelector");
@@ -106,7 +106,7 @@ export function Province(className?: string) {
 	);
 }
 
-export const City = (className?: string) => {
+export const City = ({ className }: { className?: string }) => {
 	const context = useContext(LocationContext);
 	if (!context) throw new Error("City must be used within a LocationSelector");
 
