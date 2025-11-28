@@ -5,6 +5,8 @@ import Temp from "@/pages/Temp";
 import Test from "@/pages/Test";
 import Login from "@/pages/Login";
 import AboutUs from "@/pages/AboutUs";
+import ForgetPassword from "@/pages/ForgetPassword";
+import ChangePassword from "@/pages/ChangePassword";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
@@ -51,6 +53,14 @@ export const router = createBrowserRouter([
 			{
 				path: "/signup",
 				element: <Signup />,
+			},
+			{
+				path: "/forgetpassword",
+				element: <ForgetPassword />,
+			},
+			{
+				path: "/changepassword",
+				element: <ChangePassword />,
 			},
 		],
 	},
