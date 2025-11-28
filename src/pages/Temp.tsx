@@ -7,35 +7,19 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/Custom/Select/Select";
-import { loginService } from "@/services/authService";
-import useUserStore from "@/store/userStore/userStore";
 import { translateNumber } from "@/utils/translateNumber";
 import { useState } from "react";
 
 export default function Temp() {
-	const { username, setUsername } = useUserStore();
 	const [email, setEmail] = useState<string>("");
 	const [count, setCounter] = useState<number>(0);
 	const [password, setPassword] = useState<string>("");
-	const [loading, setLoading] = useState<boolean>(false);
+	const [loading] = useState<boolean>(false);
 	const showToast = () => {
 		CustomToast("This is a toast");
 	};
 	const increaseCounter = () => {
 		setCounter((prev) => prev + 1);
-	};
-	const login = () => {
-		setLoading(true);
-		loginService({ email, username, password })
-			.then((data) => {
-				setUsername(data?.user?.username);
-				CustomToast("Login successful", "success");
-			})
-			.catch((error) => {
-				console.log(error);
-				CustomToast("Login failed", "error");
-			})
-			.finally(() => setLoading(false));
 	};
 
 	return (
@@ -47,10 +31,7 @@ export default function Temp() {
 				>
 					toast
 				</button>
-				<button
-					className="cursor-pointer bg-accent rounded-md p-2"
-					onClick={login}
-				>
+				<button className="cursor-pointer bg-accent rounded-md p-2">
 					{loading ? <p>Logging in....</p> : <p>Login</p>}
 				</button>
 			</div>

@@ -29,7 +29,7 @@ apiClient.interceptors.request.use(
 		// if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
-	(error) => Promise.reject(error)
+	(error) => Promise.reject(error),
 );
 
 apiClient.interceptors.response.use(
@@ -37,7 +37,7 @@ apiClient.interceptors.response.use(
 	(error) => {
 		console.error(error);
 		return Promise.reject(error);
-	}
+	},
 );
 
 // ✅ GET

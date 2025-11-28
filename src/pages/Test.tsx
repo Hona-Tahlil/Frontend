@@ -10,12 +10,12 @@ import { Form, Formik, useFormikContext } from "formik";
 import * as Yup from "yup";
 
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
@@ -42,12 +42,15 @@ import { name } from "react-date-object/calendars/julian";
 import { DropdownMenu } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 
 const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("ایمیل معتبر نمی باشد")
-    .required("ایمیل اجباری است"),
-  password: Yup.string()
-    .min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
-    .required("رمز عبور اجباری است"),
+	email: Yup.string()
+		.email("ایمیل معتبر نمی باشد")
+		.required("ایمیل اجباری است"),
+	password: Yup.string()
+		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
+		.required("رمز عبور اجباری است"),
+	akhoond: Yup.string()
+		.min(6, "پسورد باید حداقل 6 کاراکتر باشد یسبشس سبسی بشسب")
+		.required("رمز عبور اجباری است"),
 });
 
 function Test() {
@@ -101,177 +104,189 @@ function Test() {
               </SelectContent>
             </Select>
 
-            <div className="mt-5 w-50">
-              <Input
-                name="email"
-                shadow={true}
-                classes={{
-                  className: "h-20",
-                  inputClassName: "!text-[20px]",
-                  errorClassName: "px-5",
-                }}
-                type="email"
-                placeholder="ایمیل"
-              />
-            </div>
+						<div className="mt-5 w-50">
+							<Input
+								name="email"
+								shadow={true}
+								classes={{
+									className: "h-20",
+									inputClassName: "!text-[20px]",
+									errorClassName: "px-5",
+								}}
+								type="email"
+								placeholder="ایمیل"
+							/>
+						</div>
 
-            <div className="w-35">
-              <DatePicker className="h-15 !text-[35px]" name="akhoond2" />
-            </div>
+						<div className="w-35">
+							<DatePicker className="h-15 !text-[35px]" name="akhoond2" />
+						</div>
 
-            <div className="mt-5 w-50">
-              <Input
-                name="password"
-                shadow={true}
-                classes={{
-                  className: "h-20",
-                  errorClassName: "px-5",
-                  inputClassName: "!text-[45px]",
-                }}
-                onChangeWrappers={[adjustInputDirection]}
-                type="password"
-                placeholder="ایمیل"
-              />
-            </div>
-            <PetDatePicker
-              from={10}
-              to={8}
-              relative={true}
-              name="niceone"
-              smallFontSize="20px"
-              bigFontSize="30px"
-            />
+						<div className="mt-5 w-50">
+							<Input
+								name="password"
+								shadow={true}
+								classes={{
+									className: "h-20",
+									errorClassName: "px-5",
+									inputClassName: "!text-[45px]",
+								}}
+								onChangeWrappers={[adjustInputDirection]}
+								type="password"
+								placeholder="ایمیل"
+							/>
+						</div>
 
-            <Checkbox
-              name="love"
-              classes={{ textClassName: "text-[17px]" }}
-              text={"آقا عشق"}
-            />
+						<PetDatePicker
+							from={10}
+							to={8}
+							relative={true}
+							name="niceone"
+							smallFontSize="20px"
+							bigFontSize="30px"
+						/>
 
-            <Checkbox
-              name="love2"
-              classes={{ textClassName: "text-[17px]" }}
-              text={"آقا عشق"}
-            />
-            <Checkbox
-              name="love3"
-              classes={{
-                className: "mt-5",
-                backGroundClassName: "!border-5",
-                textClassName: "text-[17px]",
-              }}
-              size="30px"
-              text={"آقا عشق"}
-            />
-            <Checkbox
-              name="love4"
-              classes={{
-                className: "mt-5 bg-red-500",
-                backGroundClassName: "!border-5",
-                textClassName: "text-[17px] font-bold",
-              }}
-              size="15px"
-              text={"آقا عشق"}
-            />
-            <div className="px-5 w-full">
-              <Textarea
-                rows={6}
-                scrollbarBorderRadius="10px"
-                className="relative drop-shadow-lg py-3"
-                name="betterakhoond"
-              />
-            </div>
+						<Checkbox
+							name="love"
+							classes={{ textClassName: "text-[17px]" }}
+							text={"آقا عشق"}
+						/>
 
-            <Button
-              type="submit"
-              size={"giant"}
-              variant={"outline"}
-              shadow={false}
-              boxShadow={true}
-              bold={true}
-              isLoading={isSubmitting}
-              className="mb-3"
-            >
-              ورود
-            </Button>
-          </Form>
-        )}
-      </Formik>
-      {isDesktop && <p> desktop mode</p>}
-      {isMobile && <p> mobile mode</p>}
-      {isTablet && <p> tablet mode</p>}
+						<Checkbox
+							name="love2"
+							classes={{ textClassName: "text-[17px]" }}
+							text={"آقا عشق"}
+						/>
 
-      <Button shadow={true} size={"giant"} bold={true}>
-        ورود
-      </Button>
-      <br />
-      <br />
-      <Button isLoading={true} shadow={true} size={"giant"} bold={true}>
-        ورود
-      </Button>
-      <br />
-      <br />
-      <Button
-        isLoading={true}
-        loadingClassName="!size-8"
-        shadow={true}
-        size={"giant"}
-        bold={true}
-      >
-        ورود
-      </Button>
-      <br />
-      <br />
-      <br />
-      <br />
-      <Button variant={"link"} shadow={false} bold={true}>
-        فراموشی رمز عبور
-      </Button>
-      <MultiStage>
-        <MultiStage.Header>
-          <MultiStage.StageHeader index={0}>
-            بررسی اطلاعات
-          </MultiStage.StageHeader>
-          <MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
-          <MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
-        </MultiStage.Header>
+						<Checkbox
+							name="love3"
+							classes={{
+								className: "mt-5",
+								backGroundClassName: "!border-5",
+								textClassName: "text-[17px]",
+							}}
+							size="30px"
+							text={"آقا عشق"}
+						/>
 
-        <MultiStage.StageHolder>
-          <MultiStage.Stage index={0}>
-            <p>Account form goes here</p>
-          </MultiStage.Stage>
+						<Checkbox
+							name="love4"
+							classes={{
+								className: "mt-5 bg-red-500",
+								backGroundClassName: "!border-5",
+								textClassName: "text-[17px] font-bold",
+							}}
+							size="15px"
+							text={"آقا عشق"}
+						/>
 
-          <MultiStage.Stage index={1}>
-            <p>Profile form goes here</p>
-          </MultiStage.Stage>
-        </MultiStage.StageHolder>
-      </MultiStage>
+						<div className="px-5 w-full">
+							<Textarea
+								rows={6}
+								scrollbarBorderRadius="10px"
+								className="relative drop-shadow-lg py-3"
+								name="betterakhoond"
+							/>
+						</div>
 
-      <Formik
-        initialValues={{ isAdult: "false", petKind: "dog" }}
-        onSubmit={(values) => console.log(values)}
-      >
-        <Form>
-          <IsAdultToggleGroup
-            name="isAdult"
-            items={[
-              { name: "false", icon: BabyIcon, value: "جوجه" },
-              { name: "true", icon: Dog, value: "بالغ" },
-            ]}
-          />
+						<Button
+							type="submit"
+							size={"giant"}
+							variant={"outline"}
+							shadow={false}
+							boxShadow={true}
+							bold={true}
+							isLoading={isSubmitting}
+							className="mb-3"
+						>
+							ورود
+						</Button>
+					</Form>
+				)}
+			</Formik>
 
-          <PetKindToggleGroup
-            name="petKind"
-            items={[
-              { name: "dog", icon: Dog, value: "سگ" },
-              { name: "cat", icon: Cat, value: "گربه" },
-              { name: "bird", icon: Bird, value: "پرنده" },
-            ]}
-          />
-        </Form>
-      </Formik>
+			{isDesktop && <p> desktop mode</p>}
+			{isMobile && <p> mobile mode</p>}
+			{isTablet && <p> tablet mode</p>}
 
-      {/* FIXED: Removed the extra broken MultiStage.StageHolder */}
+			<Button shadow={true} size={"giant"} bold={true}>
+				ورود
+			</Button>
+
+			<br />
+			<br />
+
+			<Button isLoading={true} shadow={true} size={"giant"} bold={true}>
+				ورود
+			</Button>
+
+			<br />
+			<br />
+
+			<Button
+				isLoading={true}
+				loadingClassName="!size-8"
+				shadow={true}
+				size={"giant"}
+				bold={true}
+			>
+				ورود
+			</Button>
+
+			<br />
+			<br />
+			<br />
+			<br />
+
+			<Button variant={"link"} shadow={false} bold={true}>
+				فراموشی رمز عبور
+			</Button>
+
+			<MultiStage>
+				<MultiStage.Header>
+					<MultiStage.StageHeader index={0}>
+						بررسی اطلاعات
+					</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
+					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
+				</MultiStage.Header>
+
+				<MultiStage.StageHolder>
+					<MultiStage.Stage index={0}>
+						<p>Account form goes here</p>
+					</MultiStage.Stage>
+
+					<MultiStage.Stage index={1}>
+						<p>Profile form goes here</p>
+					</MultiStage.Stage>
+				</MultiStage.StageHolder>
+			</MultiStage>
+
+			<Formik
+				initialValues={{ isAdult: "false", petKind: "dog" }}
+				onSubmit={(values) => console.log(values)}
+			>
+				<Form>
+					<IsAdultToggleGroup
+						name="isAdult"
+						items={[
+							{ name: "false", icon: BabyIcon, value: "جوجه" },
+							{ name: "true", icon: Dog, value: "بالغ" },
+						]}
+					/>
+
+					<PetKindToggleGroup
+						name="petKind"
+						items={[
+							{ name: "dog", icon: Dog, value: "سگ" },
+							{ name: "cat", icon: Cat, value: "گربه" },
+							{ name: "bird", icon: Bird, value: "پرنده" },
+						]}
+					/>
+				</Form>
+			</Formik>
+
+			{/* FIXED: Removed the extra broken MultiStage.StageHolder */}
 
       <Dialog>
         <DialogTrigger asChild>

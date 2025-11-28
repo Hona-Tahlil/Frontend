@@ -13,16 +13,14 @@ import {
 	DialogTitle,
 } from "@/components/ui/dialog";
 
-import {
-	InputOTP,
-	InputOTPGroup,
-	InputOTPSlot,
-} from "@/components/ui/input-otp";
+import { signupService } from "@/services/authService";
+import { translateAxiosError } from "@/utils/errorTranslator";
 
 export default function SignupForm() {
 	const [open, setOpen] = useState(false);
 	const openDialog = () => setOpen(true);
-	const closeDialog = () => setOpen(false);
+	//const closeDialog = () => setOpen(false);
+	const [overAllError, setOverAllError] = useState<string>("");
 	const navigate = useNavigate();
 	function navigateToLoginPage() {
 		navigate("/login");
@@ -38,16 +36,54 @@ export default function SignupForm() {
 				</h1>
 				<Formik
 					{...SignupSchema}
-					onSubmit={(values) => {
+					onSubmit={(values, { setErrors, setSubmitting }) => {
+						setOverAllError("");
 						console.log("Form values:", values);
-						setTimeout(openDialog, 1000);
+						signupService({ ...values })
+							.then((data) => {
+								if (data.statusCode === 200) {
+									openDialog();
+								} else {
+									setOverAllError("خطای غیر منتظره");
+								}
+							})
+							.catch((error) => {
+								const errorText = translateAxiosError(error);
+								console.log(error.response.data.messages);
+								if (error.response.data.messages) {
+									setErrors(error.response.data.messages);
+								} else if (error.response.data.message) {
+									setOverAllError(error.response.data.message);
+								} else {
+									setOverAllError(errorText);
+								}
+							})
+							.finally(() => {
+								setSubmitting(false);
+							});
 					}}
 				>
 					{({ isSubmitting }) => (
 						<Form className="mt-6 rounded flex flex-col gap-4 items-center w-full">
+							{overAllError && (
+								<div
+									className="bg-red-500/20 text-red-500 rounded-lg w-full px-4 py-2"
+									dir="rtl"
+								>
+									<p>{overAllError}</p>
+								</div>
+							)}
 							<Input
-								name="username"
-								placeholder="نام کاربری"
+								name="firstname"
+								placeholder="نام"
+								classes={{
+									className: "h-10 w-full",
+								}}
+								shadow={true}
+							/>
+							<Input
+								name="lastname"
+								placeholder="نام خانوادگی"
 								classes={{
 									className: "h-10 w-full",
 								}}
@@ -121,30 +157,7 @@ export default function SignupForm() {
 							<DialogHeader>
 								<DialogTitle>تایید ایمیل</DialogTitle>
 							</DialogHeader>
-							<p className="text-center">
-								لطفا کدی که برای ایمیل شما ارسال شده است را وارد کنید
-							</p>
-							<InputOTP maxLength={6}>
-								<InputOTPGroup>
-									<InputOTPSlot index={0} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={1} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={2} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={3} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={4} />
-								</InputOTPGroup>
-								<InputOTPGroup>
-									<InputOTPSlot index={5} />
-								</InputOTPGroup>
-							</InputOTP>
-							<Button onClick={closeDialog}>تایید</Button>
+							<p className="text-center">لطفا ایمیل خود را چک کنید.</p>
 						</DialogContent>
 					</Dialog>
 				</div>

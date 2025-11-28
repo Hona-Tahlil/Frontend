@@ -1,4 +1,3 @@
-import React from "react";
 import { Switch } from "../../ui/switch";
 import { cn } from "@/lib/utils";
 import type { ToggleProps } from "@/types/toggleTypes";

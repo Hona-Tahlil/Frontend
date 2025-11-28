@@ -41,7 +41,7 @@ function Input({
 }: InputProps) {
 	const isDesktop = useDesktop();
 	const isTabletMobile = useTabletMobile();
-	const [field, meta] = useField(name);
+	const [field, meta] = useField(name || "");
 	const [showPassword, setShowPassword] = useState(false);
 	const hasError = Boolean(meta.touched && meta.error);
 	const value = field.value || "";

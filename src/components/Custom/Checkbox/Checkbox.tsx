@@ -22,7 +22,7 @@ export interface CheckboxClass {
 	checkboxClassName?: string;
 }
 function Checkbox({ classes, name, size, text, ...props }: InputProps) {
-	const [field] = useField(name);
+	const [field] = useField(name || "");
 	return (
 		<div className={cn("flex gap-1 items-center", classes?.className)}>
 			<label className={cn("font-[Alibaba] h-auto", classes?.textClassName)}>
