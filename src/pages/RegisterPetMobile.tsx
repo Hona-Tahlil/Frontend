@@ -55,6 +55,7 @@ export default function RegisterPetMobile() {
 
   function petKindOnChange(value: string) {
     // api call
+    
     console.log(value);
   }
 
