@@ -16,7 +16,7 @@ export default function PetKindToggleGroup({
     <ToggleGroup
     disabled={disable}
       type="single"
-      value={field.value}
+      value={field.name}
       onValueChange={(val) => {
         helpers.setValue(val);
         onChange?.(val);
@@ -27,7 +27,7 @@ export default function PetKindToggleGroup({
         <ToggleGroupItem
           key={item.name}
           value={item.name}
-          className="group h-20 p-0 flex justify-between gap-0 md:rounded-2xl cursor-pointer mx-3"
+          className="group h-full w-[90%] p-0 flex justify-between gap-0 md:rounded-2xl cursor-pointer mx-3"
         >
           {/* Left vertical Label */}
           <div className="w-[20%] h-full bg-black/40 group-hover:bg-primary group-data-[state=on]:bg-primary text-white  px-1 md:px-5 rounded-tr-md rounded-br-md md:rounded-tr-2xl md:rounded-br-2xl flex justify-center items-center">
@@ -35,7 +35,7 @@ export default function PetKindToggleGroup({
           </div>
 
           {/* Icon Box */}
-          <div className="w-[80%] h-full border-black/40 border-4 group-hover:border-primary group-data-[state=on]:border-primary rounded-tl-md rounded-bl-md md:rounded-tl-2xl md:rounded-bl-2xl flex justify-center items-center">
+          <div className="w-[80%] aspect-[5/4] h-full border-black/40 border-4 group-hover:border-primary group-data-[state=on]:border-primary rounded-tl-md rounded-bl-md md:rounded-tl-2xl md:rounded-bl-2xl flex justify-center items-center">
             <item.icon className="w-50 group-hover:text-primary group-data-[state=on]:text-primary" />
           </div>
         </ToggleGroupItem>

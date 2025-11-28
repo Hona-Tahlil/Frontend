@@ -16,6 +16,7 @@ import Toggle from "@/components/Custom/Toggle/Toggle";
 import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 import { Avatar } from "@/components/ui/avatar";
+import { getPetSpeciesService } from "@/services/petRegisterService";
 import { Form, Formik, type FormikHelpers, type FormikValues } from "formik";
 import {
   BabyIcon,
@@ -45,19 +46,33 @@ export default function RegisterPetMobile() {
 
   const [isChecked, setIsChecked] = useState(false);
   const [species, setSpecies] = useState([
-    { name: "پرشین", number: 1 },
-    { name: "ژرمن", number: 2 },
+    { name: "پرشین", num: 1 },
+    { name: "ژرمن", num: 2 },
   ]);
   const [kindDontKnow, setKindDontKnow] = useState(false);
   const [genderDontKnow, setGenderDontKnow] = useState(false);
   const [weightDontKnow, setWeightDontKnow] = useState(false);
   const [birthDontKnow, setBirthDontKnow] = useState(false);
 
-  function petKindOnChange(value: string) {
-    // api call
-    
-    console.log(value);
-  }
+  function petKindOnChange(name: string) {
+      // api call
+  
+      const kindId =
+        name === "dog" ? 1 : name === "cat" ? 2 : name === "bird" ? 3 : 4;
+      getPetSpeciesService(kindId)
+        .then((loginResponse) => {
+          if (loginResponse.statusCode === 200) {
+            //setAccessToken(loginResponse.data?.accessToken);
+            setSpecies(loginResponse.data!);
+          }
+        })
+        .catch((error) => {
+          const errorText = "خطای غیر منتظره";
+          console.log(errorText);
+        });
+  
+      console.log(name);
+    }
 
   return (
     <div
@@ -156,7 +171,7 @@ export default function RegisterPetMobile() {
                             {!isChecked && (
                               <SelectGroup>
                                 {species.map((item) => (
-                                  <SelectItem value={item.number.toString()}>
+                                  <SelectItem value={item.num.toString()}>
                                     {item.name}
                                   </SelectItem>
                                 ))}

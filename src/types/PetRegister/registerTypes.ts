@@ -1,11 +1,11 @@
 
-type speciesData = {
+type SpeciesData = {
     num: number,
     name: string,
 }
 
-export type spiecesResponse = {
+export type SpiecesResponse = {
     statusCode: number,
     message?: string,
-    data?: speciesData[],
+    data?: SpeciesData[],
 }
