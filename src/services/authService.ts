@@ -5,6 +5,8 @@ import type {
 	LoginResponse,
 	SignupPayload,
 	SignupResponse,
+	ForgetPasswordPayload,
+	ForgetPasswordResponse,
 } from "@/types/authTypes";
 import { postData } from "./services";
 
@@ -22,6 +24,15 @@ export const signupService = async (
 ): Promise<SignupResponse> => {
 	return postData({
 		endPoint: `/v1/auth/register`,
+		data: credentials,
+	});
+};
+
+export const forgetpasswordService = async (
+	credentials: ForgetPasswordPayload,
+): Promise<ForgetPasswordResponse> => {
+	return postData({
+		endPoint: `/v1/auth/forget-password`,
 		data: credentials,
 	});
 };

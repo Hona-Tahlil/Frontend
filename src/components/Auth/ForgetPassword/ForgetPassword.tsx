@@ -3,6 +3,7 @@ import { Input } from "@/components/Custom/Input/Input";
 import { Form, Formik } from "formik";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { forgetpasswordService } from "@/services/authService";
 import ForgetPasswordSchema from "@/schemas/ForgetPasswordSchema";
 
 export default function ForgetPasswordForm() {
@@ -51,10 +52,32 @@ export default function ForgetPasswordForm() {
                     onSubmit={(values, { setErrors, setSubmitting }) => {
                         setOverAllError("");
 
-                        setLinkSent(true);
-                        setCounter(30); 
+                        forgetpasswordService({
+                            email: values.email,
+                        })
+                            .then((loginResponse) => {
+                                if (loginResponse.messages !== null) {
+                                    setErrors(loginResponse.messages!);
+                                }
+                                if (loginResponse.statusCode === 200) {
+                                    // setAccessToken(loginResponse.data?.accessToken);
+                                    setLinkSent(true);
+                                }
+                            })
+                            .catch((error) => {
+                                const errorText = "خطای غیر منتظره";
 
-                        setSubmitting(false);
+                                if (error.response?.data?.messages) {
+                                    setErrors(error.response.data.messages);
+                                } else if (error.response?.data?.message) {
+                                    setOverAllError(error.response.data.message);
+                                } else {
+                                    setOverAllError(errorText);
+                                }
+                            })
+                            .finally(() => {
+                                setSubmitting(false);
+                            });
                     }}
                 >
                     {({ isSubmitting }) => (
@@ -90,7 +113,6 @@ export default function ForgetPasswordForm() {
                                     type="submit"
                                     size={"giant"}
                                     bold={true}
-                                    isLoading={false}  
                                     disabled={linkSent && counter > 0} 
                                     className="text-4sm font-[Alibaba] font-bold mt-6 px-5 py-6"
                                 >
