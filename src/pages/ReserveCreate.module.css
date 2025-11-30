@@ -1,0 +1,10 @@
+.customBorder {
+	border-style: dashed;
+	border-width: 4px;
+	border-spacing: 10px;
+	border-image: repeating-linear-gradient(to right,
+			orange 0,
+			orange 10px,
+			transparent 10px,
+			transparent 20px) 5;
+}
