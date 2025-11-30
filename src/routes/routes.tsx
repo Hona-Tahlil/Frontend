@@ -7,6 +7,7 @@ import Login from "@/pages/Login";
 import AboutUs from "@/pages/AboutUs";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
+import ExplorePetSitter from "@/pages/ExplorePetSitter"
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 
 export const router = createBrowserRouter([
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/AboutUs",
 				element: <AboutUs />,
+			},
+			{
+				path: "/ExplorePetSitter",
+				element: <ExplorePetSitter />,
 			},
 		],
 	},
