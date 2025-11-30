@@ -43,7 +43,13 @@ export const LocationSelector = ({ children }: LocationSelectorProps) => {
 	);
 };
 
-export function Province({ className }: { className?: string }) {
+export function Province({
+	className,
+	name,
+}: {
+	className?: string;
+	name?: string;
+}) {
 	const context = useContext(LocationContext);
 	if (!context)
 		throw new Error("Province must be used within a LocationSelector");
@@ -69,7 +75,7 @@ export function Province({ className }: { className?: string }) {
 	}
 
 	return (
-		<Select name="Province" onValueChange={setProvince}>
+		<Select name={name || "Province"} onValueChange={setProvince}>
 			<SelectTrigger
 				ref={ref}
 				style={
@@ -106,7 +112,13 @@ export function Province({ className }: { className?: string }) {
 	);
 }
 
-export const City = ({ className }: { className?: string }) => {
+export const City = ({
+	className,
+	name,
+}: {
+	className?: string;
+	name?: string;
+}) => {
 	const context = useContext(LocationContext);
 	if (!context) throw new Error("City must be used within a LocationSelector");
 
@@ -131,7 +143,7 @@ export const City = ({ className }: { className?: string }) => {
 	}
 
 	return (
-		<Select name="City">
+		<Select name={name || "City"}>
 			<SelectTrigger
 				ref={ref}
 				style={

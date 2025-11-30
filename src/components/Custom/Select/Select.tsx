@@ -23,6 +23,7 @@ const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 	dir = "rtl",
 	name,
 	value,
+	onValueChange,
 	...props
 }) => {
 	const [field, meta, helpers] = useField(name || "");
@@ -42,6 +43,7 @@ const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 					requestAnimationFrame(() => {
 						helpers.setValue(v);
 						setSelfValue(v);
+						onValueChange?.(v);
 					});
 				}}
 				dir={dir}

@@ -60,7 +60,7 @@ function Test() {
 					password: "he",
 					love: false,
 				}}
-				validationSchema={validationSchema}
+				//validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
