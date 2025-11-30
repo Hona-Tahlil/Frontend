@@ -135,7 +135,7 @@ function PetSitterLanding() {
 								<CarouselItem className="basis-55 w-full" key={index}>
 									<div className="w-full h-auto max-w-50 min-w-50 bg-white shadow-sm rounded-2xl px-3 pt-3 pb-2 flex flex-col">
 										<div className="w-full h-36 bg-secondary-700 rounded-t-2xl"></div>
-										<p className="font-bold mt-3">فاطمه رزاقی</p>
+										<p className="font-bold mt-3">سارا احمدی </p>
 										<p className="text-sm">با سلام و عرض ادب سایت شما بستر مناسبی بود برای پیدا کردن خیوانات زیبا و دوست داشتنی من از شما بسیار ممنونم</p>
 
 										
