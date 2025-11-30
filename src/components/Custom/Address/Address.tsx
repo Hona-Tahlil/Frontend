@@ -1,14 +1,6 @@
-import {
-	Dialog,
-	DialogContent,
-	DialogDescription,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "../Button/Button";
 import { useState } from "react";
-import { City, LocationSelector, Province } from "../Province/Province";
 import { Input } from "../Input/Input";
 import { Textarea } from "../Textarea/Textarea";
 import { Plus } from "lucide-react";
@@ -16,6 +8,9 @@ import { Form, Formik, useFormikContext } from "formik";
 
 import * as Yup from "yup";
 import { NonFormikInput, type InputClass } from "../Input/NonFormikInput";
+import { City } from "../Province/City";
+import { Province } from "../Province/Province";
+import { LocationSelector } from "../Province/LocationSelector";
 
 export default function Address({ classes }: { classes?: InputClass }) {
 	const [open, setOpen] = useState(false);

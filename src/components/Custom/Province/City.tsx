@@ -13,19 +13,17 @@ import customStyles from "./Province.module.css";
 import { useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
-
-export function Province({
+export const City = ({
 	className,
 	name,
 }: {
 	className?: string;
 	name?: string;
-}) {
+}) => {
 	const context = useContext(LocationContext);
-	if (!context)
-		throw new Error("Province must be used within a LocationSelector");
+	if (!context) throw new Error("City must be used within a LocationSelector");
 
-	const { province, setProvince } = context;
+	const { province } = context;
 
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
@@ -46,7 +44,7 @@ export function Province({
 	}
 
 	return (
-		<Select name={name || "Province"} onValueChange={setProvince}>
+		<Select name={name || "City"}>
 			<SelectTrigger
 				ref={ref}
 				style={
@@ -60,25 +58,27 @@ export function Province({
 					customStyles.dynamicSize,
 				)}
 			>
-				<SelectValue placeholder="استان" />
+				<SelectValue placeholder="شهر" />
 			</SelectTrigger>
-			<SelectContent>
+			<SelectContent className="">
 				<SelectGroup>
-					{Array.from(Object.keys(iranProvincesFa)).map((province) => {
-						return (
-							<SelectItem
-								style={{ fontSize: calculateFontSize(province.length) }}
-								value={province}
-							>
-								{province}
-							</SelectItem>
-						);
-					})}
-					<SelectItem className="text-sm" value="asdf">
-						بهترین ها
+					{province &&
+						Array.from(iranProvincesFa[province]).map((province) => {
+							return (
+								<SelectItem
+									className="text-[8px]"
+									style={{ fontSize: calculateFontSize(province.length) }}
+									value={province}
+								>
+									{province}
+								</SelectItem>
+							);
+						})}
+					<SelectItem className="text-[8px]" value={"nothing"}>
+						استان را انتخاب کنید
 					</SelectItem>
 				</SelectGroup>
 			</SelectContent>
 		</Select>
 	);
-}
+};

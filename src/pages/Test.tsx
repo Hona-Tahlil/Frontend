@@ -26,12 +26,10 @@ import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 import * as Yup from "yup";
-import {
-	City,
-	LocationSelector,
-	Province,
-} from "@/components/Custom/Province/Province";
 import Address from "@/components/Custom/Address/Address";
+import { LocationSelector } from "@/components/Custom/Province/LocationSelector";
+import { Province } from "@/components/Custom/Province/Province";
+import { City } from "@/components/Custom/Province/City";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -121,7 +119,7 @@ function Test() {
 							<Province />
 							<City />
 						</LocationSelector>
-						<Address name="nazinazi" />
+						<Address />
 
 						<PetDatePicker
 							from={10}
