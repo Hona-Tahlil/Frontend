@@ -3,17 +3,34 @@ import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { Form, Formik } from "formik";
 
 import customStyles from "./ReserveCreate.module.css";
-import { CircleX, Cross, Plus } from "lucide-react";
+import { CircleX, Plus } from "lucide-react";
 import { useState } from "react";
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/Custom/Select/Select";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(1);
+
+	function addDay() {
+		setDayCount(dayCount + 1);
+	}
+	function removeDay() {
+		if (dayCount > 0) {
+			setDayCount(dayCount - 1);
+		}
+	}
 	return (
 		<div className="p-4" dir="rtl">
 			<Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
 				<Form>
 					<div className="w-full flex gap-6 p-12">
-						<div className="flex flex-col gap-3 w-100 rounded-xl drop-shadow-lg bg-white p-6">
+						<div className="flex flex-col h-fit gap-3 w-100 rounded-xl drop-shadow-lg bg-white p-6">
 							<p className="text-xl font-bold">خلاصه پرداخت</p>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-between">
@@ -81,16 +98,19 @@ export default function ReserveCreate() {
 										</div>
 										<Button shadow>ویرایش</Button>
 									</div>
-									<div className="flex justify-center">
-										<Button shadow className="bg-red-500">
-											حذف روز
-											<CircleX />
-										</Button>
-									</div>
 								</>
 							))}
+							{dayCount > 0 && (
+								<div className="flex justify-center">
+									<Button onClick={removeDay} shadow className="bg-red-500">
+										حذف روز
+										<CircleX />
+									</Button>
+								</div>
+							)}
 							<div className="flex justify-center">
 								<Button
+									onClick={addDay}
 									shadow
 									className={`
 										flex items-center gap-2 
@@ -106,6 +126,30 @@ export default function ReserveCreate() {
 									اضافه کردن روز
 									<Plus className="font-bold" size="auto" />
 								</Button>
+							</div>
+							<div className="w-full h-0.5 border-0 bg-black/40"></div>
+							<div className="flex justify-start">
+								<p className="w-50 font-bold leading-10">نوع رزرو</p>
+								<Select name="akhoond">
+									<SelectTrigger className="w-full">
+										<SelectValue placeholder="روز" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value={"1"}>1</SelectItem>
+											<SelectItem value={"2"}>2</SelectItem>
+											<SelectItem value={"3"}>3</SelectItem>
+											<SelectItem value={"4"}>4</SelectItem>
+											<SelectItem value={"5"}>5</SelectItem>
+											<SelectItem value={"6"}>6</SelectItem>
+											<SelectItem value={"7"}>7</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="w-full h-0.5 border-0 bg-black/40"></div>
+							<div className="flex justify-start">
+								<p className="w-50 font-bold leading-10">آدرس</p>
 							</div>
 						</div>
 					</div>
