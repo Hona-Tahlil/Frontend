@@ -28,6 +28,7 @@ import { useState } from "react";
 import * as Yup from "yup";
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
+import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -86,7 +87,7 @@ function Test() {
 							titles={["oh wow", "crazy"]}
 						/>
 						<ServiceToggleGroup
-							name="doost"
+							name="doost2"
 							values={["nigga", "what"]}
 							titles={["oh wow", "crazy"]}
 						/>
