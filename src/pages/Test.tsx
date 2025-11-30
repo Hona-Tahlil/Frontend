@@ -30,6 +30,9 @@ import Address from "@/components/Custom/Address/Address";
 import { LocationSelector } from "@/components/Custom/Province/LocationSelector";
 import { Province } from "@/components/Custom/Province/Province";
 import { City } from "@/components/Custom/Province/City";
+import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
+import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
+import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -81,6 +84,17 @@ function Test() {
 								</SelectGroup>
 							</SelectContent>
 						</Select>
+
+						<PetToggleGroup
+							name="doost"
+							values={["nigga", "what"]}
+							titles={["oh wow", "crazy"]}
+						/>
+						<ServiceToggleGroup
+							name="doost2"
+							values={["nigga", "what"]}
+							titles={["oh wow", "crazy"]}
+						/>
 
 						<div className="mt-5 w-50">
 							<Input
