@@ -35,15 +35,15 @@ export default function Address({ classes }: { classes?: InputClass }) {
 	return (
 		<>
 			<div className="flex gap-3">
-				<Button className="" onClick={openDiaglog} type="button">
-					<Plus />
-				</Button>
 				<NonFormikInput
 					classes={classes}
 					disabled
 					shadow
 					value={values.Province ? fullAddress : ""}
 				/>
+				<Button className="" onClick={openDiaglog} type="button">
+					<Plus />
+				</Button>
 			</div>
 
 			<Dialog open={open} onOpenChange={setOpen}>

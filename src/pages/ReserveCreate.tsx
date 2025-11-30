@@ -13,6 +13,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/Custom/Select/Select";
+import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
+import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
+import Address from "@/components/Custom/Address/Address";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(1);
@@ -29,7 +32,7 @@ export default function ReserveCreate() {
 		<div className="p-4" dir="rtl">
 			<Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
 				<Form>
-					<div className="w-full flex gap-6 p-12">
+					<div className="w-full flex gap-6 p-12 justify-center">
 						<div className="flex flex-col h-fit gap-3 w-100 rounded-xl drop-shadow-lg bg-white p-6">
 							<p className="text-xl font-bold">خلاصه پرداخت</p>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
@@ -58,17 +61,25 @@ export default function ReserveCreate() {
 								موافقت می کنید.
 							</p>
 						</div>
-						<div className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 ">
+						<div className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 max-w-200">
 							<p className="text-xl font-bold">اطلاعات رزرو خود را وارد کنید</p>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">نوع سرویس</p>
-								{/*component*/}
+								<ServiceToggleGroup
+									name="services"
+									values={["1", "2", "3", "4"]}
+									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
+								/>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">پت ها</p>
-								{/*component*/}
+								<PetToggleGroup
+									values={["1", "2", "3", "4"]}
+									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
+									classes={{ className: "justify-start" }}
+								/>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
@@ -150,6 +161,7 @@ export default function ReserveCreate() {
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">آدرس</p>
+								<Address />
 							</div>
 						</div>
 					</div>
