@@ -8,6 +8,7 @@ import AboutUs from "@/pages/AboutUs";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import ReserveSuccess from "@/pages/ReserveSuccess";
 
 export const router = createBrowserRouter([
 	{
@@ -19,7 +20,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				path:"/",
+				path: "/",
 				element: <Landing />,
 			},
 			{
@@ -38,6 +39,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/AboutUs",
 				element: <AboutUs />,
+			},
+			{
+				path: "/Reserve-Success",
+				element: <ReserveSuccess />,
 			},
 		],
 	},
