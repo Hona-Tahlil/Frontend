@@ -60,7 +60,6 @@ export default function Address({ classes }: { classes?: InputClass }) {
 						}}
 						validationSchema={validationSchema}
 						onSubmit={(values) => {
-							console.log(values);
 							setFieldValue("City", values.City);
 							setFieldValue("Province", values.Province);
 							setFieldValue("Pelak", values.Pelak);
