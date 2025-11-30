@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import PublicLayout from "@/layouts/PublicLayout/PublicLayout";
 import Landing from "@/pages/Landing";
+import PetSitterLanding from "@/pages/PetSitterLanding";
 import Temp from "@/pages/Temp";
 import Test from "@/pages/Test";
 import Login from "@/pages/Login";
@@ -25,6 +26,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/temp",
 				element: <Temp />,
+			},
+			{
+				path: "/PetSitterLanding",
+				element: <PetSitterLanding />,
 			},
 			{
 				path: "/test",
