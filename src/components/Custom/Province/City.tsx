@@ -6,13 +6,13 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../Select/Select";
-import { iranProvincesFa } from "@/utils/provinces";
 
 import customStyles from "./Province.module.css";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
+import { getIranProvincesFa } from "@/utils/provinces";
 export const City = ({
 	className,
 	name,
@@ -27,6 +27,16 @@ export const City = ({
 
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
+
+	const [iranProvincesFa, setIranProvincesFa] = useState<
+		Record<string, string[]>
+	>({});
+
+	useEffect(() => {
+		getIranProvincesFa().then((data) => {
+			setIranProvincesFa(data);
+		});
+	}, []);
 
 	useEffect(() => {
 		if (ref.current) {

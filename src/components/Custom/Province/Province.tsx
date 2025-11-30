@@ -6,7 +6,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../Select/Select";
-import { iranProvincesFa } from "@/utils/provinces";
+import { getIranProvincesFa } from "@/utils/provinces";
 
 import customStyles from "./Province.module.css";
 
@@ -30,6 +30,15 @@ export function Province({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
+	const [iranProvincesFa, setIranProvincesFa] = useState<
+		Record<string, string[]>
+	>({});
+
+	useEffect(() => {
+		getIranProvincesFa().then((data) => {
+			setIranProvincesFa(data);
+		});
+	}, []);
 	useEffect(() => {
 		if (ref.current) {
 			setWidth(ref.current.clientWidth); // gets the width in pixels

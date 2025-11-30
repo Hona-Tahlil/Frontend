@@ -1,3 +1,10 @@
+export function getIranProvincesFa(): Promise<Record<string, string[]>> {
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			resolve(iranProvincesFa);
+		}, 100);
+	});
+}
 export const iranProvincesFa: Record<string, string[]> = {
 	تهران: [
 		"تهران",
