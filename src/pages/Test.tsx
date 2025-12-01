@@ -309,7 +309,6 @@ function Test() {
         </Tabs>
       </div>
     </div>
-		</div>
 	);
 }
 
