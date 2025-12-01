@@ -9,6 +9,7 @@ import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import { PetSitterSignup } from "@/pages/PetSitterSignup";
+import PetSitterSignupComplete from "@/pages/PetSitterSignupComplete";
 
 export const router = createBrowserRouter([
 	{
@@ -20,7 +21,7 @@ export const router = createBrowserRouter([
 		children: [
 			{
 				index: true,
-				path:"/",
+				path: "/",
 				element: <Landing />,
 			},
 			{
@@ -43,6 +44,10 @@ export const router = createBrowserRouter([
 			{
 				path: "/petsittersignup",
 				element: <PetSitterSignup />,
+			},
+			{
+				path: "/petsittercomplete",
+				element: <PetSitterSignupComplete />,
 			},
 		],
 	},
