@@ -5,6 +5,12 @@ import { cn } from "@/lib/utils";
 
 const TabsVariantContext = React.createContext(false);
 
+type TabsTriggerProps = React.ComponentPropsWithoutRef<
+  typeof TabsPrimitive.Trigger
+> & {
+  number?: number;
+};
+
 const Tabs = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.Root> & {
@@ -16,7 +22,6 @@ const Tabs = React.forwardRef<
   </TabsVariantContext.Provider>
 ));
 Tabs.displayName = TabsPrimitive.Root.displayName;
-
 
 const TabsList = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.List>,
@@ -36,55 +41,72 @@ const TabsList = React.forwardRef<
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
 
-
 const TabsTrigger = React.forwardRef<
   React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, children, ...props }, ref) => {
+  TabsTriggerProps
+>(({ className, children, number, ...props }, ref) => {
   const isPetsitter = React.useContext(TabsVariantContext);
 
-  const activeTextClass = isPetsitter
+  const activeText = isPetsitter
     ? "data-[state=active]:text-secondary"
     : "data-[state=active]:text-primary";
 
-  const hoverTextClass = isPetsitter
+  const hoverText = isPetsitter
     ? "group-hover:text-secondary"
     : "group-hover:text-primary";
 
-  const focusTextClass = isPetsitter
+  const focusText = isPetsitter
     ? "group-focus-visible:text-secondary"
     : "group-focus-visible:text-primary";
 
-  const hoverBgClass = isPetsitter
+  const hoverBg = isPetsitter
     ? "group-hover:bg-secondary"
     : "group-hover:bg-primary";
 
-  const focusBgClass = isPetsitter
+  const focusBg = isPetsitter
     ? "group-focus-visible:bg-secondary"
     : "group-focus-visible:bg-primary";
 
-  const activeBgClass = isPetsitter
+  const activeBg = isPetsitter
     ? "group-data-[state=active]:bg-secondary"
     : "group-data-[state=active]:bg-primary";
+
+  const numberText = "text-white";
 
   return (
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        "group inline-flex flex-col text-black items-center justify-between whitespace-nowrap rounded-md px-3 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 -mb-0.5",
-        activeTextClass,
+        "group inline-flex flex-col items-center justify-between whitespace-nowrap rounded-md pl-6 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 -mb-0.5 text-black",
+        activeText,
         className
       )}
       {...props}
     >
-      <span className={cn(hoverTextClass, focusTextClass)}>{children}</span>
+      <span className="flex items-center gap-2 rtl:flex-row-reverse">
+        {typeof number === "number" && (
+          <span
+            className={cn(
+              "flex items-center justify-center w-6 h-6 rounded-full text-xs  transition-all bg-black/40 font-bold",
+              numberText,
+              hoverBg,
+              focusBg,
+              activeBg
+            )}
+          >
+            {number}
+          </span>
+        )}
+
+        <span className={cn(hoverText, focusText)}>{children}</span>
+      </span>
 
       <span
         className={cn(
           "mt-1 h-0.5 w-full bg-black/30 opacity-0",
-          hoverBgClass,
-          focusBgClass,
-          activeBgClass,
+          hoverBg,
+          focusBg,
+          activeBg,
           "group-hover:opacity-100 group-focus-visible:opacity-100 group-data-[state=active]:opacity-100"
         )}
       />
