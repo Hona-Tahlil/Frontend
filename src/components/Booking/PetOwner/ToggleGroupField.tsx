@@ -31,40 +31,38 @@ export default function ToggleGroupField({
 		: "";
 
 	return (
-		<div>
-			<ToggleGroup
-				dir={dir}
-				type="multiple"
-				variant="outline"
-				className={cn(containerClassName, classes?.className)}
-			>
-				{values?.map((value, index) => (
-					<ToggleGroupItem
-						key={value}
-						value={value}
-						aria-label="Toggle star"
-						onClick={() => {
-							setSelectedValues((prevSelected) => {
-								if (!prevSelected.includes(value)) {
-									const newValues = [...prevSelected, value];
-									helpers.setValue(newValues);
-									return newValues;
-								} else {
-									const newValues = prevSelected.filter((v) => v !== value);
-									helpers.setValue(newValues);
-									return newValues;
-								}
-							});
-						}}
-						className={cn(toggleClassName, classes?.toggleClassName)}
-					>
-						<CircleCheck className="size-auto" />
-						<p className={cn(textClassName, classes?.textClassName)}>
-							{titles?.[index] || ""}
-						</p>
-					</ToggleGroupItem>
-				))}
-			</ToggleGroup>
-		</div>
+		<ToggleGroup
+			dir={dir}
+			type="multiple"
+			variant="outline"
+			className={cn(containerClassName, classes?.className)}
+		>
+			{values?.map((value, index) => (
+				<ToggleGroupItem
+					key={value}
+					value={value}
+					aria-label="Toggle star"
+					onClick={() => {
+						setSelectedValues((prevSelected) => {
+							if (!prevSelected.includes(value)) {
+								const newValues = [...prevSelected, value];
+								helpers.setValue(newValues);
+								return newValues;
+							} else {
+								const newValues = prevSelected.filter((v) => v !== value);
+								helpers.setValue(newValues);
+								return newValues;
+							}
+						});
+					}}
+					className={cn(toggleClassName, classes?.toggleClassName)}
+				>
+					<CircleCheck className="size-auto" />
+					<p className={cn(textClassName, classes?.textClassName)}>
+						{titles?.[index] || ""}
+					</p>
+				</ToggleGroupItem>
+			))}
+		</ToggleGroup>
 	);
 }

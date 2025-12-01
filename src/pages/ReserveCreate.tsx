@@ -16,6 +16,7 @@ import {
 import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import Address from "@/components/Custom/Address/Address";
+import { useDesktop, useMobile } from "@/hooks/ResponsiveHooks";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(0);
@@ -28,44 +29,24 @@ export default function ReserveCreate() {
 			setDayCount(dayCount - 1);
 		}
 	}
+
+	const isDesktop = useDesktop();
+	const isMobile = useMobile();
 	return (
-		<div className="p-4" dir="rtl">
+		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
 				<Form>
-					<div className="w-full flex gap-6 p-12 justify-center">
-						<div className="flex flex-col h-fit gap-3 w-100 rounded-xl drop-shadow-lg bg-white p-6">
-							<p className="text-xl font-bold">خلاصه پرداخت</p>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-between">
-								<div className="text-gray-500">هزینه نگهداری</div>
-								<div>12 تومن</div>
-							</div>
-							<div className="flex justify-between">
-								<div className="text-gray-500">هزینه نگهداری</div>
-								<div>12 تومن</div>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-between">
-								<div className="font-bold">مبلغ نهایی</div>
-								<div className="font-bold text-primary">12 تومن</div>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<Button className="mx-5" shadow>
-								تایید و ادامه
-							</Button>
-							<p className="text-center">
-								با کلیلک بر روی تایید شما با{" "}
-								<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
-									قوانین و مقررات
-								</a>{" "}
-								موافقت می کنید.
-							</p>
-						</div>
-						<div className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 max-w-200">
+					<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
+						<div
+							className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 lg:max-w-200"
+							dir="rtl"
+						>
 							<p className="text-xl font-bold">اطلاعات رزرو خود را وارد کنید</p>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">نوع سرویس</p>
+								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+									نوع سرویس
+								</p>
 								<ServiceToggleGroup
 									name="services"
 									classes={{
@@ -77,10 +58,12 @@ export default function ReserveCreate() {
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">پت ها</p>
+								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+									پت ها
+								</p>
 								<PetToggleGroup
 									classes={{
-										className: "gap-3",
+										className: "gap-3 flex-1",
 										toggleClassName: "py-5 px-3",
 										textClassName: "text-xl",
 									}}
@@ -90,7 +73,9 @@ export default function ReserveCreate() {
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">تاریخ</p>
+								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+									تاریخ
+								</p>
 								<div className="flex-1">
 									<DatePicker
 										className="h-10 border-0 drop-shadow-lg"
@@ -98,8 +83,8 @@ export default function ReserveCreate() {
 									></DatePicker>
 								</div>
 							</div>
-							<div className="flex justify-between">
-								<div className="flex gap-3">
+							<div className="flex flex-col sm:flex-row justify-between">
+								<div className="flex flex-col sm:flex-row gap-3">
 									<p className="font-bold leading-10">بازه های انتخاب شده</p>
 									<p className="font-bold leading-10">12:00 - 15:00</p>
 								</div>
@@ -158,7 +143,9 @@ export default function ReserveCreate() {
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">نوع رزرو</p>
+								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+									نوع رزرو
+								</p>
 								<Select name="akhoond">
 									<SelectTrigger className="flex-1 h-10 border-0">
 										<SelectValue />
@@ -178,7 +165,9 @@ export default function ReserveCreate() {
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">آدرس</p>
+								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+									آدرس
+								</p>
 								<Address
 									className="flex-1"
 									classes={{
@@ -188,7 +177,73 @@ export default function ReserveCreate() {
 								/>
 							</div>
 						</div>
+						{!isMobile && (
+							<div
+								className="flex flex-col h-fit gap-3 w-full lg:w-100 rounded-xl drop-shadow-lg bg-white p-6"
+								dir="rtl"
+							>
+								<p className="text-xl font-bold">خلاصه پرداخت</p>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-between">
+									<div className="text-gray-500">هزینه نگهداری</div>
+									<div>12 تومن</div>
+								</div>
+								<div className="flex justify-between">
+									<div className="text-gray-500">هزینه نگهداری</div>
+									<div>12 تومن</div>
+								</div>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-between">
+									<div className="font-bold">مبلغ نهایی</div>
+									<div className="font-bold text-primary">12 تومن</div>
+								</div>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<Button className="mx-5" shadow>
+									تایید و ادامه
+								</Button>
+								<p className="text-center">
+									با کلیلک بر روی تایید شما با{" "}
+									<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
+										قوانین و مقررات
+									</a>{" "}
+									موافقت می کنید.
+								</p>
+							</div>
+						)}
 					</div>
+					{isMobile && (
+						<div
+							className="flex flex-col h-fit gap-3 w-full lg:w-100 rounded-xl drop-shadow-lg bg-white p-6"
+							dir="rtl"
+						>
+							<p className="text-xl font-bold">خلاصه پرداخت</p>
+							<div className="w-full h-0.5 border-0 bg-black/40"></div>
+							<div className="flex justify-between">
+								<div className="text-gray-500">هزینه نگهداری</div>
+								<div>12 تومن</div>
+							</div>
+							<div className="flex justify-between">
+								<div className="text-gray-500">هزینه نگهداری</div>
+								<div>12 تومن</div>
+							</div>
+							<div className="w-full h-0.5 border-0 bg-black/40"></div>
+							<div className="flex justify-between">
+								<div className="font-bold">مبلغ نهایی</div>
+								<div className="font-bold text-primary">12 تومن</div>
+							</div>
+							<div className="w-full h-0.5 border-0 bg-black/40"></div>
+							<Button className="mx-5" shadow>
+								تایید و ادامه
+							</Button>
+							<p className="text-center">
+								با کلیلک بر روی تایید شما با{" "}
+								<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
+									قوانین و مقررات
+								</a>{" "}
+								موافقت می کنید.
+							</p>
+						</div>
+					)}
 				</Form>
 			</Formik>
 		</div>
