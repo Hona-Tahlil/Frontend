@@ -18,7 +18,7 @@ import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import Address from "@/components/Custom/Address/Address";
 
 export const ReserveEdit = (props: {}) => {
-	const [dayCount, setDayCount] = useState(1);
+	const [dayCount, setDayCount] = useState(0);
 
 	function addDay() {
 		setDayCount(dayCount + 1);
@@ -56,7 +56,12 @@ export const ReserveEdit = (props: {}) => {
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">تاریخ شروع</p>
-								<DatePicker className="h-10" name="nice"></DatePicker>
+								<div className="flex-1">
+									<DatePicker
+										className="h-10 border-0 drop-shadow-lg"
+										name="nice"
+									></DatePicker>
+								</div>
 							</div>
 							<div className="flex justify-between">
 								<div className="flex gap-3">
@@ -70,7 +75,9 @@ export const ReserveEdit = (props: {}) => {
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
 									<div className="flex justify-start">
 										<p className="w-50 font-bold leading-10">تاریخ شروع</p>
-										<DatePicker className="h-10" name="nice"></DatePicker>
+										<div className="flex-1">
+											<DatePicker className="h-10" name="nice"></DatePicker>
+										</div>
 									</div>
 									<div className="flex justify-between">
 										<div className="flex gap-3">
@@ -106,16 +113,16 @@ export const ReserveEdit = (props: {}) => {
 										rounded-xl
 									`}
 								>
-									اضافه کردن روز
 									<Plus className="font-bold" size="auto" />
+									اضافه کردن روز
 								</Button>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">نوع رزرو</p>
 								<Select name="akhoond">
-									<SelectTrigger className="w-full">
-										<SelectValue placeholder="روز" />
+									<SelectTrigger className="flex-1 border-0 h-10">
+										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>

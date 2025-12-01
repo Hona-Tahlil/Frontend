@@ -18,7 +18,7 @@ import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import Address from "@/components/Custom/Address/Address";
 
 export default function ReserveCreate() {
-	const [dayCount, setDayCount] = useState(1);
+	const [dayCount, setDayCount] = useState(0);
 
 	function addDay() {
 		setDayCount(dayCount + 1);
@@ -68,6 +68,9 @@ export default function ReserveCreate() {
 								<p className="w-50 font-bold leading-10">نوع سرویس</p>
 								<ServiceToggleGroup
 									name="services"
+									classes={{
+										textClassName: "text-xl",
+									}}
 									values={["1", "2", "3", "4"]}
 									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
 								/>
@@ -76,15 +79,24 @@ export default function ReserveCreate() {
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">پت ها</p>
 								<PetToggleGroup
+									classes={{
+										className: "gap-3",
+										toggleClassName: "py-5 px-3",
+										textClassName: "text-xl",
+									}}
 									values={["1", "2", "3", "4"]}
 									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
-									classes={{ className: "justify-start" }}
 								/>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
-								<p className="w-50 font-bold leading-10">تاریخ شروع</p>
-								<DatePicker className="h-10" name="nice"></DatePicker>
+								<p className="w-50 font-bold leading-10">تاریخ</p>
+								<div className="flex-1">
+									<DatePicker
+										className="h-10 border-0 drop-shadow-lg"
+										name="nice"
+									></DatePicker>
+								</div>
 							</div>
 							<div className="flex justify-between">
 								<div className="flex gap-3">
@@ -97,8 +109,13 @@ export default function ReserveCreate() {
 								<>
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
 									<div className="flex justify-start">
-										<p className="w-50 font-bold leading-10">تاریخ شروع</p>
-										<DatePicker className="h-10" name="nice"></DatePicker>
+										<p className="w-50 font-bold leading-10">تاریخ</p>
+										<div className="flex-1">
+											<DatePicker
+												className="h-10 border-0 drop-shadow-lg"
+												name="nice"
+											></DatePicker>
+										</div>
 									</div>
 									<div className="flex justify-between">
 										<div className="flex gap-3">
@@ -131,19 +148,20 @@ export default function ReserveCreate() {
 										bg-primary-100 
 										text-primary-600 
 										text-xl font-semibold
-										rounded-xl
+										rounded-md
+										font-normal
 									`}
 								>
+									<Plus className="" size="auto" />
 									اضافه کردن روز
-									<Plus className="font-bold" size="auto" />
 								</Button>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">نوع رزرو</p>
 								<Select name="akhoond">
-									<SelectTrigger className="w-full">
-										<SelectValue placeholder="روز" />
+									<SelectTrigger className="flex-1 h-10 border-0">
+										<SelectValue />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
@@ -161,7 +179,13 @@ export default function ReserveCreate() {
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
 							<div className="flex justify-start">
 								<p className="w-50 font-bold leading-10">آدرس</p>
-								<Address />
+								<Address
+									className="flex-1"
+									classes={{
+										inputClassName: "border-0",
+										className: "border-0",
+									}}
+								/>
 							</div>
 						</div>
 					</div>

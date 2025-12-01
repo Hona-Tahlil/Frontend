@@ -36,7 +36,6 @@ export default function ToggleGroupField({
 				dir={dir}
 				type="multiple"
 				variant="outline"
-				size="sm"
 				className={cn(containerClassName, classes?.className)}
 			>
 				{values?.map((value, index) => (
@@ -59,7 +58,7 @@ export default function ToggleGroupField({
 						}}
 						className={cn(toggleClassName, classes?.toggleClassName)}
 					>
-						<CircleCheck size={"auto"} />
+						<CircleCheck className="size-auto" />
 						<p className={cn(textClassName, classes?.textClassName)}>
 							{titles?.[index] || ""}
 						</p>

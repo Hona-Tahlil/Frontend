@@ -1,10 +1,48 @@
 .customBorder {
-	border-style: dashed;
-	border-width: 4px;
-	border-spacing: 10px;
-	border-image: repeating-linear-gradient(to right,
-			orange 0,
-			orange 10px,
-			transparent 10px,
-			transparent 20px) 5;
+	/* Horizontal borders (top/bottom) */
+	--dash-length-x: 10px;
+	--dash-gap-x: 10px;
+	--dash-thickness-x: 4px;
+
+	/* Vertical borders (left/right) */
+	--dash-length-y: 10px;
+	--dash-gap-y: 10px;
+	--dash-thickness-y: 4px;
+
+	/* Color */
+	--dash-color: orange;
+
+	/* Independent offsets */
+	--offset-top: 0px;
+	--offset-bottom: 0px;
+	--offset-left: 0px;
+	--offset-right: 0px;
+
+	position: relative;
+	padding: 10px 20px;
+}
+
+.customBorder::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+
+	/* TOP */
+	background:
+		repeating-linear-gradient(to right,
+			var(--dash-color) 0 var(--dash-length-x),
+			transparent var(--dash-length-x) calc(var(--dash-length-x) + var(--dash-gap-x))) top var(--offset-top) left 0 / 100% var(--dash-thickness-x) no-repeat,
+		/* BOTTOM */
+		repeating-linear-gradient(to right,
+			var(--dash-color) 0 var(--dash-length-x),
+			transparent var(--dash-length-x) calc(var(--dash-length-x) + var(--dash-gap-x))) bottom var(--offset-bottom) left 0 / 100% var(--dash-thickness-x) no-repeat,
+		/* LEFT */
+		repeating-linear-gradient(to bottom,
+			var(--dash-color) 0 var(--dash-length-y),
+			transparent var(--dash-length-y) calc(var(--dash-length-y) + var(--dash-gap-y))) top var(--offset-left) left 0 / var(--dash-thickness-y) 100% no-repeat,
+		/* RIGHT */
+		repeating-linear-gradient(to bottom,
+			var(--dash-color) 0 var(--dash-length-y),
+			transparent var(--dash-length-y) calc(var(--dash-length-y) + var(--dash-gap-y))) top var(--offset-right) right 0 / var(--dash-thickness-y) 100% no-repeat;
 }
