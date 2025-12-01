@@ -28,3 +28,7 @@ export interface SitterWithTimeAndDate extends PetSitter {
   availableTo: string;
   availableDates: string[];
 }
+
+export interface SitterCardProps {
+  sitter: PetSitter;
+}

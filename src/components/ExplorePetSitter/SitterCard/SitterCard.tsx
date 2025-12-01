@@ -1,34 +1,53 @@
-import { PawPrint, MapPin, Dog, Cat, Bird, Rat, House } from "lucide-react";
-import { Button } from "@/components/Custom/Button/Button";
-import type { PetSitter } from "@/types/PetSitter";
-import { SERVICE_OPTIONS } from "@/types/services";
+"use client";
 
-interface SitterCardProps {
-  sitter: PetSitter;
-}
+import { PawPrint, MapPin, Dog, Cat, Bird, Rat, House } from "lucide-react";
+
+import { Button } from "@/components/Custom/Button/Button";
+import { SERVICE_OPTIONS } from "@/types/services";
+import type { SitterCardProps } from "@/types/ExplorePetSitter";
+
+// 🔽 مسیر رو با مسیر واقعی کامپوننت خودت عوض کن
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@/components/ui/avatar";
 
 export default function SitterCard({ sitter }: SitterCardProps) {
   const fullStars = Math.round(sitter.rating);
   const stars = "★".repeat(fullStars).padEnd(5, "☆");
 
+  // اگر بعداً فیلد عکس به PetSitter اضافه کردی (مثلاً avatarUrl)،
+  // اینجا می‌تونی ازش استفاده کنی:
+  // const avatarSrc = sitter.avatarUrl ?? undefined;
+
   return (
-    <div className="rounded-[24px] border border-orange-300 bg-white/90 px-6 py-5 flex flex-col justify-between">
+    <div className="card-shell flex flex-col justify-between px-6 py-5">
       {/* بالا */}
       <div>
         <div className="flex items-start justify-between gap-4">
-          <div className="flex h-20 w-20 flex-shrink-0 items-center justify-center rounded-full bg-slate-100">
-            <PawPrint className="h-8 w-8 text-orange-500" />
-          </div>
+          {/* آواتار سیتِر */}
+          <Avatar className="h-20 w-20">
+            {/* اگر فیلد عکس داشتی اینو آن‌کامنت کن و src رو ست کن */}
+            {/* <AvatarImage src={avatarSrc} alt={sitter.name} /> */}
+            <AvatarFallback className="bg-secondary-50">
+              <PawPrint className="h-8 w-8 text-primary-500" />
+            </AvatarFallback>
+          </Avatar>
 
           <div className="flex-1 space-y-1 text-right">
-            <h3 className="text-lg font-semibold text-slate-900">{sitter.name}</h3>
+            <h3 className="text-subtitle font-semibold text-charcoal-900 text-base md:text-lg">
+              {sitter.name}
+            </h3>
 
-            <div className="flex items-center justify-start gap-1 text-xs text-slate-500">
-              <span className="text-sm text-orange-400">{stars}</span>
+            {/* امتیاز */}
+            <div className="flex items-center justify-start gap-1 text-small text-charcoal-500">
+              <span className="text-primary-400">{stars}</span>
               <span>({sitter.reviewsCount} نظر)</span>
             </div>
 
-            <div className="mt-1 flex items-center gap-1 text-xs text-slate-400">
+            {/* شهر */}
+            <div className="mt-1 flex items-center gap-1 text-small text-charcoal-400">
               <MapPin className="h-4 w-4" />
               <span>{sitter.city}</span>
             </div>
@@ -36,25 +55,31 @@ export default function SitterCard({ sitter }: SitterCardProps) {
         </div>
 
         {/* قیمت */}
-        <div className="mt-6 text-right text-sm text-slate-700">
+        <div className="mt-6 text-small text-charcoal-700 text-right">
           شروع قیمت از{" "}
-          <span className="font-semibold text-orange-500">
+          <span className="font-semibold text-primary-600">
             {sitter.pricePerNight.toLocaleString("fa-IR")} تومان
           </span>
         </div>
 
-        {/* خدمات */}
+        {/* خدمات + پت‌ها */}
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
+          {/* خدمات */}
           <div className="flex flex-wrap gap-2">
             {sitter.services.map((service) => {
               const label =
-                SERVICE_OPTIONS.find((s) => s.value === service)?.label ||
+                SERVICE_OPTIONS.find((s) => s.value === service)?.label ??
                 "سرویس";
 
               return (
                 <div
                   key={service}
-                  className="flex items-center gap-1 rounded-full bg-gradient-to-b from-orange-400 to-orange-500 px-4 py-1 text-xs font-medium text-white shadow-lg"
+                  className="
+                    flex items-center gap-1 rounded-full
+                    bg-gradient-to-b from-primary-400 to-primary-500
+                    px-4 py-1 text-xs font-medium
+                    text-primary-foreground shadow-lg
+                  "
                 >
                   <House className="h-3 w-3" />
                   <span>{label}</span>
@@ -64,7 +89,7 @@ export default function SitterCard({ sitter }: SitterCardProps) {
           </div>
 
           {/* پت‌ها */}
-          <div className="flex items-center gap-2 text-orange-500">
+          <div className="flex items-center gap-2 text-primary-500">
             {sitter.pets.includes("cat") && <Cat className="h-5 w-5" />}
             {sitter.pets.includes("dog") && <Dog className="h-5 w-5" />}
             {sitter.pets.includes("bird") && <Bird className="h-5 w-5" />}
@@ -77,16 +102,12 @@ export default function SitterCard({ sitter }: SitterCardProps) {
       <div className="mt-5 flex gap-3">
         <Button
           variant="outline"
-          className="flex-1 rounded-full border-orange-500 px-4 py-2.5 text-xs font-semibold text-orange-500 
-          focus:outline-none active:scale-100 active:shadow-none transition-none cursor-pointer"
+          className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold text-charcoal-700"
         >
           مشاهده پروفایل
         </Button>
 
-        <Button
-          className="flex-1 rounded-full bg-orange-500 px-4 py-2.5 text-xs font-semibold text-white
-          focus:outline-none active:scale-100 active:shadow-none transition-none cursor-pointer"
-        >
+        <Button className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold">
           رزرو فوری
         </Button>
       </div>
