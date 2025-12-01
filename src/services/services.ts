@@ -80,45 +80,6 @@ export const postImageData = async ({ endPoint, data }: PostParams) => {
 	}
 };
 
-// ✅ Auto FormData post
-export const postFormData = async ({ endPoint, data }: PostParams) => {
-	try {
-		let formData: FormData;
-
-		if (data instanceof FormData) {
-			formData = data;
-		} else {
-			formData = new FormData();
-			Object.entries(data || {}).forEach(([key, value]) => {
-				if (Array.isArray(value)) {
-					value.forEach((item) => {
-						if (item instanceof File || item instanceof Blob) {
-							formData.append(key, item);
-						} else {
-							formData.append(key, String(item));
-						}
-					});
-				} else {
-					if (value instanceof File || value instanceof Blob) {
-						formData.append(key, value);
-					} else {
-						formData.append(key, String(value));
-					}
-				}
-			});
-		}
-
-		const response: AxiosResponse = await apiClient.post(endPoint, formData, {
-			headers: {}, // Axios sets Content-Type automatically
-		});
-
-		return response.data;
-	} catch (error) {
-		console.error("error in postFormData", error);
-		throw error;
-	}
-};
-
 // ✅ PATCH
 export const patchData = async ({ endPoint, data, headers }: PatchParams) => {
 	try {
@@ -139,6 +100,18 @@ export const putData = async ({ endPoint, data }: PutParams) => {
 		return response.data;
 	} catch (error) {
 		console.error("error in putData", error);
+		throw error;
+	}
+};
+
+export const putImageData = async ({ endPoint, data }: PostParams) => {
+	try {
+		const response: AxiosResponse = await apiClient.put(endPoint, data, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
+		return response.data;
+	} catch (error) {
+		console.error("error in postImageData", error);
 		throw error;
 	}
 };

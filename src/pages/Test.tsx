@@ -24,7 +24,8 @@ import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
 import Toggle from "@/components/Custom/Toggle/Toggle";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { testSubmit } from "@/services/petSitterSignupService";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -44,6 +45,9 @@ function Test() {
 	const isTablet = useTablet();
 	const [isChecked, setIsChecked] = useState(false);
 
+	useEffect(() => {
+		testSubmit({ nice: "nice" });
+	});
 	return (
 		<div className="flex flex-col items-center">
 			<Formik

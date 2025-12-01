@@ -6,7 +6,13 @@ import type {
 	SubmitSkillsPayload,
 	UploadDocuments,
 } from "@/types/petSitterSignupApiTypes";
-import { getData, postData, putData } from "./services";
+import {
+	getData,
+	postData,
+	postImageData,
+	putData,
+	putImageData,
+} from "./services";
 
 export const createPetSitterData = async (
 	credentials: AccessTokenPayload,
@@ -40,7 +46,7 @@ export const uploadDocuments = async (
 	credentials: UploadDocuments,
 ): Promise<void> => {
 	const { accessToken, ...data } = credentials;
-	return putData({
+	return putImageData({
 		endPoint: `/v1/petsitter/register/documents`,
 		data: data,
 		headers: { Authorization: `Bearer ${accessToken}` },
@@ -73,5 +79,15 @@ export const getStatus = async (
 	return getData({
 		endPoint: `/v1/petsitter/register/skills`,
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
+	});
+};
+
+interface testOne {
+	nice: string;
+}
+export const testSubmit = async (credentials: testOne): Promise<void> => {
+	return postImageData({
+		endPoint: `/v1/petsitter/register/skills`,
+		data: credentials,
 	});
 };
