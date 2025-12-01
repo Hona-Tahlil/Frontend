@@ -272,14 +272,16 @@ function Test() {
 
       {isChecked && <p>salllaaam</p>}
 
-      <div className="flex w-full max-w-sm flex-col gap-6">
-        <Tabs defaultValue="account" >
+      <div className="flex w-200 flex-col gap-6">
+        <Tabs defaultValue="account">
           <TabsList >
             <TabsTrigger  value="account" number={3}>رزرو های فعال</TabsTrigger>
-            <TabsTrigger value="password">رزرو های گذشته</TabsTrigger>
+            <TabsTrigger value="password" number={1}>رزرو های گذشته</TabsTrigger>
+			<TabsTrigger value="salam">رزرو های گذشته</TabsTrigger>
           </TabsList>
           <TabsContent  value="account">salam</TabsContent>
           <TabsContent value="password">naaaaa</TabsContent>
+		  <TabsContent value="salam">naaaaa</TabsContent>
         </Tabs>
       </div>
     </div>

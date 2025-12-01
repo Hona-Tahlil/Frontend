@@ -28,15 +28,18 @@ const TabsList = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
 >(({ className, ...props }, ref) => (
   <>
-    <TabsPrimitive.List
-      ref={ref}
-      className={cn(
-        "inline-flex h-9 items-end justify-start rounded-lg text-muted-foreground bg-none rtl w-full",
-        className
-      )}
-      {...props}
-    />
-    <div className="h-0.5 bg-black/30"></div>
+    <div className="w-full overflow-x-auto whitespace-nowrap scrollbar-none  rtl [scrollbar-width:none] [-ms-overflow-style:none]">
+      <TabsPrimitive.List
+        ref={ref}
+        className={cn(
+          "inline-flex h-9 items-end justify-start rounded-lg text-muted-foreground bg-none rtl gap-2 ",
+          className
+        )}
+        {...props}
+      />
+    </div>
+
+    <div className="h-0.5 -mt-0.5 bg-black/30"></div>
   </>
 ));
 TabsList.displayName = TabsPrimitive.List.displayName;
@@ -77,17 +80,17 @@ const TabsTrigger = React.forwardRef<
     <TabsPrimitive.Trigger
       ref={ref}
       className={cn(
-        "group inline-flex flex-col items-center justify-between whitespace-nowrap rounded-md pl-6 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 -mb-0.5 text-black",
+        "hover:cursor-pointer group inline-flex flex-col items-center h-full justify-between whitespace-nowrap rounded-md pl-6 text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 text-black",
         activeText,
         className
       )}
       {...props}
     >
-      <span className="flex items-center gap-2 rtl:flex-row-reverse">
+      <span className="flex items-center gap-2 rtl:flex-row-reverse h-full">
         {typeof number === "number" && (
           <span
             className={cn(
-              "flex items-center justify-center w-6 h-6 rounded-full text-xs  transition-all bg-black/40 font-bold",
+              "flex items-center justify-center h-[60%] aspect-square rounded-full text-xs transition-all bg-black/40 font-bold",
               numberText,
               hoverBg,
               focusBg,
@@ -103,7 +106,7 @@ const TabsTrigger = React.forwardRef<
 
       <span
         className={cn(
-          "mt-1 h-0.5 w-full bg-black/30 opacity-0",
+          "h-0.5 w-full opacity-0",
           hoverBg,
           focusBg,
           activeBg,
