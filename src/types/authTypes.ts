@@ -47,7 +47,7 @@ export interface PermissionResponse {
 }
 
 export interface ForgetPasswordPayload {
-	email: string;
+	Email: string;
 }
 
 export interface ForgetPasswordResponse {
@@ -57,5 +57,5 @@ export interface ForgetPasswordResponse {
 }
 
 export interface ForgetPasswordErrors {
-	email?: string;
+	Email?: string;
 }

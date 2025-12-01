@@ -32,7 +32,7 @@ export const forgetpasswordService = async (
 	credentials: ForgetPasswordPayload,
 ): Promise<ForgetPasswordResponse> => {
 	return postData({
-		endPoint: `/v1/auth/forget-password`,
+		endPoint: `/v1/auth/forgot-password`,
 		data: credentials,
 	});
 };

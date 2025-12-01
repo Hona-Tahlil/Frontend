@@ -14,7 +14,7 @@ export default function ForgetPasswordForm() {
     const [linkSent, setLinkSent] = useState(false);
     const [counter, setCounter] = useState(0); 
 
-    const passedEmail = (location.state as { email?: string })?.email || "";
+    const passedEmail = (location.state as { Email?: string })?.Email || "";
 
     function navigateToLogin() {
         navigate("/login");
@@ -46,14 +46,14 @@ export default function ForgetPasswordForm() {
 
                 <Formik
                     initialValues={{
-                        email: passedEmail,
+                        Email: passedEmail,
                     }}
                     validationSchema={ForgetPasswordSchema}
                     onSubmit={(values, { setErrors, setSubmitting }) => {
                         setOverAllError("");
 
                         forgetpasswordService({
-                            email: values.email,
+                            Email: values.Email,
                         })
                             .then((loginResponse) => {
                                 if (loginResponse.messages !== null) {
@@ -94,7 +94,7 @@ export default function ForgetPasswordForm() {
                                 )}
 
                                 <Input
-                                    name="email"
+                                    name="Email"
                                     placeholder="ایمیل"
                                     classes={{
                                         className: "h-10 w-full",
