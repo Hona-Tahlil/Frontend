@@ -51,34 +51,42 @@ export default function ForgetPasswordForm() {
                     validationSchema={ForgetPasswordSchema}
                     onSubmit={(values, { setErrors, setSubmitting }) => {
                         setOverAllError("");
-
+                      
                         forgetpasswordService({
-                            Email: values.Email,
+                          Email: values.Email,
                         })
-                            .then((loginResponse) => {
-                                if (loginResponse.messages !== null) {
-                                    setErrors(loginResponse.messages!);
-                                }
-                                if (loginResponse.statusCode === 200) {
-                                    // setAccessToken(loginResponse.data?.accessToken);
-                                    setLinkSent(true);
-                                }
-                            })
-                            .catch((error) => {
-                                const errorText = "خطای غیر منتظره";
-
-                                if (error.response?.data?.messages) {
-                                    setErrors(error.response.data.messages);
-                                } else if (error.response?.data?.message) {
-                                    setOverAllError(error.response.data.message);
-                                } else {
-                                    setOverAllError(errorText);
-                                }
-                            })
-                            .finally(() => {
-                                setSubmitting(false);
-                            });
-                    }}
+                          .then((response) => {
+                            // فقط برای تست:
+                            console.log("BACK RESPONSE:", response);
+                      
+                            // اگر بک پیام ولیدیشن فرستاده:
+                            if (response.messages) {
+                              setErrors(response.messages);
+                            }
+                      
+                            // اگر همه‌چیز اوکی بود:
+                            if (response.statusCode === 200) {
+                              setLinkSent(true);
+                              setCounter(30);   // 👈 اینجا تایمر را شروع می‌کنیم
+                            }
+                          })
+                          .catch((error) => {
+                            const errorText = "خطای غیر منتظره";
+                      
+                            if (error.response?.data?.messages) {
+                              setErrors(error.response.data.messages);
+                            } else if (error.response?.data?.message) {
+                              setOverAllError(error.response.data.message);
+                            } else {
+                              setOverAllError(errorText);
+                            }
+                          })
+                          .finally(() => {
+                            setSubmitting(false);
+                          });
+                      }}
+                      
+                    
                 >
                     {({ isSubmitting }) => (
                         <>
