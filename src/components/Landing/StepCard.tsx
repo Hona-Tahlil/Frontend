@@ -26,7 +26,7 @@ const StepCard: React.FC<StepCardProps> = ({
 			<div className="bg-card rounded-3xl shadow-md overflow-hidden">
 				{}
 				<div className="bg-secondary-100 flex flex-col items-center pt-10 pb-5 px-6">
-					<img src={icon} alt={iconAlt} className="w-40 h-40 mb-3" />
+					<img src={icon} alt={iconAlt} className="w-40 h-30 mb-3" />
 				</div>
 
 				{}

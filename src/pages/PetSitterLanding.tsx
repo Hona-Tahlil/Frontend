@@ -41,23 +41,27 @@ function PetSitterLanding() {
 			className="w-full flex flex-col items-center justify-center mt-20 bg-primary-50"
 			dir="rtl"
 		>
-			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7">
-				<div className="lg:w-1/2 flex justify-end">
+			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7 gap-12 lg:gap-20">
+				<div className="lg:w-1/2 flex items-center justify-center justify-end lg:justify-end">
 					<div className="lg:w-150 flex flex-col items-center gap-1">
-						<div className="text-xl sm:text-3xl font-bold text-center mt-70 ml-10">
+						<div className="text-xl sm:text-3xl font-bold text-center">
                             با عشق به حیوانات درآمد بساز    
 						</div>
-						<div className="text-xl sm:text-3xl text-center leading-20 lg:leading-normal ml-10">
-							با زمان‌های آزادی که داری رو به مراقبت از پت‌ها تبدیل کن.انعطاف کامل در ساعت کاری و درآمد شفاف و پشتیبانی مستمر.
-                            <Button
+						<div className="flex flex-col items-center text-center text-xl sm:text-3xl leading-20 lg:leading-normal">
+							<p>
+								با زمان‌های آزادی که داری رو به مراقبت از پت‌ها تبدیل کن. انعطاف کامل در ساعت کاری و درآمد شفاف و پشتیبانی مستمر.
+							</p>
+
+							<Button
 								type="submit"
 								size={"giant"}
 								bold={true}
-								className="font-[Alibaba] font-bold h-7 mt-10 px-34 py-6"
+								className="font-[Alibaba] font-bold mt-10 px-34 py-6"
 							>
-								همین حالا ثبت نام کن
+								همین حالا ثبت‌نام کن
 							</Button>
-                        </div>
+						</div>
+
 						
 					</div>
 				</div>
@@ -94,7 +98,7 @@ function PetSitterLanding() {
 						<FeatureCard
 							Icon={UsersRound}
 							text="با امتیاز بالا سفارش های تکراری و مشتری های وفادار پیدا کن."
-							title="مشترهای ثابت"
+							title="مشتری های ثابت"
 						/>
 					</div>
 					<div className="flex flex-col lg:flex-row gap-5 xl:gap-15 sm:mt-20">
@@ -117,37 +121,41 @@ function PetSitterLanding() {
 				</div>
 			</div>
 
-            <div className="bg-secondary-200 w-full flex flex-col items-center gap-3 py-3 mt-70">
+            <div className="bg-secondary-200 w-full flex flex-col items-center gap-6 py-10 mt-70 mb-16">
 				<div className="flex w-9/10 lg:w-8/10 justify-between items-center">
 					<p className="text-2xl font-bold">تجربه پت‌یار ها</p>
 					
 				</div>
 				<Carousel
-					opts={{ loop: true, direction: "rtl" }}
-					className="w-full flex justify-center"
-				>
-					<div className="w-1/10 hidden lg:flex items-center justify-center">
-						<CarouselNext className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15" />
-					</div>
-					<div className="w-9/10 lg:w-8/10">
-						<CarouselContent>
-							{Array.from({ length: 10 }).map((_, index) => (
-								<CarouselItem className="basis-55 w-full" key={index}>
-									<div className="w-full h-auto max-w-50 min-w-50 bg-white shadow-sm rounded-2xl px-3 pt-3 pb-2 flex flex-col">
-										<div className="w-full h-36 bg-secondary-700 rounded-t-2xl"></div>
-										<p className="font-bold mt-3">سارا احمدی </p>
-										<p className="text-sm">با سلام و عرض ادب سایت شما بستر مناسبی بود برای پیدا کردن خیوانات زیبا و دوست داشتنی من از شما بسیار ممنونم</p>
-
-										
-									</div>
-								</CarouselItem>
-							))}
-						</CarouselContent>
-					</div>
-					<div className="w-1/10 hidden lg:flex items-center justify-center">
-						<CarouselPrevious className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15" />
-					</div>
-				</Carousel>
+					  opts={{ loop: true, direction: "rtl" }}
+					  className="w-full flex justify-center"
+					>
+					  <div className="w-1/10 hidden lg:flex items-center justify-center">
+					    <CarouselNext className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15 cursor-pointer" />
+					  </div>
+						
+					  <div className="w-9/10 lg:w-8/10">
+					    <CarouselContent>
+					      {Array.from({ length: 10 }).map((_, index) => (
+					        <CarouselItem className="basis-55 w-full" key={index}>
+					          <div className="w-full h-auto max-w-50 min-w-50 bg-card shadow-sm rounded-2xl px-3 pt-3 pb-2 flex flex-col">
+					            <div className="w-full h-36 bg-secondary-700 rounded-t-2xl"></div>
+					            <p className="font-bold mt-3">سارا احمدی</p>
+					            <p className="text-sm">
+					              با سلام و عرض ادب سایت شما بستر مناسبی بود برای پیدا کردن حیوانات زیبا و دوست داشتنی. 
+					              من از شما بسیار ممنونم.
+					            </p>
+					          </div>
+					        </CarouselItem>
+					      ))}
+					    </CarouselContent>
+					  </div>
+					  
+					  <div className="w-1/10 hidden lg:flex items-center justify-center">
+					    <CarouselPrevious className="relative top-0 right-0 left-0 bottom-0 translate-y-0 size-15 cursor-pointer" />
+					  </div>
+					</Carousel>
+					  
 			</div>
 
             <div className="w-full flex flex-col items-center mt-50 px-7">
