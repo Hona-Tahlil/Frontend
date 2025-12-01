@@ -6,7 +6,24 @@ import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
 import { TimePickerRoller } from "@/components/Custom/TimePicker/TimeRoller";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 
-import type { PetSitter, ServiceType } from "@/types/PetSitter";
+import {
+  MOCK_SITTERS,
+  GLOBAL_MIN_PRICE,
+  GLOBAL_MAX_PRICE,
+  PET_OPTIONS,
+  SORT_FIELDS,
+  CITY_OPTIONS,
+} from "@/data/explorePetSitterData";
+
+import type { PetSitter, PetType, ServiceType } from "@/types/PetSitter";
+import type {
+  FilterState,
+  SortField,
+  SortDirection,
+  SearchParams,
+  SitterWithTimeAndDate,
+} from "@/types/ExplorePetSitter";
+
 import { SERVICE_OPTIONS } from "@/types/services";
 import SitterCard from "@/components/ExplorePetSitter/SitterCard/SitterCard";
 
@@ -22,157 +39,6 @@ import * as Yup from "yup";
 
 import { Clock3, PawPrint, ChevronDown, ChevronUp } from "lucide-react";
 
-/* -------------------------------------------------
-   انواع
--------------------------------------------------- */
-
-type SortField = "price" | "rating" | "experience";
-type SortDirection = "asc" | "desc";
-
-interface SearchParams {
-  searchQuery: string;
-  serviceType: string;
-  pets: string[];
-  city: string;
-  date: string; // "1404/09/11" جلالی
-  timeFrom: string; // "HH:mm"
-  timeTo: string; // "HH:mm"
-  priceRange: [number, number];
-  sortField: SortField;
-  sortDirection: SortDirection;
-  page: number;
-  pageSize: number;
-}
-
-interface FilterState {
-  searchQuery: string;
-  serviceType: string;
-  pets: string[];
-  city: string;
-  date: string;
-  timeFrom: string;
-  timeTo: string;
-  priceRange: [number, number];
-}
-
-type SitterWithTimeAndDate = PetSitter & {
-  availableFrom: string; 
-  availableTo: string; 
-  availableDates: string[]; 
-};
-
-/* -------------------- mock data -------------------- */
-
-const BASE_SITTERS: SitterWithTimeAndDate[] = [
-  {
-    id: 1,
-    name: "جیمز باند",
-    city: "تهران",
-    rating: 4.9,
-    reviewsCount: 13,
-    pricePerNight: 250000,
-    pets: ["dog", "cat"],
-    services: ["walking", "care"],
-    experienceYears: 3,
-    availableFrom: "09:00",
-    availableTo: "20:00",
-    availableDates: ["1404/09/10", "1404/09/11", "1404/09/15"],
-  },
-  {
-    id: 2,
-    name: "الیسا",
-    city: "اصفهان",
-    rating: 4.7,
-    reviewsCount: 9,
-    pricePerNight: 180000,
-    pets: ["cat"],
-    services: ["care"],
-    experienceYears: 2,
-    availableFrom: "10:00",
-    availableTo: "18:00",
-    availableDates: ["1404/09/11", "1404/09/12"],
-  },
-  {
-    id: 3,
-    name: "مهدی",
-    city: "تهران",
-    rating: 4.4,
-    reviewsCount: 21,
-    pricePerNight: 150000,
-    pets: ["dog"],
-    services: ["walking"],
-    experienceYears: 5,
-    availableFrom: "08:00",
-    availableTo: "16:00",
-    availableDates: ["1404/09/13", "1404/09/20"],
-  },
-  {
-    id: 4,
-    name: "سارا",
-    city: "شیراز",
-    rating: 4.8,
-    reviewsCount: 17,
-    pricePerNight: 320000,
-    pets: ["dog", "cat", "bird"],
-    services: ["medical", "care"],
-    experienceYears: 4,
-    availableFrom: "12:00",
-    availableTo: "23:00",
-    availableDates: ["1404/09/10", "1404/09/11", "1404/09/25"],
-  },
-  {
-    id: 5,
-    name: "آرش",
-    city: "مشهد",
-    rating: 4.2,
-    reviewsCount: 7,
-    pricePerNight: 120000,
-    pets: ["bird", "rodent"],
-    services: ["care"],
-    experienceYears: 1,
-    availableFrom: "07:30",
-    availableTo: "15:30",
-    availableDates: ["1404/09/12", "1404/09/18"],
-  },
-];
-
-
-const MOCK_SITTERS: SitterWithTimeAndDate[] = Array.from(
-  { length: 60 },
-  (_, idx) => {
-    const base = BASE_SITTERS[idx % BASE_SITTERS.length];
-    const round = Math.floor(idx / BASE_SITTERS.length);
-    const priceBump = round * 20000;
-
-    return {
-      ...base,
-      id: idx + 1,
-      name: `${base.name} ${idx + 1}`,
-      pricePerNight: base.pricePerNight + priceBump,
-      reviewsCount: base.reviewsCount + round * 3,
-      experienceYears: base.experienceYears + round,
-    };
-  }
-);
-
-
-const GLOBAL_MIN_PRICE = Math.min(...MOCK_SITTERS.map((s) => s.pricePerNight));
-const GLOBAL_MAX_PRICE = Math.max(...MOCK_SITTERS.map((s) => s.pricePerNight));
-
-const PET_OPTIONS = [
-  { value: "dog", label: "سگ‌ها" },
-  { value: "cat", label: "گربه‌ها" },
-  { value: "bird", label: "پرنده‌ها" },
-  { value: "rodent", label: "جوندگان" },
-];
-
-const SORT_FIELDS: { value: SortField; label: string }[] = [
-  { value: "price", label: "قیمت" },
-  { value: "rating", label: "امتیاز" },
-];
-
-const CITY_OPTIONS = ["تهران", "اصفهان", "مشهد", "شیراز", "تبریز"];
-
 /* ---------------- mock API (سمت فرانت) ------------- */
 
 function mockFetchSitters(params: SearchParams): {
@@ -181,38 +47,32 @@ function mockFetchSitters(params: SearchParams): {
 } {
   let result: SitterWithTimeAndDate[] = [...MOCK_SITTERS];
 
-  // جستجو روی اسم
   if (params.searchQuery.trim()) {
     const q = params.searchQuery.trim().toLowerCase();
     result = result.filter((s) => s.name.toLowerCase().includes(q));
   }
 
-  // نوع سرویس
   if (params.serviceType) {
     result = result.filter((s) =>
       s.services.includes(params.serviceType as ServiceType)
     );
   }
 
-  // نوع پت‌ها
   if (params.pets && params.pets.length > 0) {
     result = result.filter((s) =>
       s.pets.some((pet) => params.pets.includes(pet))
     );
   }
 
-  // شهر (اگر "همه شهرها" بود فیلتر نکن)
   if (params.city && params.city !== "همه شهرها") {
     result = result.filter((s) => s.city === params.city);
   }
 
-  // محدوده قیمت
   const [minPrice, maxPrice] = params.priceRange;
   result = result.filter(
     (s) => s.pricePerNight >= minPrice && s.pricePerNight <= maxPrice
   );
 
-  // ⏰ فیلتر ساعت: بازه‌ی سیتر باید داخل بازه‌ی انتخابی باشد
   if (params.timeFrom || params.timeTo) {
     const reqFrom = params.timeFrom || "";
     const reqTo = params.timeTo || "";
@@ -230,20 +90,16 @@ function mockFetchSitters(params: SearchParams): {
     });
   }
 
-  // 📅 فیلتر تاریخ بر اساس بازه‌ی جلالی هر سیتر
-  // 📅 فیلتر تاریخ: فقط اگر کاربر تاریخ انتخاب کرده باشد
-if (params.date) {
-  const reqDate = params.date; // مثل "1404/09/11"
+  if (params.date) {
+    const reqDate = params.date;
 
-  result = result.filter((s) =>
-    Array.isArray(s.availableDates)
-      ? s.availableDates.includes(reqDate)
-      : false
-  );
-}
+    result = result.filter((s) =>
+      Array.isArray(s.availableDates)
+        ? s.availableDates.includes(reqDate)
+        : false
+    );
+  }
 
-
-  // سورت
   result.sort((a, b) => {
     let av: number;
     let bv: number;
@@ -280,17 +136,17 @@ if (params.date) {
 
 function SitterCardSkeleton() {
   return (
-    <div className="flex h-full flex-col rounded-[32px] border border-[#F2F2F2] bg-card p-4 shadow-[0_8px_30px_rgba(15,23,42,0.06)] animate-pulse">
-      <div className="mb-4 h-28 w-full rounded-2xl bg-slate-100" />
-      <div className="mb-2 h-4 w-1/2 rounded-full bg-slate-100" />
+    <div className="flex h-full flex-col rounded-xl border border-border bg-card p-4 shadow-lg animate-pulse">
+      <div className="mb-4 h-28 w-full rounded-lg bg-charcoal-50" />
+      <div className="mb-2 h-4 w-1/2 rounded-full bg-charcoal-50" />
       <div className="mb-4 space-y-2">
-        <div className="h-3 w-1/3 rounded-full bg-slate-100" />
-        <div className="h-3 w-1/4 rounded-full bg-slate-100" />
+        <div className="h-3 w-1/3 rounded-full bg-charcoal-50" />
+        <div className="h-3 w-1/4 rounded-full bg-charcoal-50" />
       </div>
-      <div className="mb-4 h-4 w-2/3 rounded-full bg-slate-100" />
+      <div className="mb-4 h-4 w-2/3 rounded-full bg-charcoal-50" />
       <div className="mt-auto flex flex-col gap-2">
-        <div className="h-9 w-full rounded-full bg-slate-100" />
-        <div className="h-9 w-full rounded-full bg-slate-100" />
+        <div className="h-9 w-full rounded-full bg-charcoal-50" />
+        <div className="h-9 w-full rounded-full bg-charcoal-50" />
       </div>
     </div>
   );
@@ -304,39 +160,29 @@ export default function PetSitterSearchPage() {
 
   const [showTimePicker, setShowTimePicker] = useState(false);
 
-  const [filters, setFilters] = useState<FilterState>({
-    searchQuery: "",
-    serviceType: "",
-    pets: [],
-    city: "",
-    date: "",
-    timeFrom: "",
-    timeTo: "",
-    priceRange: [GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE],
-  });
+  // فیلترها به استیت‌های کوچک شکسته شده‌اند
+  const [searchQuery, setSearchQuery] = useState("");
+  const [serviceType, setServiceType] = useState<ServiceType | "">("");
+  const [pets, setPets] = useState<PetType[]>([]);
+  const [city, setCity] = useState("");
+  const [date, setDate] = useState("");
+  const [timeFrom, setTimeFrom] = useState("");
+  const [timeTo, setTimeTo] = useState("");
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    GLOBAL_MIN_PRICE,
+    GLOBAL_MAX_PRICE,
+  ]);
 
-  // چون تاریخ جلالی به صورت string نگه‌داری می‌شه، اینجا هم string اعتبارسنجی می‌کنیم
   const validationSchema = Yup.object({
     date: Yup.string().required("تاریخ الزامی است"),
   });
 
-  const [queryParams, setQueryParams] = useState<SearchParams>({
-    searchQuery: "",
-    serviceType: "",
-    pets: [],
-    city: "",
-    date: "",
-    timeFrom: "",
-    timeTo: "",
-    priceRange: [GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE],
-    sortField: "price",
-    sortDirection: "asc",
-    page: 1,
-    pageSize,
-  });
-
   const [sortField, setSortField] = useState<SortField>("price");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
+  const [page, setPage] = useState(1);
+
+  // برای اینکه هر بار سرچ می‌زنیم، effect بفهمه سرچ جدید شروع شده
+  const [searchToken, setSearchToken] = useState(0);
 
   const [data, setData] = useState<PetSitter[]>([]);
   const [totalItems, setTotalItems] = useState(0);
@@ -349,40 +195,65 @@ export default function PetSitterSearchPage() {
   const [openService, setOpenService] = useState(false);
   const [openCity, setOpenCity] = useState(false);
 
-  /* ------------ fetch دیتا بر اساس queryParams ------------ */
+  /* ------------ fetch دیتا بر اساس stateها ------------ */
 
   useEffect(() => {
     if (!hasSearched) return;
 
     setIsLoading(true);
 
+    // اینجا از stateهای خرد شده یک SearchParams می‌سازیم
+    const params: SearchParams = {
+      searchQuery,
+      serviceType,
+      pets,
+      city,
+      date,
+      timeFrom,
+      timeTo,
+      priceRange,
+      sortField,
+      sortDirection,
+      page,
+      pageSize,
+    };
+
     const timer = setTimeout(() => {
-      const { items, total } = mockFetchSitters(queryParams);
+      const { items, total } = mockFetchSitters(params);
 
-      setData((prev) =>
-        queryParams.page === 1 ? items : [...prev, ...items]
-      );
-
+      setData((prev) => (page === 1 ? items : [...prev, ...items]));
       setTotalItems(total);
 
-      const loadedSoFar = queryParams.page * queryParams.pageSize;
+      const loadedSoFar = page * pageSize;
       setHasMore(loadedSoFar < total);
 
       setIsLoading(false);
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [queryParams, hasSearched]);
+  }, [
+    hasSearched,
+    searchToken, // هر بار سرچ جدید می‌زنیم این عوض می‌شود
+    page,
+    sortField,
+    sortDirection,
+    searchQuery,
+    serviceType,
+    pets,
+    city,
+    date,
+    timeFrom,
+    timeTo,
+    priceRange,
+    pageSize,
+  ]);
 
   /* --------- اینفینیت‌اسکرول --------- */
 
   const loadMoreSitters = useCallback(() => {
     if (!hasSearched || isLoading || !hasMore) return;
 
-    setQueryParams((prev) => ({
-      ...prev,
-      page: prev.page + 1,
-    }));
+    setPage((prev) => prev + 1);
   }, [hasSearched, isLoading, hasMore]);
 
   const lastSitterRef = useCallback(
@@ -410,24 +281,14 @@ export default function PetSitterSearchPage() {
 
   /* --------- handlers --------- */
 
-  const updateFilterField = <K extends keyof FilterState>(
-    field: K,
-    value: FilterState[K]
-  ) => {
-    setFilters((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-  };
+  const handleTogglePet = (petValue: PetType) => {
+    setPets((prevPets) => {
+      const exists = prevPets.includes(petValue);
+      const nextPets: PetType[] = exists
+        ? prevPets.filter((p) => p !== petValue)
+        : [...prevPets, petValue];
 
-  const handleTogglePet = (petValue: string) => {
-    setFilters((prev) => {
-      const exists = prev.pets.includes(petValue);
-      const nextPets = exists
-        ? prev.pets.filter((p) => p !== petValue)
-        : [...prev.pets, petValue];
-
-      return { ...prev, pets: nextPets };
+      return nextPets;
     });
   };
 
@@ -435,15 +296,9 @@ export default function PetSitterSearchPage() {
     setHasSearched(true);
     setData([]);
     setHasMore(true);
-
-    setQueryParams((prev) => ({
-      ...prev,
-      ...filters,
-      sortField,
-      sortDirection,
-      page: 1,
-      pageSize,
-    }));
+    setPage(1);
+    // باعث می‌شود useEffect بفهمد یک سرچ جدید آغاز شده
+    setSearchToken((prev) => prev + 1);
   };
 
   const handleClearFilters = () => {
@@ -458,21 +313,23 @@ export default function PetSitterSearchPage() {
       priceRange: [GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE],
     };
 
-    setFilters(resetFilters);
+    // ریست stateهای خرد شده
+    setSearchQuery(resetFilters.searchQuery);
+    setServiceType(resetFilters.serviceType as ServiceType | "");
+    setPets(resetFilters.pets);
+    setCity(resetFilters.city);
+    setDate(resetFilters.date);
+    setTimeFrom(resetFilters.timeFrom);
+    setTimeTo(resetFilters.timeTo);
+    setPriceRange(resetFilters.priceRange);
+
     setSortField("price");
     setSortDirection("asc");
+    setPage(1);
     setData([]);
     setTotalItems(0);
     setHasMore(false);
     setHasSearched(false);
-
-    setQueryParams({
-      ...resetFilters,
-      sortField: "price",
-      sortDirection: "asc",
-      page: 1,
-      pageSize,
-    });
   };
 
   const toggleSortDirection = () => {
@@ -481,12 +338,7 @@ export default function PetSitterSearchPage() {
 
       setData([]);
       setHasMore(true);
-
-      setQueryParams((prevParams) => ({
-        ...prevParams,
-        sortDirection: next,
-        page: 1,
-      }));
+      setPage(1);
 
       return next;
     });
@@ -498,11 +350,11 @@ export default function PetSitterSearchPage() {
     <div className="min-h-screen bg-second-background px-4 py-6" dir="rtl">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
         {/* باکس فیلتر بالا */}
-        <div className="rounded-[32px] border border-border bg-card px-6 py-6 shadow-drop-shadow-lg">
-          <h1 className="mb-1 text-center text-subtitle font-bold text-slate-800 md:text-section">
+        <div className="rounded-xl border border-border bg-card px-6 py-6 shadow-lg">
+          <h1 className="mb-1 text-center text-subtitle font-bold text-charcoal-900 md:text-section">
             پت‌سیتر مناسب خودت رو پیدا کن
           </h1>
-          <p className="mb-6 text-center text-small text-slate-500 md:text-small">
+          <p className="mb-6 text-center text-small text-charcoal-500 md:text-small">
             نوع سرویس، موقعیت مکانی یا نوع پت خودت رو وارد کن تا بهترین گزینه‌ها
             رو برات بیاریم.
           </p>
@@ -510,36 +362,34 @@ export default function PetSitterSearchPage() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {/* ساعت */}
             <div className="relative space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">ساعت</label>
+              <label className="text-small text-charcoal-500 pr-5">ساعت</label>
 
               <button
                 type="button"
                 onClick={() => setShowTimePicker((prev) => !prev)}
-                className={`relative flex h-13 w-full items-center rounded-full border border-[1px] border-black/40 bg-card px-6 text-[15px] font-[Alibaba] font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
-                  filters.timeFrom || filters.timeTo
-                    ? "text-slate-700"
-                    : "text-slate-400"
+                className={`relative flex h-13 w-full items-center rounded-full border border-border bg-card px-6 text-small font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
+                  timeFrom || timeTo ? "text-charcoal-800" : "text-charcoal-400"
                 }`}
               >
                 <span className="text-small opacity-70">از&nbsp;</span>
-                <span className="text-small">{filters.timeFrom || "--:--"}</span>
+                <span className="text-small">{timeFrom || "--:--"}</span>
 
                 <span className="mx-3 text-small opacity-70">تا&nbsp;</span>
 
-                <span className="text-small">{filters.timeTo || "--:--"}</span>
+                <span className="text-small">{timeTo || "--:--"}</span>
 
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Clock3 className="h-4 w-4 text-slate-400" />
+                  <Clock3 className="h-4 w-4 text-charcoal-400" />
                 </span>
               </button>
 
               {showTimePicker && (
                 <div className="absolute inset-x-0 top-full z-20 mt-2">
                   <TimePickerRoller
-                    from={filters.timeFrom}
-                    to={filters.timeTo}
-                    onChangeFrom={(val) => updateFilterField("timeFrom", val)}
-                    onChangeTo={(val) => updateFilterField("timeTo", val)}
+                    from={timeFrom}
+                    to={timeTo}
+                    onChangeFrom={(val) => setTimeFrom(val)}
+                    onChangeTo={(val) => setTimeTo(val)}
                     onClose={() => setShowTimePicker(false)}
                   />
                 </div>
@@ -548,10 +398,10 @@ export default function PetSitterSearchPage() {
 
             {/* تاریخ */}
             <div className="space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">تاریخ</label>
+              <label className="text-small text-charcoal-500 pr-5">تاریخ</label>
               <div className="relative">
                 <Formik
-                  initialValues={{ date: filters.date || "" }}
+                  initialValues={{ date: date || "" }}
                   enableReinitialize
                   validationSchema={validationSchema}
                   onSubmit={() => {}}
@@ -563,12 +413,10 @@ export default function PetSitterSearchPage() {
                           name="date"
                           className="!text-small"
                           value={values.date}
-                          // ⚠️ اگر DatePickerت به‌جای event مستقیم string برمی‌گردونه،
-                          // این onChange رو بعداً در خود کامپوننت عوض کن
                           onChange={(e) => {
                             const val = (e.target as HTMLInputElement).value;
                             setFieldValue("date", val);
-                            updateFilterField("date", val);
+                            setDate(val);
                           }}
                         />
                       </div>
@@ -580,7 +428,7 @@ export default function PetSitterSearchPage() {
 
             {/* نوع سرویس */}
             <div className="space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">
+              <label className="text-small text-charcoal-500 pr-5">
                 نوع سرویس
               </label>
 
@@ -588,33 +436,33 @@ export default function PetSitterSearchPage() {
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className={`flex h-13 w-full items-center justify-between rounded-full border border-[1px] border-black/40 bg-card px-6 text-[15px] font-[Alibaba] font-bold shadow-sm ${
-                      filters.serviceType ? "text-slate-700" : "text-slate-400"
+                    className={`flex h-13 w-full items-center justify-between rounded-full border border-border bg-card px-6 text-small font-bold shadow-sm ${
+                      serviceType ? "text-charcoal-800" : "text-charcoal-400"
                     }`}
                   >
                     <span>
-                      {filters.serviceType
+                      {serviceType
                         ? SERVICE_OPTIONS.find(
-                            (o) => o.value === filters.serviceType
+                            (o) => o.value === serviceType
                           )?.label
                         : "همه سرویس‌ها"}
                     </span>
 
                     {openService ? (
-                      <ChevronUp className="h-4 w-4 text-slate-400" />
+                      <ChevronUp className="h-4 w-4 text-charcoal-400" />
                     ) : (
-                      <ChevronDown className="h-4 w-4 text-slate-400" />
+                      <ChevronDown className="h-4 w-4 text-charcoal-400" />
                     )}
                   </button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
                   align="end"
-                  className="min-w-[10rem] rounded-2xl border border-slate-200 bg-card px-1 py-1 text-right"
+                  className="min-w-[10rem] rounded-xl border border-border bg-card px-1 py-1 text-right shadow-lg"
                 >
                   <DropdownMenuItem
-                    onSelect={() => updateFilterField("serviceType", "")}
-                    className="rounded-xl px-3 py-2 justify-end text-right"
+                    onSelect={() => setServiceType("")}
+                    className="rounded-lg px-3 py-2 justify-end text-right"
                   >
                     همه سرویس‌ها
                   </DropdownMenuItem>
@@ -622,10 +470,8 @@ export default function PetSitterSearchPage() {
                   {SERVICE_OPTIONS.map((opt) => (
                     <DropdownMenuItem
                       key={opt.value}
-                      onSelect={() =>
-                        updateFilterField("serviceType", opt.value)
-                      }
-                      className="rounded-xl px-3 py-2 justify-end text-right"
+                      onSelect={() => setServiceType(opt.value as ServiceType)}
+                      className="rounded-lg px-3 py-2 justify-end text-right"
                     >
                       {opt.label}
                     </DropdownMenuItem>
@@ -636,7 +482,7 @@ export default function PetSitterSearchPage() {
 
             {/* موقعیت مکانی */}
             <div className="space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">
+              <label className="text-small text-charcoal-500 pr-5">
                 موقعیت مکانی
               </label>
 
@@ -644,38 +490,38 @@ export default function PetSitterSearchPage() {
                 <DropdownMenuTrigger asChild>
                   <button
                     type="button"
-                    className={`flex h-13 w-full items-center justify-between rounded-full border border-[1px] border-black/40 bg-card px-6 font-[Alibaba] font-bold shadow-sm ${
-                      filters.city ? "text-slate-700" : "text-slate-400"
+                    className={`flex h-13 w-full items-center justify-between rounded-full border border-border bg-card px-6 font-bold shadow-sm ${
+                      city ? "text-charcoal-800" : "text-charcoal-400"
                     }`}
                   >
-                    <span>{filters.city || "انتخاب شهر..."}</span>
+                    <span>{city || "انتخاب شهر..."}</span>
 
                     {openCity ? (
-                      <ChevronUp className="h-4 w-4 text-slate-400" />
+                      <ChevronUp className="h-4 w-4 text-charcoal-400" />
                     ) : (
-                      <ChevronDown className="h-4 w-4 text-slate-400" />
+                      <ChevronDown className="h-4 w-4 text-charcoal-400" />
                     )}
                   </button>
                 </DropdownMenuTrigger>
 
                 <DropdownMenuContent
                   align="end"
-                  className="min-w-[10rem] rounded-2xl border border-slate-200 px-1 py-1 text-right"
+                  className="min-w-[10rem] rounded-xl border border-border bg-card px-1 py-1 text-right shadow-lg"
                 >
                   <DropdownMenuItem
-                    onSelect={() => updateFilterField("city", "همه شهرها")}
-                    className="rounded-xl px-3 py-2 justify-end text-right"
+                    onSelect={() => setCity("همه شهرها")}
+                    className="rounded-lg px-3 py-2 justify-end text-right"
                   >
                     همه شهرها
                   </DropdownMenuItem>
 
-                  {CITY_OPTIONS.map((city) => (
+                  {CITY_OPTIONS.map((cityOption) => (
                     <DropdownMenuItem
-                      key={city}
-                      onSelect={() => updateFilterField("city", city)}
-                      className="rounded-xl px-3 py-2 justify-end text-right"
+                      key={cityOption}
+                      onSelect={() => setCity(cityOption)}
+                      className="rounded-lg px-3 py-2 justify-end text-right"
                     >
-                      {city}
+                      {cityOption}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
@@ -684,16 +530,16 @@ export default function PetSitterSearchPage() {
 
             {/* پت‌ها */}
             <div className="space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">پت‌ها</label>
+              <label className="text-small text-charcoal-500 pr-5">پت‌ها</label>
               <div className="relative">
                 <NonFormikInput
                   readOnly
                   name="pets"
                   type="text"
                   value={
-                    filters.pets.length === 0
+                    pets.length === 0
                       ? "نوع پت را انتخاب کنید"
-                      : filters.pets
+                      : pets
                           .map(
                             (p) =>
                               PET_OPTIONS.find((opt) => opt.value === p)
@@ -702,28 +548,29 @@ export default function PetSitterSearchPage() {
                           .join("، ")
                   }
                   classes={{
-                    className: `h-13 cursor-pointer text-[15px] font-[Alibaba] font-bold ${
-                      filters.pets.length ? "text-slate-700" : "text-slate-400"
+                    className: `h-13 cursor-pointer text-small font-bold ${
+                      pets.length ? "text-charcoal-800" : "text-charcoal-400"
                     }`,
                   }}
                 />
                 <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <PawPrint className="h-4 w-4 text-slate-400" />
+                  <PawPrint className="h-4 w-4 text-charcoal-400" />
                 </span>
               </div>
 
-              <div className="mt-1 flex flex-wrap gap-1 text-[11px] pr-2">
+              <div className="mt-1 flex flex-wrap gap-1 text-small pr-2">
                 {PET_OPTIONS.map((pet) => {
-                  const active = filters.pets.includes(pet.value);
+                  const value = pet.value as PetType;
+                  const active = pets.includes(value);
                   return (
                     <button
                       key={pet.value}
                       type="button"
-                      onClick={() => handleTogglePet(pet.value)}
+                      onClick={() => handleTogglePet(value)}
                       className={`rounded-full border px-2 py-0.5 ${
                         active
-                          ? "border-orange-400 text-orange-600"
-                          : "border-slate-200 text-slate-500"
+                          ? "border-primary-400 text-primary-600"
+                          : "border-charcoal-100 text-charcoal-500"
                       }`}
                     >
                       {pet.label}
@@ -735,16 +582,16 @@ export default function PetSitterSearchPage() {
 
             {/* محدوده قیمت */}
             <div className="space-y-1 text-small">
-              <label className="text-small text-slate-500 pr-5">
+              <label className="text-small text-charcoal-500 pr-5">
                 محدوده قیمت
               </label>
               <PriceRangeSlider
-                value={filters.priceRange}
+                value={priceRange}
                 min={GLOBAL_MIN_PRICE}
                 max={GLOBAL_MAX_PRICE}
                 step={PRICE_STEP}
                 onChange={(range) =>
-                  updateFilterField("priceRange", range as [number, number])
+                  setPriceRange(range as [number, number])
                 }
               />
             </div>
@@ -753,16 +600,12 @@ export default function PetSitterSearchPage() {
           <div className="mt-6 flex items-center justify-between">
             <p
               onClick={handleClearFilters}
-              className="rounded-full text-small cursor-pointer text-slate-400 hover:text-slate-600 md:text-small"
+              className="rounded-full text-small cursor-pointer text-charcoal-400 hover:text-charcoal-600 md:text-small"
             >
               حذف همه فیلترها
             </p>
 
-            <Button
-              type="button"
-              onClick={handleSearchClick}
-              className="px-13"
-            >
+            <Button type="button" onClick={handleSearchClick} className="px-13">
               جستجو
             </Button>
           </div>
@@ -770,22 +613,25 @@ export default function PetSitterSearchPage() {
 
         {/* نوار نتایج + سورت */}
         <div className="flex items-center justify-between">
-          <h2 className="text-normal font-bold text-slate-800 md:text-subtitle">
+          <h2 className="text-normal font-bold text-charcoal-900 md:text-subtitle">
             نتایج جستجو
           </h2>
 
           <div className="flex items-center gap-2 rounded-full bg-card px-3 py-2 text-small shadow-sm md:text-small">
-            <span className="text-slate-500">مرتب‌سازی بر اساس</span>
+            <span className="text-charcoal-500">مرتب‌سازی بر اساس</span>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-1 rounded-full border border-slate-200 px-3 py-1 text-small text-slate-700"
+                  className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-small text-charcoal-800"
                 >
                   <span>
-                    {SORT_FIELDS.find((opt) => opt.value === sortField)?.label}
+                    {
+                      SORT_FIELDS.find((opt) => opt.value === sortField)
+                        ?.label
+                    }
                   </span>
-                  <ChevronDown className="h-4 w-4 text-slate-400" />
+                  <ChevronDown className="h-4 w-4 text-charcoal-400" />
                 </button>
               </DropdownMenuTrigger>
 
@@ -796,10 +642,10 @@ export default function PetSitterSearchPage() {
                 avoidCollisions={false}
                 className="
                   min-w-[7rem]
-                  rounded-3xl border border-black/5
+                  rounded-3xl border border-border
                   px-4 py-2
-                  text-small text-slate-800
-                  shadow-[0_12px_30px_rgba(15,23,42,0.08)]
+                  text-small text-charcoal-900
+                  shadow-lg
                   overflow-visible max-h-none
                 "
               >
@@ -811,17 +657,13 @@ export default function PetSitterSearchPage() {
                       setData([]);
                       setHasMore(true);
                       if (hasSearched) {
-                        setQueryParams((prev) => ({
-                          ...prev,
-                          sortField: opt.value,
-                          page: 1,
-                        }));
+                        setPage(1);
                       }
                     }}
                     className={`cursor-pointer rounded-2xl px-2 py-1.5 text-right ${
                       sortField === opt.value
-                        ? "text-orange-500"
-                        : "text-slate-700"
+                        ? "text-primary-500"
+                        : "text-charcoal-800"
                     }`}
                   >
                     {opt.label}
@@ -835,9 +677,9 @@ export default function PetSitterSearchPage() {
               variant="outline"
               onClick={toggleSortDirection}
               className="
-                items-center gap-1 rounded-full border border-slate-200
-                text-small text-slate-600
-                hover:text-slate-800 transition
+                items-center gap-1 rounded-full border border-border
+                text-small text-charcoal-600
+                hover:text-charcoal-900 transition
               "
             >
               {sortDirection === "asc" ? (
@@ -858,7 +700,7 @@ export default function PetSitterSearchPage() {
         {/* لیست سیتِرها + اسکلت + اینفینیت‌اسکرول */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {!hasSearched ? (
-            <div className="col-span-full flex items-center justify-center py-16 text-small text-slate-500">
+            <div className="col-span-full flex items-center justify-center py-16 text-small text-charcoal-500">
               برای مشاهده نتایج، فیلترها را تنظیم کرده و روی «جستجو» کلیک کن.
             </div>
           ) : data.length === 0 && isLoading ? (
@@ -866,7 +708,7 @@ export default function PetSitterSearchPage() {
               <SitterCardSkeleton key={index} />
             ))
           ) : data.length === 0 ? (
-            <div className="col-span-full flex items-center justify-center py-16 text-small text-slate-500">
+            <div className="col-span-full flex items-center justify-center py-16 text-small text-charcoal-500">
               موردی مطابق با جستجوی شما یافت نشد.
             </div>
           ) : (
@@ -892,21 +734,25 @@ export default function PetSitterSearchPage() {
 
         {/* اطلاعات پیجینیشن کلی */}
         <div className="mt-2 flex items-center justify-between text-small md:text-small">
-          <div className="text-slate-500">
+          <div className="text-charcoal-500">
             {!hasSearched || totalItems === 0 ? (
-              hasSearched ? "هیچ آیتمی وجود ندارد." : ""
+              hasSearched ? (
+                "هیچ آیتمی وجود ندارد."
+              ) : (
+                ""
+              )
             ) : (
               <>
                 نمایش{" "}
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-charcoal-900">
                   {data.length === 0 ? 0 : 1}
                 </span>{" "}
                 تا{" "}
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-charcoal-900">
                   {data.length}
                 </span>{" "}
                 از{" "}
-                <span className="font-semibold text-slate-700">
+                <span className="font-semibold text-charcoal-900">
                   {totalItems}
                 </span>{" "}
                 پت‌سیتر
@@ -914,7 +760,7 @@ export default function PetSitterSearchPage() {
             )}
           </div>
 
-          <div className="text-slate-500">
+          <div className="text-charcoal-500">
             {hasSearched &&
               !hasMore &&
               totalItems > 0 &&

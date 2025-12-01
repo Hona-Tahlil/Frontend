@@ -3,61 +3,76 @@
 import React from "react";
 import { ChevronUp, ChevronDown } from "lucide-react";
 
-/* ---------------------- انواع کمکی ---------------------- */
+import type {
+  SingleTime,
+  SingleTimeRollerProps,
+  TimePickerRollerProps,
+} from "@/types/TimePicker";
 
-type SingleTime = {
-  hour: number;   // 0..23
-  minute: number; // فقط 0 یا 30
-};
+/* ---------------------- توابع کمکی زمان ---------------------- */
 
-interface SingleTimeRollerProps {
-  value?: string;               // "HH:MM"
-  onChange?: (value: string) => void;
-}
+const HOURS_IN_DAY = 24;
+const MINUTE_STEP = 30;
 
-/* تبدیل استرینگ → ساعت و دقیقه */
+/** تبدیل استرینگ "HH:mm" به آبجکت ساعت/دقیقه */
 function parseTime(value?: string): SingleTime {
-  if (!value) return { hour: 0, minute: 0 };
+  if (!value) {
+    return { hour: 0, minute: 0 };
+  }
 
   const [hStr, mStr] = value.split(":");
-  let h = Number(hStr);
-  const m = Number(mStr ?? "0");
+  let hour = Number(hStr);
+  const rawMinute = Number(mStr ?? "0");
 
-  if (!Number.isFinite(h) || h < 0 || h > 23) h = 0;
-  const minute = m === 30 ? 30 : 0;
+  if (!Number.isFinite(hour) || hour < 0 || hour >= HOURS_IN_DAY) {
+    hour = 0;
+  }
 
-  return { hour: h, minute };
+  const minute = rawMinute === MINUTE_STEP ? MINUTE_STEP : 0;
+
+  return { hour, minute };
 }
 
-/* تبدیل ساعت/دقیقه → استرینگ */
+/** تبدیل آبجکت ساعت/دقیقه به "HH:mm" */
 function formatTime({ hour, minute }: SingleTime): string {
   return `${hour.toString().padStart(2, "0")}:${minute
     .toString()
     .padStart(2, "0")}`;
 }
 
-/* ---------------------- رولر تک زمان (HH / MM) ---------------------- */
+/* ---------------------- رولر تک‌زمان (HH / MM) ---------------------- */
 
-const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) => {
-  const [state, setState] = React.useState<SingleTime>(() => parseTime(value));
+const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({
+  value,
+  onChange,
+}) => {
+  const parsedTime = React.useMemo(() => parseTime(value), [value]);
+
+  const [state, setState] = React.useState<SingleTime>(parsedTime);
 
   React.useEffect(() => {
-    setState(parseTime(value));
-  }, [value]);
+    setState(parsedTime);
+  }, [parsedTime]);
 
   const emit = (next: SingleTime) => {
     setState(next);
     onChange?.(formatTime(next));
   };
 
-  const incHour = () =>
-    emit({ ...state, hour: (state.hour + 1) % 24 });
+  const incHour = () => {
+    const nextHour = (state.hour + 1) % HOURS_IN_DAY;
+    emit({ ...state, hour: nextHour });
+  };
 
-  const decHour = () =>
-    emit({ ...state, hour: (state.hour + 23) % 24 });
+  const decHour = () => {
+    const nextHour = (state.hour + HOURS_IN_DAY - 1) % HOURS_IN_DAY;
+    emit({ ...state, hour: nextHour });
+  };
 
-  const toggleMinute = () =>
-    emit({ ...state, minute: state.minute === 0 ? 30 : 0 });
+  const toggleMinute = () => {
+    const nextMinute = state.minute === 0 ? MINUTE_STEP : 0;
+    emit({ ...state, minute: nextMinute });
+  };
 
   const H = state.hour.toString().padStart(2, "0");
   const M = state.minute.toString().padStart(2, "0");
@@ -70,7 +85,7 @@ const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) 
         <button
           type="button"
           onClick={incHour}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-primary-500 transition-colors hover:text-primary-600"
         >
           <ChevronUp className="h-4 w-4" />
         </button>
@@ -79,16 +94,16 @@ const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) 
         <button
           type="button"
           onClick={toggleMinute}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-primary-500 transition-colors hover:text-primary-600"
         >
           <ChevronUp className="h-4 w-4" />
         </button>
       </div>
 
       {/* نمایش عددی */}
-      <div className="flex items-center gap-3 text-lg font-semibold text-slate-800 tabular-nums">
+      <div className="flex items-center gap-3 text-normal font-semibold text-charcoal-800 tabular-nums">
         <span className="w-8 text-center">{H}</span>
-        <span className="text-base text-slate-500">:</span>
+        <span className="text-small text-charcoal-500">:</span>
         <span className="w-8 text-center">{M}</span>
       </div>
 
@@ -98,7 +113,7 @@ const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) 
         <button
           type="button"
           onClick={decHour}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-primary-500 transition-colors hover:text-primary-600"
         >
           <ChevronDown className="h-4 w-4" />
         </button>
@@ -107,7 +122,7 @@ const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) 
         <button
           type="button"
           onClick={toggleMinute}
-          className="text-orange-500 hover:text-orange-600"
+          className="text-primary-500 transition-colors hover:text-primary-600"
         >
           <ChevronDown className="h-4 w-4" />
         </button>
@@ -116,15 +131,7 @@ const SingleTimeRoller: React.FC<SingleTimeRollerProps> = ({ value, onChange }) 
   );
 };
 
-/* ---------------------- تایم‌پیکر رنج (از / تا) ---------------------- */
-
-export interface TimePickerRollerProps {
-  from?: string;
-  to?: string;
-  onChangeFrom?: (value: string) => void;
-  onChangeTo?: (value: string) => void;
-  onClose?: () => void;
-}
+/* ---------------------- تایم‌پیکر بازه‌ای (از / تا) ---------------------- */
 
 export const TimePickerRoller: React.FC<TimePickerRollerProps> = ({
   from,
@@ -134,32 +141,29 @@ export const TimePickerRoller: React.FC<TimePickerRollerProps> = ({
   onClose,
 }) => {
   return (
-    <div className="rounded-[32px] border border-[#ECECF5] bg-[#F7F7F9] px-8 py-5 shadow-xl">
-
+    <div className="rounded-xl border border-border bg-card px-6 py-4 shadow-lg">
       {/* از / تا */}
-      <div className="flex items-center justify-center gap-16">
-
+      <div className="flex items-center justify-center gap-8">
         {/* از */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-slate-500">از</span>
+          <span className="text-small text-charcoal-500">از</span>
           <SingleTimeRoller value={from} onChange={onChangeFrom} />
         </div>
 
         {/* تا */}
         <div className="flex items-center gap-3">
-          <span className="text-sm text-slate-500">تا</span>
+          <span className="text-small text-charcoal-500">تا</span>
           <SingleTimeRoller value={to} onChange={onChangeTo} />
         </div>
-
       </div>
 
-      {/* دکمه بستن – دقیقاً پایینِ سمت چپ */}
+      {/* دکمه بستن – پایین، سمت راست در RTL */}
       {onClose && (
-        <div className="mt-6 flex justify-end" dir="rtl">
+        <div className="mt-4 flex justify-end" dir="rtl">
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full bg-orange-100 px-5 py-1.5 text-xs font-medium text-orange-600 hover:bg-orange-200"
+            className="rounded-full bg-primary-100 px-5 py-1.5 text-small font-medium text-primary-600 transition-colors hover:bg-primary-200"
           >
             بستن
           </button>

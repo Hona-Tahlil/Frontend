@@ -3,6 +3,7 @@
 import * as React from "react";
 import * as SliderPrimitive from "@radix-ui/react-slider";
 import { cn } from "@/lib/utils";
+import type { PriceRangeSliderProps } from "@/types/slider";
 
 /* ------------------------ Slider (Shadcn Base) ------------------------ */
 
@@ -18,27 +19,19 @@ const Slider = React.forwardRef<
     )}
     {...props}
   >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-slate-200">
-      <SliderPrimitive.Range className="absolute h-full bg-orange-500" />
+    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-charcoal-100">
+      <SliderPrimitive.Range className="absolute h-full bg-primary-500" />
     </SliderPrimitive.Track>
 
     {/* دو تا thumb برای رنج */}
-    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-orange-500 bg-white shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 transition" />
-    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-orange-500 bg-white shadow focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-orange-500 transition" />
+    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary-500 bg-card shadow-lg transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-focus" />
+    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary-500 bg-card shadow-lg transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-focus" />
   </SliderPrimitive.Root>
 ));
 
 Slider.displayName = SliderPrimitive.Root.displayName;
 
 /* -------------------- PriceRangeSlider With Inputs -------------------- */
-
-type PriceRangeSliderProps = {
-  value: [number, number];                // مقدار از بیرون
-  onChange: (value: [number, number]) => void;
-  min: number;
-  max: number;
-  step?: number;
-};
 
 export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   value,
@@ -94,6 +87,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   };
 
   /* ------------------------ اسلایدر ------------------------ */
+
   const handleSliderChange = (vals: number[]) => {
     const next: [number, number] = [vals[0], vals[1]];
     setInternal(next);
@@ -101,19 +95,18 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
   };
 
   return (
-    <div className="space-y-2 text-sm">
-
+    <div className="space-y-2 text-small">
       {/* --- Box Inputs --- */}
       <div className="relative">
         <div
           className="
-            flex h-13 w-full items-center rounded-full border border-[1px]
-            border-black/40 bg-white px-6 font-[Alibaba] font-bold text-[13px]
-            text-slate-700 shadow-sm
+            flex h-13 w-full items-center rounded-full border border-border
+            bg-card px-6 font-bold text-small text-charcoal-700
+            shadow-sm
           "
         >
           {/* از */}
-          <span className="ml-2 text-[11px] text-slate-400">از</span>
+          <span className="ml-2 text-small text-charcoal-400">از</span>
 
           <input
             type="number"
@@ -124,7 +117,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
             max={Number(internal[1])}
             step={step}
             className="
-              w-24 bg-transparent text-center outline-none
+              w-24 bg-transparent text-center text-small outline-none
               [appearance:textfield]
               [&::-webkit-outer-spin-button]:appearance-none
               [&::-webkit-inner-spin-button]:appearance-none
@@ -132,10 +125,10 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
           />
 
           {/* line separator */}
-          <span className="mx-4 h-4 w-px bg-slate-200" />
+          <span className="mx-4 h-4 w-px bg-charcoal-100" />
 
           {/* تا */}
-          <span className="mx-2 text-[11px] text-slate-400">تا</span>
+          <span className="mx-2 text-small text-charcoal-400">تا</span>
 
           <input
             type="number"
@@ -146,7 +139,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
             max={max}
             step={step}
             className="
-              w-24 bg-transparent text-center outline-none
+              w-24 bg-transparent text-center text-small outline-none
               [appearance:textfield]
               [&::-webkit-outer-spin-button]:appearance-none
               [&::-webkit-inner-spin-button]:appearance-none
@@ -154,7 +147,7 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
           />
 
           {/* تومان */}
-          <span className="ml-auto text-[11px] text-slate-400">تومان</span>
+          <span className="ml-auto text-small text-charcoal-400">تومان</span>
         </div>
       </div>
 

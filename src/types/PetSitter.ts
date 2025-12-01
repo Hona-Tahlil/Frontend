@@ -14,14 +14,3 @@ export interface PetSitter {
   services: ServiceType[];
   experienceYears: number;
 }
-
-export interface FilterState {
-  searchQuery: string;
-  serviceType: string;
-  pets: string[];
-  city: string;
-  date: string;
-  timeFrom: string;
-  timeTo: string;
-  priceRange: [number, number];
-}
