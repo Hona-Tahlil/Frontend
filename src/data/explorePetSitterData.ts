@@ -1,5 +1,5 @@
 // src/data/explorePetSitterData.ts
-import type { SitterWithTimeAndDate } from "@/types/ExplorePetSitter";
+import type { SitterWithTimeAndDate } from "@/types/explorePetSitter";
 import type { PetType } from "@/types/PetSitter";
 
 /* -------------------- mock sitters -------------------- */

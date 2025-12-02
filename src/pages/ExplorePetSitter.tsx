@@ -22,7 +22,7 @@ import type {
   SortDirection,
   SearchParams,
   SitterWithTimeAndDate,
-} from "@/types/ExplorePetSitter";
+} from "@/types/explorePetSitter";
 
 import { SERVICE_OPTIONS } from "@/types/services";
 import SitterCard from "@/components/ExplorePetSitter/SitterCard/SitterCard";
@@ -34,8 +34,13 @@ import {
   DropdownMenuItem,
 } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 
+import {
+  explorePetSitterInitialValues,
+  explorePetSitterValidationSchema,
+} from "@/schemas/ExplorePetSitterSchema";
+
 import { Formik, Form } from "formik";
-import * as Yup from "yup";
+// import * as Yup from "yup";
 
 import { Clock3, PawPrint, ChevronDown, ChevronUp } from "lucide-react";
 
@@ -173,9 +178,7 @@ export default function PetSitterSearchPage() {
     GLOBAL_MAX_PRICE,
   ]);
 
-  const validationSchema = Yup.object({
-    date: Yup.string().required("تاریخ الزامی است"),
-  });
+  
 
   const [sortField, setSortField] = useState<SortField>("price");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
@@ -401,17 +404,26 @@ export default function PetSitterSearchPage() {
               <label className="text-small text-charcoal-500 pr-5">تاریخ</label>
               <div className="relative">
                 <Formik
-                  initialValues={{ date: date || "" }}
-                  enableReinitialize
-                  validationSchema={validationSchema}
-                  onSubmit={() => {}}
-                >
+  initialValues={{
+    ...explorePetSitterInitialValues,
+    date: date || "",
+  }}
+  enableReinitialize
+  validationSchema={explorePetSitterValidationSchema}
+  onSubmit={() => {}}
+>
+
                   {({ values, setFieldValue }) => (
                     <Form>
                       <div>
                         <DatePicker
                           name="date"
-                          className="!text-small"
+                          className="
+    h-13 w-full rounded-full
+    border border-border bg-card px-6
+    text-small font-bold
+    text-charcoal-800 placeholder:text-charcoal-400
+    shadow-sm"
                           value={values.date}
                           onChange={(e) => {
                             const val = (e.target as HTMLInputElement).value;
@@ -548,7 +560,9 @@ export default function PetSitterSearchPage() {
                           .join("، ")
                   }
                   classes={{
-                    className: `h-13 cursor-pointer text-small font-bold ${
+                    className: `!h-13 cursor-pointer
+                              !rounded-full !border !border-border !bg-card
+                                text-small font-bold ${
                       pets.length ? "text-charcoal-800" : "text-charcoal-400"
                     }`,
                   }}

@@ -344,4 +344,5 @@ html body[data-scroll-locked] {
 	.card-shell {
 		@apply flex h-full flex-col p-4 rounded-xl border border-border bg-card shadow-lg;
 	}
+	
 }
