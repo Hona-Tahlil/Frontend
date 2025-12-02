@@ -302,10 +302,49 @@ function Test() {
 
 			{isChecked && <p>salllaaam</p>}
 
-			<div className="w-full p-7 bg-white">
+			<div className="w-full flex flex-col gap-3 p-7 bg-white">
+				<BookingCard
+					cardStatus="done"
+					side="petowner"
+					title="عهههه"
+					services="نگهداری و فلان"
+					cost={5000}
+					location="تهران ، اینجا"
+					date="1384/01/17"
+					time="14:45"
+				/>
+				<BookingCard
+					cardStatus="pending"
+					side="petowner"
+					title="عهههه"
+					services="نگهداری و فلان"
+					cost={5000}
+					location="تهران ، اینجا"
+					date="1384/01/17"
+					time="14:45"
+				/>
 				<BookingCard
 					cardStatus="accepted"
-					commentStatus={1}
+					side="petowner"
+					title="عهههه"
+					services="نگهداری و فلان"
+					cost={5000}
+					location="تهران ، اینجا"
+					date="1384/01/17"
+					time="14:45"
+				/>
+				<BookingCard
+					cardStatus="rejected"
+					side="petowner"
+					title="عهههه"
+					services="نگهداری و فلان"
+					cost={5000}
+					location="تهران ، اینجا"
+					date="1384/01/17"
+					time="14:45"
+				/>
+				<BookingCard
+					cardStatus="canceled"
 					side="petowner"
 					title="عهههه"
 					services="نگهداری و فلان"
