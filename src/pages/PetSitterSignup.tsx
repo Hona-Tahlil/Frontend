@@ -170,7 +170,7 @@ export const PetSitterSignup = () => {
 	}
 	useEffect(() => {
 		if (!accessToken) {
-			//navigate("/login");
+			navigate("/login");
 			return;
 		}
 		getStatus({ accessToken }).then((res) => {
