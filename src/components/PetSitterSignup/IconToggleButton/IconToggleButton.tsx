@@ -17,6 +17,7 @@ export default function IconToggleButton({
 	return (
 		<Button
 			onClick={() => helpers.setValue(!field.value)}
+			type="button"
 			variant={"outline"}
 			className={cn(
 				"border hover:border-primary",

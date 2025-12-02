@@ -19,6 +19,7 @@ export default function ToggleButton({
 		<Button
 			onClick={() => helpers.setValue(!field.value)}
 			variant={"outline"}
+			type="button"
 			className={cn(
 				"border hover:border-primary",
 				field.value ? "!border-primary" : "border-black text-black",
