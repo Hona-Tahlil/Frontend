@@ -303,7 +303,17 @@ function Test() {
 			{isChecked && <p>salllaaam</p>}
 
 			<div className="w-full p-7 bg-white">
-				<BookingCard cardStatus="done" commentStatus={1} />
+				<BookingCard
+					cardStatus="accepted"
+					commentStatus={1}
+					side="petowner"
+					title="عهههه"
+					services="نگهداری و فلان"
+					cost={5000}
+					location="تهران ، اینجا"
+					date="1384/01/17"
+					time="14:45"
+				/>
 			</div>
 
 			<div className="flex w-200 flex-col gap-6">
