@@ -41,14 +41,14 @@ function PetSitterLanding() {
 			className="w-full flex flex-col items-center justify-center mt-20 bg-primary-50"
 			dir="rtl"
 		>
-			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7 gap-12 lg:gap-20">
+			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7 gap-12 lg:gap-20 pt-12 sm:pt-16">
 				<div className="lg:w-1/2 flex items-center justify-center justify-end lg:justify-end">
 					<div className="lg:w-150 flex flex-col items-center gap-1">
 						<div className="text-xl sm:text-3xl font-bold text-center">
                             با عشق به حیوانات درآمد بساز    
 						</div>
-						<div className="flex flex-col items-center text-center text-xl sm:text-3xl leading-20 lg:leading-normal">
-							<p>
+						<div className="flex flex-col items-center text-center text-xl sm:text-3xl ">
+							<p className="leading-snug sm:leading-snug lg:leading-normal">
 								با زمان‌های آزادی که داری رو به مراقبت از پت‌ها تبدیل کن. انعطاف کامل در ساعت کاری و درآمد شفاف و پشتیبانی مستمر.
 							</p>
 
@@ -56,7 +56,7 @@ function PetSitterLanding() {
 								type="submit"
 								size={"giant"}
 								bold={true}
-								className="font-[Alibaba] font-bold mt-10 px-34 py-6"
+								className="font-[Alibaba] font-bold mt-10 text-lg lg:text-2xl px-10 py-3 sm:px-20 sm:py-4 lg:px-34 lg:py-6"
 							>
 								همین حالا ثبت‌نام کن
 							</Button>
@@ -74,7 +74,7 @@ function PetSitterLanding() {
 			
 
 			
-			<div className="w-full h-auto flex flex-col items-center px-7 -mt-30">
+			<div className="w-full h-auto flex flex-col items-center px-7 mt-10 ">
 				<p className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mt-35">
 					چرا به ما بپیوندی؟
 				</p>
@@ -114,7 +114,7 @@ function PetSitterLanding() {
 						/>
 						<FeatureCard
 							Icon={Home}
-							text="به‌راحتی می‌تونی نزدیک‌ترین درخواست‌ها را قبول کنی و زمان و هزینه رفت‌وآمدت را کاهش بدی."
+							text="نزدیک‌ترین درخواست‌ها را قبول کن و زمان و هزینه رفت‌وآمدت را کاهش بده."
 							title="کار در نزدیکی محل زندگی"
 						/>
 					</div>
