@@ -56,18 +56,15 @@ export default function ForgetPasswordForm() {
                           Email: values.Email,
                         })
                           .then((response) => {
-                            // فقط برای تست:
                             console.log("BACK RESPONSE:", response);
                       
-                            // اگر بک پیام ولیدیشن فرستاده:
                             if (response.messages) {
                               setErrors(response.messages);
                             }
                       
-                            // اگر همه‌چیز اوکی بود:
                             if (response.statusCode === 200) {
                               setLinkSent(true);
-                              setCounter(30);   // 👈 اینجا تایمر را شروع می‌کنیم
+                              setCounter(30);   
                             }
                           })
                           .catch((error) => {
