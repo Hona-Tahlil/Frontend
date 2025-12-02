@@ -3,27 +3,15 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import {
-  ShieldCheck,
-  ListChecks,
-  Users,
-  MessageSquareMore,
-  AlertCircle,
-  CalendarDays,
-  LogOut,
-  LockKeyhole,
-} from "lucide-react";
-import type { AdminSidebarProps } from "@/types/admin";
+import { LogOut } from "lucide-react";
 
-const MENU_ITEMS = [
-  { id: "verify-sitter", label: "اعتبارسنجی پت سیتر", icon: ShieldCheck },
-  { id: "sitters-list", label: "نمایش لیست پت سیتر", icon: ListChecks },
-  { id: "owners-list", label: "نمایش لیست پت اونر", icon: Users },
-  { id: "reviews", label: "نمایش نظرات", icon: MessageSquareMore },
-  { id: "complaints", label: "نمایش شکایات", icon: AlertCircle },
-  { id: "bookings", label: "نمایش رزروها", icon: CalendarDays },
-  { id: "access", label: "دسترسی‌ها", icon: LockKeyhole },
-];
+import { ADMIN_SIDEBAR_ITEMS } from "@/data/adminSidebarItems";
+
+interface AdminSidebarProps {
+  activeItemId?: string;
+  onChangeActive?: (id: string) => void;
+  className?: string;
+}
 
 export function AdminSidebar({
   activeItemId,
@@ -31,7 +19,7 @@ export function AdminSidebar({
   className,
 }: AdminSidebarProps) {
   const [activeId, setActiveId] = useState<string>(
-    activeItemId ?? MENU_ITEMS[0]?.id
+    activeItemId ?? ADMIN_SIDEBAR_ITEMS[0]?.id
   );
 
   const handleClick = (id: string) => {
@@ -53,7 +41,7 @@ export function AdminSidebar({
 
       {/* منو */}
       <nav className="flex-1 space-y-1 px-4 py-6">
-        {MENU_ITEMS.map((item) => {
+        {ADMIN_SIDEBAR_ITEMS.map((item) => {
           const Icon = item.icon;
           const isActive = item.id === activeId;
 
@@ -77,7 +65,7 @@ export function AdminSidebar({
         })}
       </nav>
 
-      {/* دکمه خروج */}
+      {/* خروج */}
       <div className="border-t border-admin-sidebar-foreground/20 px-4 py-4">
         <button
           type="button"
