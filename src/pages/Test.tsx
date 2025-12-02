@@ -39,6 +39,7 @@ import { City } from "@/components/Custom/Province/City";
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
 import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
+import RequestDialogboxLayout from "@/components/RequestDialogboxLayout/RequestDialogboxLayout";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -317,6 +318,46 @@ function Test() {
           <TabsContent value="salam">naaaaa</TabsContent>
         </Tabs>
       </div>
+
+      <RequestDialogboxLayout
+        petsitterName="علی قربانی"
+        petsitterImage=""
+        trigger={<Button> salam </Button>}
+      >
+        <div className="flex w-full flex-col gap-6">
+          <Tabs defaultValue="account" className="rtl">
+            <TabsList>
+              <TabsTrigger value="account">مشخصات درخواست </TabsTrigger>
+              <TabsTrigger value="password">پت ها </TabsTrigger>
+            </TabsList>
+            <TabsContent value="account">
+              <div className="mt-4 flex flex-col gap-1">
+                <div>
+                  <span className="font-bold">نوع سرویس: </span>
+                  <span>نگهداری</span>
+                </div>
+                <div>
+                  <span className="font-bold">تعداد پت: </span>
+                  <span>۲</span>
+                </div>
+                <div>
+                  <span className="font-bold">تاریخ و ساعت شروع : </span>
+                  <span> ۲۳ /۱/۴۰۴ از ساعت ۱۳:۵۰</span>
+                </div>
+                <div>
+                  <span className="font-bold">تاریخ و ساعت پایان :</span>
+                  <span>  ۲۳ /۱/۴۰۴ تا ساعت ۱۳:۵۰</span>
+                </div>
+                <div>
+                  <span className="font-bold">مبلغ  :</span>
+                  <span> ۲۳۰۰۰ تومان</span>
+                </div>
+              </div>
+            </TabsContent>
+            <TabsContent value="password">naaaaa</TabsContent>
+          </Tabs>
+        </div>
+      </RequestDialogboxLayout>
     </div>
   );
 }
