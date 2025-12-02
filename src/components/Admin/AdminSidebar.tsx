@@ -13,12 +13,7 @@ import {
   LogOut,
   LockKeyhole,
 } from "lucide-react";
-
-interface AdminSidebarProps {
-  activeItemId?: string;
-  onChangeActive?: (id: string) => void;
-  className?: string;
-}
+import type { AdminSidebarProps } from "@/types/admin";
 
 const MENU_ITEMS = [
   { id: "verify-sitter", label: "اعتبارسنجی پت سیتر", icon: ShieldCheck },
@@ -41,7 +36,7 @@ export function AdminSidebar({
 
   const handleClick = (id: string) => {
     setActiveId(id);
-    onChangeActive?.(id); 
+    onChangeActive?.(id);
   };
 
   return (
@@ -82,6 +77,7 @@ export function AdminSidebar({
         })}
       </nav>
 
+      {/* دکمه خروج */}
       <div className="border-t border-admin-sidebar-foreground/20 px-4 py-4">
         <button
           type="button"
