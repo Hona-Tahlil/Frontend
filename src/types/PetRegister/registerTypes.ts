@@ -9,3 +9,19 @@ export type SpiecesResponse = {
     message?: string,
     data?: SpeciesData[],
 }
+
+export type RegisterPayLoad = {
+    name: string,
+    kind?: number ,
+    species?: number ,
+    birthDate?: string ,
+    isAdult : boolean ,
+    gender : number ,
+    image? : File | null
+    aboutPet? : string | null
+}
+
+export type RegisterResponse = {
+    statusCode: number,
+    message?: string,
+}

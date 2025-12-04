@@ -40,7 +40,10 @@ import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
 import { name } from "react-date-object/calendars/julian";
 import { DropdownMenu } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
-import { getPetSpeciesService } from "@/services/petRegisterService";
+import {
+  getPetSpeciesService,
+  registerPetService,
+} from "@/services/petRegisterService";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -63,10 +66,22 @@ function Test() {
   const [weightDontKnow, setWeightDontKnow] = useState(false);
   const [birthDontKnow, setBirthDontKnow] = useState(false);
   const navigate = useNavigate();
-  const [species, setSpecies] = useState([
+  const [speciesList, setSpeciesList] = useState([
     { name: "پرشین", num: 1 },
     { name: "ژرمن", num: 2 },
   ]);
+
+  const KIND_MAP: Record<string, number> = {
+    dog: 1,
+    cat: 2,
+    bird: 3,
+    rabit: 4,
+  };
+
+  const GENDER_MAP: Record<string, number> = {
+    male: 1,
+    femal: 2,
+  };
 
   function petKindOnChange(name: string) {
     // api call
@@ -77,16 +92,18 @@ function Test() {
       .then((loginResponse) => {
         if (loginResponse.statusCode === 200) {
           //setAccessToken(loginResponse.data?.accessToken);
-          setSpecies(loginResponse.data!);
+          setSpeciesList(loginResponse.data!);
         }
       })
-      .catch((error) => {
+      .catch(() => {
         const errorText = "خطای غیر منتظره";
         console.log(errorText);
       });
 
     console.log(name);
   }
+
+  petKindOnChange("cat");
   return (
     <div className="flex flex-col items-center">
       <Formik
@@ -311,15 +328,32 @@ function Test() {
         <DialogContent className="w-200 h-[90%] " dir="rtl">
           <Formik
             initialValues={{
-              petKind: kindDontKnow ? "" : "dog",
-              petName: "salam",
+              petKind: "cat",
+              petName: "",
+              gender: "male",
+              species: "",
+              birthDate: "",
               isAdult: "true",
               aboutPet: "",
             }}
-            onSubmit={(values) => console.log(values)}
+            onSubmit={(values) => {
+              const payload = {
+                name: values.petName,
+                kind: KIND_MAP[values.petKind],
+                species: Number(values.species),
+                birthDate: values.birthDate || undefined,
+                isAdult: values.isAdult === "true",
+                gender: GENDER_MAP[values.gender],
+                image: null,
+              };
+
+              registerPetService(payload)
+                .then((res) => console.log("SUCCESS", res))
+                .catch((err) => console.error("ERROR", err));
+            }}
             enableReinitialize
           >
-            {({ isSubmitting }) => (
+            {({ submitForm }) => (
               <Form>
                 <Stepper
                   initialStep={1}
@@ -334,6 +368,7 @@ function Test() {
                   className="mb-20"
                   backButtonProps={{ className: "" }}
                   stepContainerClassName="hidden"
+                  onSubmit={() => {submitForm()}}
                 >
                   <Step>
                     <div className="h-120 flex justify-start flex-col items-center mb-[2vh]">
@@ -380,7 +415,7 @@ function Test() {
                         </div>
                         <div className="w-[90%] mt-10 flex gap-5 justify-between items-center">
                           <p className="text-lg mb-0.5">نژاد</p>
-                          <Select name="breed">
+                          <Select name="spieces">
                             <SelectTrigger
                               className="w-full h-9"
                               disabled={kindDontKnow}
@@ -394,7 +429,7 @@ function Test() {
                             <SelectContent>
                               {!kindDontKnow && (
                                 <SelectGroup>
-                                  {species.map((item) => (
+                                  {speciesList.map((item) => (
                                     <SelectItem value={item.num.toString()}>
                                       {item.name}
                                     </SelectItem>
@@ -421,8 +456,7 @@ function Test() {
                       <div className="w-full">
                         <PetKindToggleGroup
                           disable={genderDontKnow}
-                          onChange={petKindOnChange}
-                          name="petKind"
+                          name="gender"
                           items={[
                             { name: "male", icon: Mars, value: "پسر" },
                             { name: "femal", icon: Venus, value: "دختر" },

@@ -16,7 +16,7 @@ export default function PetKindToggleGroup({
     <ToggleGroup
     disabled={disable}
       type="single"
-      value={field.name}
+      value={field.value}
       onValueChange={(val) => {
         helpers.setValue(val);
         onChange?.(val);
