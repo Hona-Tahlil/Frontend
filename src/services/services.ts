@@ -68,11 +68,32 @@ export const postData = async ({ endPoint, data, headers }: PostParams) => {
 };
 
 // ✅ POST image/form-data
-export const postImageData = async ({ endPoint, data }: PostParams) => {
+// export const postImageData = async ({ endPoint, data }: PostParams) => {
+// 	try {
+// 		const response: AxiosResponse = await apiClient.post(endPoint, data, {
+// 			headers: { "Content-Type": "multipart/form-data" },
+// 		});
+// 		return response.data;
+// 	} catch (error) {
+// 		console.error("error in postImageData", error);
+// 		throw error;
+// 	}
+// };
+
+export const postImageData = async ({ endPoint, data, config }: PostParams & { config?: any }) => {
 	try {
-		const response: AxiosResponse = await apiClient.post(endPoint, data, {
-			headers: { "Content-Type": "multipart/form-data" },
-		});
+		const response: AxiosResponse = await apiClient.post(
+			endPoint,
+			data,
+			{
+				// base headers
+				headers: {
+					"Content-Type": "multipart/form-data",
+					...(config?.headers ?? {}),  // ⬅ merge Authorization or anything else
+				},
+				...config, // allow additional Axios configs
+			}
+		);
 		return response.data;
 	} catch (error) {
 		console.error("error in postImageData", error);

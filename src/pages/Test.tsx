@@ -44,6 +44,20 @@ import {
   getPetSpeciesService,
   registerPetService,
 } from "@/services/petRegisterService";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/Custom/Tabs/Tabs";
+import Address from "@/components/Custom/Address/Address";
+import { LocationSelector } from "@/components/Custom/Province/LocationSelector";
+import { Province } from "@/components/Custom/Province/Province";
+import { City } from "@/components/Custom/Province/City";
+import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
+import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
+import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
+import EditableAvatar from "@/components/Custom/Avatar/EditableAvatar";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -113,7 +127,7 @@ function Test() {
           password: "he",
           love: false,
         }}
-        validationSchema={validationSchema}
+        //validationSchema={validationSchema}
         onSubmit={(values) => {
           console.log("Form values:", values);
         }}
@@ -136,6 +150,17 @@ function Test() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+
+            <PetToggleGroup
+              name="doost"
+              values={["nigga", "what"]}
+              titles={["oh wow", "crazy"]}
+            />
+            <ServiceToggleGroup
+              name="doost2"
+              values={["nigga", "what"]}
+              titles={["oh wow", "crazy"]}
+            />
 
             <div className="mt-5 w-50">
               <Input
@@ -169,6 +194,12 @@ function Test() {
                 placeholder="ایمیل"
               />
             </div>
+
+            <LocationSelector>
+              <Province />
+              <City />
+            </LocationSelector>
+            <Address />
 
             <PetDatePicker
               from={10}
@@ -344,7 +375,7 @@ function Test() {
                 birthDate: values.birthDate || undefined,
                 isAdult: values.isAdult === "true",
                 gender: GENDER_MAP[values.gender],
-                image: null,
+                pet_profile_pic: null,
               };
 
               registerPetService(payload)
@@ -375,7 +406,7 @@ function Test() {
                       <p className="font-bold text-md mt-10">
                         نام و عکس پت خود رو وارد کنید
                       </p>
-                      <Avatar className="w-24 h-24 border-2 mt-4"></Avatar>
+                      <EditableAvatar className="w-30 h-30 border-6 mt-4 border-white"/>
                       <div>
                         <p className="text-lg mb-1">نام</p>
                         <Input
@@ -567,7 +598,26 @@ function Test() {
         onCheckedChange={() => setIsChecked((checked) => !checked)}
       /> */}
 
-      {/* {isChecked && <p>salllaaam</p>} */}
+
+      <div className="flex w-200 flex-col gap-6">
+        <Tabs defaultValue="account">
+          <TabsList>
+            <TabsTrigger value="account" number={3}>
+              رزرو های فعال
+            </TabsTrigger>
+            <TabsTrigger value="password" number={1}>
+              رزرو های گذشته
+            </TabsTrigger>
+            <TabsTrigger value="salam">رزرو های گذشته</TabsTrigger>
+          </TabsList>
+          <TabsContent value="account">salam</TabsContent>
+          <TabsContent value="password">naaaaa</TabsContent>
+          <TabsContent value="salam">naaaaa</TabsContent>
+        </Tabs>
+      </div>
+
+
+      
     </div>
   );
 }
