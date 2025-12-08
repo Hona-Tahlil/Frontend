@@ -95,15 +95,15 @@ function Test() {
           setSpeciesList(loginResponse.data!);
         }
       })
-      .catch(() => {
+      .catch((error) => {
         const errorText = "خطای غیر منتظره";
         console.log(errorText);
+        console.log(error.response.statusCode);
       });
 
     console.log(name);
   }
 
-  petKindOnChange("cat");
   return (
     <div className="flex flex-col items-center">
       <Formik
@@ -328,7 +328,7 @@ function Test() {
         <DialogContent className="w-200 h-[90%] " dir="rtl">
           <Formik
             initialValues={{
-              petKind: "cat",
+              petKind: "",
               petName: "",
               gender: "male",
               species: "",
@@ -360,15 +360,15 @@ function Test() {
                   onStepChange={(step) => {
                     console.log(step);
                   }}
-                  onFinalStepCompleted={() =>
-                    console.log("All steps completed!")
-                  }
+                  onFinalStepCompleted={() => {
+                    console.log("All steps completed!");
+                    submitForm();
+                  }}
                   backButtonText="مرحله قبل"
                   nextButtonText="مرحله بعد"
                   className="mb-20"
                   backButtonProps={{ className: "" }}
                   stepContainerClassName="hidden"
-                  onSubmit={() => {submitForm()}}
                 >
                   <Step>
                     <div className="h-120 flex justify-start flex-col items-center mb-[2vh]">

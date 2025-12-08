@@ -3,7 +3,7 @@ import { getData, postData, postImageData } from "./services";
 
 export const getPetSpeciesService = async (kindId : number): Promise<SpiecesResponse> => {
 	return getData({
-		endPoint: `/pets/kinds/${kindId}/species`,
+		endPoint: `/v1/pets/kinds/${kindId}/species`,
 	});
 };
 
