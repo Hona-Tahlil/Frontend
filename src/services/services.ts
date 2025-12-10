@@ -12,8 +12,9 @@ import type {
 	PostParams,
 	PutParams,
 } from "../types/apiTypes";
+import useUserStore from "@/store/userStore/userStore";
 
-export const baseURL = "http://185.60.136.50:8080"; // backend URL
+export const baseURL = "http://62.60.198.160:8080"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,
@@ -25,8 +26,8 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// const token = getTokenFromStore();
-		// if (token) config.headers.Authorization = `Bearer ${token}`;
+		const token = useUserStore.getState().accessToken;
+		if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
 	(error) => Promise.reject(error),
