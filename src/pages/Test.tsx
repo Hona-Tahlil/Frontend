@@ -443,15 +443,8 @@ function Test() {
                           <p className="font-bold text-lg mt-5">
                             نوع و نژاد پت شما چیه؟
                           </p>
-                          <div className="h-13 my-5">
-                            <Toggle
-                              text="نمیدونم"
-                              checked={kindDontKnow}
-                              onCheckedChange={setKindDontKnow}
-                              className="h-full"
-                            />
-                          </div>
-                          <div className="w-full">
+                          
+                          <div className="w-full mt-13">
                             <PetKindToggleGroup
                               disable={kindDontKnow}
                               onChange={petKindOnChange}
