@@ -4,6 +4,6 @@ import { getData } from "../services";
 export const viewPetsService = async (
 ): Promise<GetAllPetsResponse> => {
     return getData({
-        endPoint: `/v1/pets`,
+        endPoint: `/v1/pets/`,
     });
 };

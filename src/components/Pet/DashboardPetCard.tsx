@@ -20,8 +20,8 @@ type DashboardPetCardProps = {
   name: string;
   kind: string;
   species: string;
-  age: string | null;
-  isAdult: boolean | null;
+  age?: string | null;
+  isAdult?: boolean | null;
   gender: string;
   id: number;
   pictureLink?: string | undefined;
@@ -48,7 +48,7 @@ export default function DashboardPetCard({
         <div className="h-fit w-fit flex justify-center items-center self-center">
           <Avatar className=" -mt-[60%] md:-mt-[55%] w-15 h-15  md:w-25 md:h-25">
             <AvatarImage
-              src={petProfile}
+              src={(pictureLink != "" && pictureLink != null) ? pictureLink : petProfile}
               className="object-cover"
             ></AvatarImage>
           </Avatar>
