@@ -165,6 +165,7 @@ export default function Stepper({
               )} */}
               <Button
                 onClick={isLastStep ? handleComplete : handleNext}
+                type="button"
                 className=" duration-500 flex items-center justify-center rounded-full  py-1.5 px-3.5 font-medium tracking-tight text-white transition"
                 {...nextButtonProps}
               >
@@ -180,7 +181,9 @@ export default function Stepper({
                   {nextButtonText}
                 </span>
               </Button>
-              {isMobile && <PawIcon step={currentStep} className="w-10 h-10"></PawIcon>}
+              {isMobile && (
+                <PawIcon step={currentStep} className="w-10 h-10"></PawIcon>
+              )}
               {isMobile ? (
                 <Button
                   disabled={currentStep === 1}
@@ -188,6 +191,7 @@ export default function Stepper({
                     setPrevButtonHover(false);
                     handleBack();
                   }}
+                  type="button"
                   variant={"outline"}
                   className="px-0 w-fit gap-0 cursor-pointer"
                   {...backButtonProps}
@@ -197,6 +201,7 @@ export default function Stepper({
                 </Button>
               ) : (
                 <Button
+                  type="button"
                   disabled={currentStep === 1}
                   onClick={() => {
                     setPrevButtonHover(false);

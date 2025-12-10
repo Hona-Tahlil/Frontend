@@ -12,17 +12,12 @@ export const getPetSpeciesService = async (kindId : number): Promise<SpiecesResp
 };
 
 export const registerPetService = async (
-	credentials: RegisterPayLoad,
+	formData: FormData,
 ): Promise<RegisterResponse> => {
 	console.log(token);
 	return postImageData({
 		endPoint: `/v1/pets/`,
-		data: credentials,
-		config: {
-			headers: {
-				Authorization: token ? `Bearer ${token}` : "",
-			},
-    	},
+		data: formData,
 	});
 };
 

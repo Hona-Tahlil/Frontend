@@ -12,6 +12,7 @@ import type {
 	PostParams,
 	PutParams,
 } from "../types/apiTypes";
+import useUserStore from "@/store/userStore/userStore";
 
 export const baseURL = "http://62.60.198.160:8080"; // backend URL
 
@@ -25,8 +26,9 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// const token = getTokenFromStore();
-		// if (token) config.headers.Authorization = `Bearer ${token}`;
+		const token = useUserStore.getState().accessToken;
+
+		if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
 	(error) => Promise.reject(error),
@@ -67,33 +69,12 @@ export const postData = async ({ endPoint, data, headers }: PostParams) => {
 	}
 };
 
-// ✅ POST image/form-data
-// export const postImageData = async ({ endPoint, data }: PostParams) => {
-// 	try {
-// 		const response: AxiosResponse = await apiClient.post(endPoint, data, {
-// 			headers: { "Content-Type": "multipart/form-data" },
-// 		});
-// 		return response.data;
-// 	} catch (error) {
-// 		console.error("error in postImageData", error);
-// 		throw error;
-// 	}
-// };
-
-export const postImageData = async ({ endPoint, data, config }: PostParams & { config?: any }) => {
+//✅ POST image/form-data
+export const postImageData = async ({ endPoint, data }: PostParams) => {
 	try {
-		const response: AxiosResponse = await apiClient.post(
-			endPoint,
-			data,
-			{
-				// base headers
-				headers: {
-					"Content-Type": "multipart/form-data",
-					...(config?.headers ?? {}),  // ⬅ merge Authorization or anything else
-				},
-				...config, // allow additional Axios configs
-			}
-		);
+		const response: AxiosResponse = await apiClient.post(endPoint, data, {
+			headers: { "Content-Type": "multipart/form-data" },
+		});
 		return response.data;
 	} catch (error) {
 		console.error("error in postImageData", error);
