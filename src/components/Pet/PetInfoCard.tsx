@@ -6,32 +6,36 @@ import { Input } from "../Custom/Input/Input";
 import { Form, Formik } from "formik";
 import { Checkbox } from "../Custom/Checkbox/Checkbox";
 import PetInfoShema from "@/schemas/PetInfoSchema";
+import { Textarea } from "../Custom/Textarea/Textarea";
 
 type PetInfoCardProps = {
+  id: number;
   name: string;
-  type: string;
-  breed: string;
-  gender: string;
-  weight: number;
-  birthDate: string;
-  healthStatus: string;
+  kind: number;
+  species: number;
+  gender: number;
+  weight: number | null;
+  birthDate: string | null;
+  aboutPet: string | null | undefined;
+  isAdult: boolean;
 };
 
 export default function PetInfoCard({
   name,
-  type,
-  breed,
+  kind,
+  species,
   gender,
   weight,
   birthDate,
-  healthStatus,
+  aboutPet,
+  isAdult,
 }: PetInfoCardProps) {
   const [showMore, setShowMore] = useState(false);
   const [editingMode, setEditingMode] = useState(false);
   const isMobile = useMobile();
   return (
     <div
-      className="bg-white rounded-xl shadow-lg px-3 md:px-10 py-5 md:p-6  w-full border border-gray-100"
+      className="bg-white rounded-xl shadow-lg px-2 md:px-10 py-5 md:p-6  w-full border border-gray-100"
       dir="rtl"
     >
       {/* Header */}
@@ -56,6 +60,7 @@ export default function PetInfoCard({
         {...PetInfoShema}
         onSubmit={(values) => {
           console.log("Form values:", values);
+          setEditingMode(false);
         }}
       >
         {({ isSubmitting }) => (
@@ -90,7 +95,7 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium text-xs sm:text-sm">{type}</p>
+                  <p className="font-medium text-xs sm:text-sm">{kind}</p>
                 )}
                 {/* Vertical divider - shorter */}
                 {!isMobile && (
@@ -109,7 +114,7 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium text-xs sm:text-sm">{breed}</p>
+                  <p className="font-medium text-xs sm:text-sm">{species}</p>
                 )}
                 {isMobile && (
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
@@ -149,7 +154,9 @@ export default function PetInfoCard({
                     shadow={true}
                   />
                 ) : (
-                  <p className="font-medium text-xs sm:text-sm">{weight}</p>
+                  <p className="font-medium text-xs sm:text-sm">
+                    {weight ?? (isAdult ? "بالغ" : "نابالغ")}
+                  </p>
                 )}
                 {/* Vertical divider - shorter */}
                 <div className="absolute left-0 top-1/2 -translate-y-1/2 w-px h-12 bg-gray-300"></div>
@@ -175,13 +182,11 @@ export default function PetInfoCard({
             <div className="mt-4">
               <h3 className="text-gray-500 font-medium mb-1 ">وضعیت سلامت</h3>
               {editingMode ? (
-                <Input
-                  name="healthState"
+                <Textarea
+                  name="aboutPet"
                   placeholder="وضعیت سلامت"
-                  classes={{
-                    className: "h-9 w-[80%]",
-                  }}
-                  shadow={true}
+                  rows={10}
+                  className=""
                 />
               ) : (
                 <p
@@ -190,7 +195,7 @@ export default function PetInfoCard({
                     "text-gray-700 leading-relaxed text-xs md:text-sm"
                   }
                 >
-                  {healthStatus}
+                  {aboutPet}
                 </p>
               )}
               {!editingMode && (
@@ -207,7 +212,13 @@ export default function PetInfoCard({
 
               {editingMode && (
                 <div className="flex gap-2 justify-end h-10 mt-7 w-full">
-                  <Button type="reset" variant={"outline"} onClick={()=>{setEditingMode(false)}}>
+                  <Button
+                    type="reset"
+                    variant={"outline"}
+                    onClick={() => {
+                      setEditingMode(false);
+                    }}
+                  >
                     انصراف
                   </Button>
                   <Button type="submit" isLoading={isSubmitting}>
