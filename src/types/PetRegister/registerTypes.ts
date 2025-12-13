@@ -17,7 +17,7 @@ export type RegisterPayLoad = {
     birthDate?: string ,
     isAdult : boolean ,
     gender : number ,
-    petProfilePic? : File | null
+    petprof? : File | null
     aboutPet? : string | null
 }
 

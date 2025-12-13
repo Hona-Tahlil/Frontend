@@ -12,6 +12,10 @@ interface StepperProps extends HTMLAttributes<HTMLDivElement> {
   initialStep?: number;
   onStepChange?: (step: number) => void;
   onFinalStepCompleted?: () => void;
+
+  canProceed?: (currentStep: number) => boolean;
+
+
   stepCircleContainerClassName?: string;
   stepContainerClassName?: string;
   contentClassName?: string;
@@ -33,6 +37,9 @@ export default function Stepper({
   initialStep = 1,
   onStepChange = () => {},
   onFinalStepCompleted = () => {},
+
+  canProceed,
+
   stepCircleContainerClassName = "",
   stepContainerClassName = "",
   contentClassName = "",
@@ -72,6 +79,9 @@ export default function Stepper({
   };
 
   const handleNext = () => {
+
+    if (canProceed && !canProceed(currentStep)) return; 
+
     if (!isLastStep) {
       setDirection(-1);
       updateStep(currentStep + 1);
@@ -79,6 +89,8 @@ export default function Stepper({
   };
 
   const handleComplete = () => {
+    if (canProceed && !canProceed(currentStep)) return;
+
     setDirection(-1);
     updateStep(totalSteps + 1);
   };
@@ -104,6 +116,8 @@ export default function Stepper({
                     step: stepNumber,
                     currentStep,
                     onStepClick: (clicked) => {
+                      if (clicked > currentStep && canProceed && !canProceed(currentStep)) return;
+                      
                       setDirection(clicked > currentStep ? 1 : -1);
                       updateStep(clicked);
                     },
