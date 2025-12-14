@@ -17,7 +17,6 @@ import { useFormikContext } from "formik";
 
 interface EditableAvatarProps {
   className?: string;
-  /** Formik field name, e.g. "petProfilePic" */
   name: string;
 }
 
@@ -27,21 +26,18 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className, name }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const isMobile = useMobile();
 
-  // Access Formik context (values, setFieldValue, etc.)
   const formik = useFormikContext<any>();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // For preview
     const reader = new FileReader();
     reader.onloadend = () => {
       setImage(reader.result as string);
     };
     reader.readAsDataURL(file);
 
-    // ✅ Update Formik field with the File object
     formik.setFieldValue(name, file);
     formik.setFieldTouched(name, true, false);
   };
@@ -51,7 +47,6 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className, name }) => {
     setOpen(false);
   };
 
-  // ───────────────── MOBILE VERSION ─────────────────
   if (isMobile) {
     return (
       <div
@@ -98,7 +93,6 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className, name }) => {
     );
   }
 
-  // ───────────────── DESKTOP VERSION ─────────────────
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
