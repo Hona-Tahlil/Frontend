@@ -6,8 +6,8 @@ import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
-import { Form, Formik } from "formik";
-//import * as Yup from "yup";
+import { Form, Formik, useFormikContext } from "formik";
+import * as Yup from "yup";
 
 import {
   Select,
@@ -19,13 +19,31 @@ import {
 } from "@/components/Custom/Select/Select";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
-import { BabyIcon, Bird, Cat, Dog } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import Stepper, { Step } from "@/components/Custom/PetRegister/PetMultiStage";
+import { useNavigate } from "react-router-dom";
+import { Avatar } from "@/components/ui/avatar";
+import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
+import PawIcon from "@/components/Custom/PetRegister/PawIcon";
+import { BabyIcon, Bird, Cat, Dog, Mars, Rabbit, Venus } from "lucide-react";
 import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
 
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
-import * as Yup from "yup";
+import { name } from "react-date-object/calendars/julian";
+import { DropdownMenu } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
+import {
+  getPetSpeciesService,
+  registerPetService,
+} from "@/services/petRegisterService";
 import {
   Tabs,
   TabsContent,
@@ -39,6 +57,8 @@ import { City } from "@/components/Custom/Province/City";
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
 import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
+import EditableAvatar from "@/components/Custom/Avatar/EditableAvatar";
+import PetRegisterForm from "@/components/PetRegister/PetRegisterForm";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -56,7 +76,11 @@ function Test() {
   const isDesktop = useDesktop();
   const isMobile = useMobile();
   const isTablet = useTablet();
-  const [isChecked, setIsChecked] = useState(false);
+  
+  const navigate = useNavigate();
+  
+
+  
 
   return (
     <div className="flex flex-col items-center">
@@ -292,14 +316,32 @@ function Test() {
 
       {/* FIXED: Removed the extra broken MultiStage.StageHolder */}
 
-      <Toggle
-        className="mb-10"
+      <Dialog>
+        <DialogTrigger asChild>
+          {!isMobile && <Button>کلیک کن</Button>}
+        </DialogTrigger>
+        <DialogContent className="w-200 h-[90%] " dir="rtl">
+          <PetRegisterForm></PetRegisterForm>
+        </DialogContent>
+      </Dialog>
+
+      {isMobile && (
+        <Button
+          onClick={() => {
+            navigate("/RegisterPet");
+          }}
+        >
+          سلام
+        </Button>
+      )}
+
+      <PawIcon step={2} className=""></PawIcon>
+      {/* <Toggle
+        className="mb-10 h-50"
         text="نمیدونم"
         checked={isChecked}
         onCheckedChange={() => setIsChecked((checked) => !checked)}
-      />
-
-      {isChecked && <p>salllaaam</p>}
+      /> */}
 
       <div className="flex w-200 flex-col gap-6">
         <Tabs defaultValue="account">

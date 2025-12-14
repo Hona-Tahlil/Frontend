@@ -10,41 +10,43 @@ import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import ExplorePetSitter from "@/pages/ExplorePetSitter"
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import RegisterPetMobile from "@/pages/RegisterPetMobile";
+import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
 export const router = createBrowserRouter([
-	{
-		path: "/",
-		element: <PublicLayout />,
-		// errorElement: (
-		// 	<Error404 />
-		// ),
-		children: [
-			{
-				index: true,
-				path:"/",
-				element: <Landing />,
-			},
-			{
-				path: "/temp",
-				element: <Temp />,
-			},
+  {
+    path: "/",
+    element: <PublicLayout />,
+    // errorElement: (
+    // 	<Error404 />
+    // ),
+    children: [
+      {
+        index: true,
+        path: "/",
+        element: <Landing />,
+      },
+      {
+        path: "/temp",
+        element: <Temp />,
+      },
 			{
 				path: "/PetSitterLanding",
 				element: <PetSitterLanding />,
 			},
-			{
-				path: "/test",
-				element: <Test />,
-			},
-			{
-				path: "/Terms",
-				element: <Terms />,
-			},
+      {
+        path: "/test",
+        element: <Test />,
+      },
+      {
+        path: "/Terms",
+        element: <Terms />,
+      },
 
-			{
-				path: "/AboutUs",
-				element: <AboutUs />,
-			},
+      {
+        path: "/AboutUs",
+        element: <AboutUs />,
+      },
 			{
 				path: "/ExplorePetSitter",
 				element: <ExplorePetSitter />,
@@ -54,45 +56,54 @@ export const router = createBrowserRouter([
 				path: "/admin",
 				element: <AdminDashboard />,
 			},
-		],
-	},
-	{
-		element: <AuthLayout />,
-		children: [
-			{
-				path: "/login",
-				element: <Login />,
-			},
-			{
-				path: "/signup",
-				element: <Signup />,
-			},
-		],
-	},
-	// {
-	// 	element: <PrivateLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/EditProfile",
-	// 			element: <EditProfile />,
-	// 		},
-	// 		{
-	// 			path: "/DashBoard",
-	// 			element: <DashBoard />,
-	// 		},
-	// 	],
-	// },
-	// {
-	// 	element: <AnotherLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/login",
-	// 			element: <Login />,
-	// 		},
-	// 		{
-	// 			path: "/temp",
-	// 			element: <Temp />,
-	// 		},
-	// 	],
-	// },
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+    ],
+  },
+  {
+    element: <MobileLayout />,
+    children: [
+      {
+        path: "/RegisterPet",
+        element: <RegisterPetMobile />,
+      },
+    ],
+  },
+  // {
+  // 	element: <PrivateLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/EditProfile",
+  // 			element: <EditProfile />,
+  // 		},
+  // 		{
+  // 			path: "/DashBoard",
+  // 			element: <DashBoard />,
+  // 		},
+  // 	],
+  // },
+  // {
+  // 	element: <AnotherLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/login",
+  // 			element: <Login />,
+  // 		},
+  // 		{
+  // 			path: "/temp",
+  // 			element: <Temp />,
+  // 		},
+  // 	],
+  // },
 ]);
