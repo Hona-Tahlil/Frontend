@@ -34,6 +34,12 @@ import { useState } from "react";
 function Landing() {
 	const isDesktop = useDesktop();
 
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+const handleToggle = (i: number) => {
+	setOpenIndex(openIndex === i ? null : i);
+};
+
 	const [faq1Open, setFaq1Open] = useState(true);
 	const [faq2Open, setFaq2Open] = useState(false);
 	const [faq3Open, setFaq3Open] = useState(false);
@@ -341,39 +347,41 @@ function Landing() {
 				)}
 			</div>
 			<div className="flex flex-col w-5/6 sm:w-3/4 lg:w-full h-auto sm:px-7 mt-20 max-w-250 mb-30">
-				<p className="text-xl font-bold">سوالات متداول</p>
-				<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
-					<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
-						<FaqItem
-							index={0}
-							open={faq1Open}
-							setOpen={setFaq1Open}
-							otherSetStates={otherSetStates}
-							text="یه سری سوال دری وری"
-							answer="دری وری بسیار بیشتر"
-						/>
-						<FaqItem
-							index={1}
-							open={faq2Open}
-							setOpen={setFaq2Open}
-							otherSetStates={otherSetStates}
-							text="یه سری سوال دری وری"
-							answer="دری وری بسیار بیشتر"
-						/>
-						<FaqItem
-							index={2}
-							open={faq3Open}
-							setOpen={setFaq3Open}
-							otherSetStates={otherSetStates}
-							text="یه سری سوال دری وری"
-							answer="دری وری بسیار بیشتر"
-						/>
-					</div>
-					<div className="row-start-1 col-start-1 w-full lg:w-auto flex items-end justify-center">
-						<img src={Image4} />
-					</div>
-				</div>
+		<p className="text-xl font-bold">سوالات متداول</p>
+
+		<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
+
+			{/* LEFT SIDE – FAQ ITEMS */}
+			<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
+
+				<FaqItem
+					open={openIndex === 0}
+					onToggle={() => handleToggle(0)}
+					text="یه سری سوال دری وری"
+					answer="دری وری بسیار بیشتر"
+				/>
+
+				<FaqItem
+					open={openIndex === 1}
+					onToggle={() => handleToggle(1)}
+					text="یه سری سوال دری وری"
+					answer="دری وری بسیار بیشتر"
+				/>
+
+				<FaqItem
+					open={openIndex === 2}
+					onToggle={() => handleToggle(2)}
+					text="یه سری سوال دری وری"
+					answer="دری وری بسیار بیشتر"
+				/>
 			</div>
+
+			{/* RIGHT SIDE – IMAGE */}
+			<div className="row-start-1 col-start-1 w-full lg:w-auto flex items-end justify-center">
+				<img src={Image4} />
+			</div>
+		</div>
+	</div>
 		</div>
 	);
 }

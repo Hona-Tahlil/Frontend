@@ -11,6 +11,18 @@ import Signup from "@/pages/Signup";
 import ExplorePetSitter from "@/pages/ExplorePetSitter"
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
+import VerifySitterPage from "@/pages/Admin/VerifySitterPage";
+import SittersPage from "@/pages/Admin/SittersPage";
+import OwnersPage from "@/pages/Admin/OwnersPage";
+import ReviewsPage from "@/pages/Admin/ReviewsPage";
+import ComplaintsPage from "@/pages/Admin/ComplaintsPage";
+import BookingsPage from "@/pages/Admin/BookingsPage";
+import AccessPage from "@/pages/Admin/AccessPage";
+import VerifySitterDetailsPage from "@/pages/Admin/VerifySitterDetailsPage";
+
+
+
+
 export const router = createBrowserRouter([
 	{
 		path: "/",
@@ -29,7 +41,7 @@ export const router = createBrowserRouter([
 				element: <Temp />,
 			},
 			{
-				path: "/PetSitterLanding",
+				path: "/pet-sitter",
 				element: <PetSitterLanding />,
 			},
 			{
@@ -50,12 +62,49 @@ export const router = createBrowserRouter([
 				element: <ExplorePetSitter />,
 			},
 
-			{
-				path: "/admin",
-				element: <AdminDashboard />,
-			},
+
 		],
 	},
+
+	{
+		path: "/admin",
+		element: <AdminDashboard />,
+	},
+	{
+		path: "/admin/verify-sitter",
+		element: <VerifySitterPage />,
+	},
+	{
+		path: "/admin/verify-sitter/:id",
+		element: <VerifySitterDetailsPage />,
+	},
+	{
+		path: "/admin/sitters",
+		element: <SittersPage />,
+	},
+	{
+		path: "/admin/owners",
+		element: <OwnersPage />,
+	},
+	{
+		path: "/admin/reviews",
+		element: <ReviewsPage />,
+	},
+	{
+		path: "/admin/complaints",
+		element: <ComplaintsPage />,
+	},
+	{
+		path: "/admin/bookings",
+		element: <BookingsPage />,
+	},
+	{
+		path: "/admin/access",
+		element: <AccessPage />,
+	},
+
+
+
 	{
 		element: <AuthLayout />,
 		children: [
