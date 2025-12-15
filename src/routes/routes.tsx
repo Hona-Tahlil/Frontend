@@ -42,7 +42,7 @@ export const router = createBrowserRouter([
 				element: <AboutUs />,
 			},
 			{
-				path: "/reserve-create",
+				path: "/reserve-create/:petSitterUserID",
 				element: <ReserveCreate />,
 			},
 			{

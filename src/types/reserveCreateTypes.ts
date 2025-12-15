@@ -19,7 +19,7 @@ type PetKind = (typeof PetKind)[keyof typeof PetKind];
 export interface Pet {
 	id: number;
 	name: string;
-	kind: "Dog";
+	kind: PetKind;
 	species: string;
 	gender: Gender;
 	pictureLink: string;
@@ -49,23 +49,28 @@ export interface Service {
 	description: string | null;
 	price: number;
 }
+export interface GetCreateRequestInfoRequest {
+	accessToken: string;
+	petSitterUserID: number;
+}
 
 export interface GetCreateRequestInfoResponse {
 	services: Service[];
 	addresses: AddressInfoWithId[];
-	pets: [
-		{
-			id: 1;
-			name: "Buddy";
-			kind: "Dog";
-			species: "Golden Retriever";
-			gender: "Male";
-			pictureLink: "https://example.com/images/buddy.jpg";
-		},
-	];
-	freeCalendarSlots: [];
+	pets: Pet[];
+	freeCalendarSlots: CalenderSlot[];
 }
 export interface ReserveCreateRequest {
+	petSitterUserID: number;
+	calendarSlots: CalenderSlot[];
+	petIDs: number[];
+	notes: string;
+	addressInfo: AddressInfo;
+	addressID: number;
+	serviceID: number;
+	accessToken: string;
+}
+export interface ReserveCreateResponse {
 	petSitterUserID: number;
 	calendarSlots: CalenderSlot[];
 	petIDs: number[];

@@ -4,7 +4,7 @@ import { Form, Formik } from "formik";
 
 import customStyles from "./ReserveCreate.module.css";
 import { CircleX, Plus } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	Select,
 	SelectContent,
@@ -17,9 +17,22 @@ import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import Address from "@/components/Custom/Address/Address";
 import { useDesktop, useMobile } from "@/hooks/ResponsiveHooks";
+import {
+	createRequest,
+	getCreateRequestInfo,
+} from "@/services/reserveCreateService";
+import useUserStore from "@/store/userStore/userStore";
+import { useParams } from "react-router-dom";
+import type { Pet, Service } from "@/types/reserveCreateTypes";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(0);
+
+	const [pets, setPets] = useState([] as Pet[]);
+	const [services, setServices] = useState([] as Service[]);
+
+	const { accessToken } = useUserStore();
+	const { petSitterUserID } = useParams();
 
 	function addDay() {
 		setDayCount(dayCount + 1);
@@ -32,6 +45,21 @@ export default function ReserveCreate() {
 
 	const isDesktop = useDesktop();
 	const isMobile = useMobile();
+
+	function loadRequestInfo() {
+		getCreateRequestInfo({
+			accessToken: accessToken!,
+			petSitterUserID: petSitterUserID as unknown as number,
+		}).then((response) => {
+			setPets(response.pets);
+			setServices(response.services);
+		});
+	}
+
+	useEffect(() => {
+		loadRequestInfo();
+		console.log("id:", petSitterUserID);
+	}, [petSitterUserID]);
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik initialValues={{}} onSubmit={(values) => console.log(values)}>
@@ -48,12 +76,12 @@ export default function ReserveCreate() {
 									نوع سرویس
 								</p>
 								<ServiceToggleGroup
-									name="services"
+									name="serviceID"
 									classes={{
 										textClassName: "text-xl",
 									}}
-									values={["1", "2", "3", "4"]}
-									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
+									values={services.map((service) => service.id.toString())}
+									titles={services.map((service) => service.type)}
 								/>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
@@ -67,8 +95,8 @@ export default function ReserveCreate() {
 										toggleClassName: "py-5 px-3",
 										textClassName: "text-xl",
 									}}
-									values={["1", "2", "3", "4"]}
-									titles={["نگهداری", "پیاده روی", "آرایشگاه", "درمان"]}
+									values={pets.map((pet) => pet.id.toString())}
+									titles={pets.map((pet) => pet.name)}
 								/>
 							</div>
 							<div className="w-full h-0.5 border-0 bg-black/40"></div>
@@ -79,7 +107,7 @@ export default function ReserveCreate() {
 								<div className="flex-1">
 									<DatePicker
 										className="h-10 border-0 drop-shadow-lg"
-										name="nice"
+										name="day0"
 									></DatePicker>
 								</div>
 							</div>
@@ -98,7 +126,7 @@ export default function ReserveCreate() {
 										<div className="flex-1">
 											<DatePicker
 												className="h-10 border-0 drop-shadow-lg"
-												name="nice"
+												name={`day${index + 1}`}
 											></DatePicker>
 										</div>
 									</div>

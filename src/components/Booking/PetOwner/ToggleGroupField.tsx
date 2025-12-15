@@ -33,7 +33,7 @@ export default function ToggleGroupField({
 	return (
 		<ToggleGroup
 			dir={dir}
-			type="multiple"
+			type={isPet ? "multiple" : "single"}
 			variant="outline"
 			className={cn(containerClassName, classes?.className)}
 		>
