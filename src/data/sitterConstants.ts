@@ -7,6 +7,7 @@ export type Sitter = {
   status: SitterStatus;
 };
 
+
 export const initialSitters: Sitter[] = [
   { id: 1, name: "علی رضایی", email: "ali@gmail.com", status: "pending" },
   { id: 2, name: "نگار احمدی", email: "negar@gmail.com", status: "accepted" },

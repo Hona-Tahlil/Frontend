@@ -5,6 +5,12 @@ import { ChevronLeft, X, ChevronRight } from "lucide-react";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { getSittersService } from "@/services/sitterService";
+import { changeSitterStatusService, mapStatusToBackend } from "@/services/sitterService";
+import { StatusButton } from "@/components/Custom/Button/StatusButton";
+
+
+
 
 
 import {
@@ -20,10 +26,10 @@ export default function VerifySitterPage() {
   const location = useLocation();
 
 
-  const [sitters, setSitters] = useState<Sitter[]>(
-    location.state?.sitters ?? initialSitters
-  );
-    const [filter, setFilter] = useState<"all" | SitterStatus>("all");
+  const [sitters, setSitters] = useState<Sitter[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [filter, setFilter] = useState<"all" | SitterStatus>("all");
   const [search, setSearch] = useState("");
   const [selectedSitterId, setSelectedSitterId] = useState<number | null>(null);
 
@@ -31,6 +37,25 @@ export default function VerifySitterPage() {
     selectedSitterId !== null
       ? sitters.find((s) => s.id === selectedSitterId) ?? null
       : null;
+
+
+      useEffect(() => {
+        const fetchSitters = async () => {
+          try {
+            setLoading(true);
+            setError(null);
+            const list = await getSittersService();
+            setSitters(list);
+          } catch (e) {
+            setError("خطا در دریافت لیست پت‌سیترها");
+          } finally {
+            setLoading(false);
+          }
+        };
+      
+        fetchSitters();
+      }, []);
+      
 
       useEffect(() => {
         if (location.state?.updatedSitter) {
@@ -68,14 +93,32 @@ export default function VerifySitterPage() {
     return matchesStatus && matchesSearch;
   });
 
-  const handleChangeStatus = (newStatus: SitterStatus) => {
+  const handleChangeStatus = async (newStatus: SitterStatus) => {
     if (!selectedSitterId) return;
+  
+    // آپدیت optimistic (سریع در UI)
     setSitters((prev) =>
       prev.map((s) =>
         s.id === selectedSitterId ? { ...s, status: newStatus } : s
       )
     );
+  
+    try {
+      await changeSitterStatusService({
+        petSitterUserID: selectedSitterId, // اگر بک‌اند ID دیگری می‌خواهد، همینجا اصلاح کن
+        status: mapStatusToBackend(newStatus),
+      });
+    } catch (e) {
+      // اگر خطا خورد، برگردان به حالت قبل (اختیاری ولی بهتر)
+      setSitters((prev) =>
+        prev.map((s) =>
+          s.id === selectedSitterId ? { ...s, status: selectedSitter?.status ?? s.status } : s
+        )
+      );
+      alert("خطا در تغییر وضعیت");
+    }
   };
+  
 
   return (
     <div className="flex min-h-screen font-[Alibaba]" dir="rtl">
@@ -136,11 +179,26 @@ export default function VerifySitterPage() {
 
           </div>
 
+          {loading && (
+    <div className="text-center text-small text-charcoal-500 mb-4">
+      در حال دریافت اطلاعات...
+    </div>
+  )}
+
+{error && (
+    <div className="text-center text-small text-red-600 mb-4">
+      {error}
+    </div>
+  )}
+
+          {!loading && !error && (
+              <>
+
           {isMobile ? (
-            <div className="border border-gray-300 rounded-xl overflow-hidden">
+            <div className="border border-charcoal-100 rounded-xl overflow-hidden">
               <table className="w-full table-fixed text-right border-collapse text-xs">
                 <thead>
-                  <tr className="border-b border-gray-300 bg-gray-100">
+                  <tr className="border-b border-charcoal-100 bg-charcoal-50">
                     <th className="py-2 px-1 font-semibold w-10">ردیف</th>
 
                     <th className="py-2 px-1 font-semibold">نام</th>
@@ -155,7 +213,7 @@ export default function VerifySitterPage() {
                   {filtered.map((sitter, index) => (
                     <tr
                       key={sitter.id}
-                      className="border-b border-gray-300 hover:bg-gray-50"
+                      className="border-b border-charcoal-100 hover:bg-charcoal-50"
                     >
                       <td className="py-1.5 px-1 text-center">{index + 1}</td>
 
@@ -177,7 +235,7 @@ export default function VerifySitterPage() {
                       <td className="py-1.5 px-1 text-center">
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 text-[11px] text-blue-600 hover:underline"
+                          className="inline-flex items-center gap-1 text-[11px] text-admin-700 hover:underline"
                           onClick={() => handleOpenDetails(sitter.id)}
                         >
                           جزئیات
@@ -191,7 +249,7 @@ export default function VerifySitterPage() {
                     <tr>
                       <td
                         colSpan={4}
-                        className="py-4 text-center text-xs text-gray-500"
+                        className="py-4 text-center text-xs text-charcoal-400"
                       >
                         موردی با این فیلتر پیدا نشد.
                       </td>
@@ -201,10 +259,10 @@ export default function VerifySitterPage() {
               </table>
             </div>
           ) : (
-            <div className="border border-gray-300 rounded-xl overflow-hidden">
+            <div className="border border-charcoal-100 rounded-xl overflow-hidden">
               <table className="w-full text-right border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-300 bg-gray-100">
+                  <tr className="border-b border-charcoal-100 bg-charcoal-50">
                     <th className="py-3 px-2 text-small font-semibold w-4/48">
                       ردیف
                     </th>
@@ -231,7 +289,7 @@ export default function VerifySitterPage() {
                   {filtered.map((sitter, index) => (
                     <tr
                       key={sitter.id}
-                      className="border-b border-gray-300 hover:bg-gray-50"
+                      className="border-b border-charcoal-100 hover:bg-charcoal-50"
                     >
                       <td className="py-3 px-2 text-small">{index + 1}</td>
 
@@ -250,7 +308,7 @@ export default function VerifySitterPage() {
                       <td className="py-3 px-2 text-small text-left whitespace-nowrap">
                         <button
                           type="button"
-                          className="inline-flex items-center gap-1 text-blue-600 hover:underline"
+                          className="inline-flex items-center gap-1 text-admin-700 hover:underline"
                           onClick={() => handleOpenDetails(sitter.id)}
                         >
                           مشاهده جزئیات
@@ -264,7 +322,7 @@ export default function VerifySitterPage() {
                     <tr>
                       <td
                         colSpan={5}
-                        className="py-6 text-center text-small text-gray-500"
+                        className="py-6 text-center text-small text-charcoal-500"
                       >
                         موردی با این فیلتر پیدا نشد.
                       </td>
@@ -274,22 +332,24 @@ export default function VerifySitterPage() {
               </table>
             </div>
           )}
+           </>
+  )}
         </AdminContainer>
       </div>
 
       {!isMobile && selectedSitter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-3xl w-[95%] max-w-3xl p-6 shadow-xl font-[Alibaba]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-charcoal-800/40">
+          <div className="bg-card rounded-3xl w-[95%] max-w-3xl p-6 shadow-xl font-[Alibaba]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold">جزییات پت‌سیتر</h2>
               <button onClick={() => setSelectedSitterId(null)}>
-                <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
+                <X className="w-5 h-5 text-charcoal-500 hover:text-charcoal-700" />
               </button>
             </div>
 
             <div className="space-y-3 text-small">
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">مشخصات</span>
+              <div className="border border-charcoal-100 rounded-2xl px-4 py-3">
+                <span className="font-bold text-admin-700">مشخصات</span>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
                   <span>
                     <b>نام پت‌یار:</b> {selectedSitter.name}
@@ -304,7 +364,7 @@ export default function VerifySitterPage() {
               </div>
 
               <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">اطلاعات تماس</span>
+                <span className="font-bold text-admin-700">اطلاعات تماس</span>
                 <div className="mt-2 flex flex-col gap-1">
                   <span>
                     <b>ایمیل:</b> {selectedSitter.email}
@@ -315,8 +375,8 @@ export default function VerifySitterPage() {
                 </div>
               </div>
 
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">آدرس</span>
+              <div className="border border-charcoal-100 rounded-2xl px-4 py-3">
+                <span className="font-bold text-admin-700">آدرس</span>
                 <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
                   <span>
                     <b>استان:</b> تهران
@@ -330,17 +390,17 @@ export default function VerifySitterPage() {
                 </div>
               </div>
 
-              <div className="border border-gray-300 rounded-2xl px-4 py-3 text-center text-blue-700 font-bold cursor-pointer hover:bg-blue-50">
+              <div className="border border-charcoal-100 rounded-2xl px-4 py-3 text-center text-admin-700 font-bold cursor-pointer hover:bg-admin-50">
                 دانلود فایل‌های آپلود شده
               </div>
 
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">خدمات:</span>
+              <div className="border border-charcoal-100 rounded-2xl px-4 py-3">
+                <span className="font-bold text-admin-700">خدمات:</span>
                 <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
               </div>
 
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">بیوگرافی:</span>
+              <div className="border border-charcoal-100 rounded-2xl px-4 py-3">
+                <span className="font-bold text-admin-700">بیوگرافی:</span>
                 <p className="leading-relaxed">
                   پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.
                 </p>
@@ -348,38 +408,23 @@ export default function VerifySitterPage() {
             </div>
 
             <div className="mt-5 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => handleChangeStatus("accepted")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${
-                  selectedSitter.status === "accepted"
-                    ? "bg-green-500 text-white"
-                    : "border border-green-500 text-green-700 hover:bg-green-50"
-                }`}
-              >
-                تایید
-              </button>
+            <StatusButton
+    status="accepted"
+    currentStatus={selectedSitter.status}
+    onClick={() => handleChangeStatus("accepted")}
+  />
 
-              <button
-                onClick={() => handleChangeStatus("pending")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${
-                  selectedSitter.status === "pending"
-                    ? "bg-yellow-400 text-white"
-                    : "border border-yellow-400 text-yellow-600 hover:bg-yellow-50"
-                }`}
-              >
-                در انتظار
-              </button>
+  <StatusButton
+    status="pending"
+    currentStatus={selectedSitter.status}
+    onClick={() => handleChangeStatus("pending")}
+  />
 
-              <button
-                onClick={() => handleChangeStatus("rejected")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${
-                  selectedSitter.status === "rejected"
-                    ? "bg-red-500 text-white"
-                    : "border border-red-500 text-red-600 hover:bg-red-50"
-                }`}
-              >
-                رد
-              </button>
+  <StatusButton
+    status="rejected"
+    currentStatus={selectedSitter.status}
+    onClick={() => handleChangeStatus("rejected")}
+  />
             </div>
           </div>
         </div>
