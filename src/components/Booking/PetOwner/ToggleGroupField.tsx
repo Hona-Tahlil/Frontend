@@ -11,6 +11,7 @@ export default function ToggleGroupField({
 	titles,
 	dir = "rtl",
 	classes,
+	type = "multiple",
 	variant = "pet",
 }: ToggleGroupFieldProps) {
 	const [, , helpers] = useField<string[]>(name || "");
@@ -33,7 +34,7 @@ export default function ToggleGroupField({
 	return (
 		<ToggleGroup
 			dir={dir}
-			type={isPet ? "multiple" : "single"}
+			type={type}
 			variant="outline"
 			className={cn(containerClassName, classes?.className)}
 		>

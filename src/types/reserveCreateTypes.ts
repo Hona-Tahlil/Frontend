@@ -30,13 +30,17 @@ export interface CalenderSlot {
 	slots: number[];
 }
 
+export interface Days {
+	[key: string]: string;
+}
+
 export interface AddressInfo {
 	provinceName: string;
 	cityName: string;
 	streetAddress: string;
-	houseNumber: number;
-	unit: number;
-	postalCode: string;
+	houseNumber: string;
+	unit: string;
+	postalCode?: string;
 }
 
 export interface AddressInfoWithId extends AddressInfo {
