@@ -68,7 +68,7 @@ export const postData = async ({ endPoint, data, headers }: PostParams) => {
 	}
 };
 
-// ✅ POST image/form-data
+//✅ POST image/form-data
 export const postImageData = async ({ endPoint, data }: PostParams) => {
 	try {
 		const response: AxiosResponse = await apiClient.post(endPoint, data, {
