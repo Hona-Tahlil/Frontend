@@ -42,6 +42,7 @@ import type {
 } from "@/types/reserveCreateTypes";
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
+import * as Yup from "yup";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(0);
@@ -58,6 +59,12 @@ export default function ReserveCreate() {
 
 	const { accessToken } = useUserStore();
 	const { petSitterUserID } = useParams();
+
+	const validationSchema = Yup.object({
+		days: Yup.object({
+			day0: Yup.string().required("Day name is required"),
+		}),
+	});
 
 	function openDialogForDay(dayIndex: number) {
 		setCurrentDay(dayIndex);
@@ -128,6 +135,7 @@ export default function ReserveCreate() {
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik
+				validationSchema={validationSchema}
 				initialValues={{
 					requestType: "monthly",
 					serviceID: [] as string[],
