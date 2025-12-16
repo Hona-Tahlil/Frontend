@@ -36,3 +36,14 @@ export const forgetpasswordService = async (
 		data: credentials,
 	});
 };
+
+export const resetPasswordService = async (data: {
+	email: string;
+	token: string;
+	password: string;
+  }) => {
+	return postData({
+	  endPoint: "/v1/auth/reset-password",
+	  data,
+	});
+  };

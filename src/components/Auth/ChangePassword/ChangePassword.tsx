@@ -4,8 +4,18 @@ import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import ChangePasswordSchema from "@/schemas/ChangePasswordSchema";
+import { useSearchParams } from "react-router-dom";
+import { resetPasswordService } from "@/services/authService";
+
+
+
 
 export default function ChangePasswordForm() {
+    const [searchParams] = useSearchParams();
+
+    const token = searchParams.get("token");
+    const email = searchParams.get("email");
+    
     const navigate = useNavigate();
 
     const [overAllError, setOverAllError] = useState("");
@@ -38,13 +48,30 @@ export default function ChangePasswordForm() {
                         confirmPassword: "",
                     }}
                     validationSchema={ChangePasswordSchema}
-                    onSubmit={(values, { setSubmitting }) => {
+                    onSubmit={async (values, { setSubmitting }) => {
                         setOverAllError("");
-
-                        setIsChanged(true);
-
-                        setSubmitting(false);
+                    
+                        if (!token || !email) {
+                            setOverAllError("لینک بازیابی نامعتبر است");
+                            setSubmitting(false);
+                            return;
+                        }
+                    
+                        try {
+                            await resetPasswordService({
+                                email,
+                                token,
+                                password: values.password,
+                            });
+                    
+                            setIsChanged(true);
+                        } catch (error) {
+                            setOverAllError("خطا در تغییر رمز عبور");
+                        } finally {
+                            setSubmitting(false);
+                        }
                     }}
+                    
                 >
                     {({ isSubmitting }) => (
                         <>
