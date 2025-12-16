@@ -13,13 +13,15 @@ import type {
 	PutParams,
 } from "../types/apiTypes";
 
-export const baseURL = "http://hona-petyar.ir:8080"; // backend URL
+export const baseURL =
+	"https://untranslatable-jeffry-formatively.ngrok-free.dev"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,
 	timeout: 20000,
 	headers: {
 		"Content-Type": "application/json",
+		"ngrok-skip-browser-warning": "true",
 	},
 });
 

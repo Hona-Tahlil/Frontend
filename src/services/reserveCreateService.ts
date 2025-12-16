@@ -11,7 +11,7 @@ export const getCreateRequestInfo = async (
 	credentials: GetCreateRequestInfoRequest,
 ): Promise<GetCreateRequestInfoResponse> => {
 	return getData({
-		endPoint: `/v1/pets`,
+		endPoint: `/v1/requests/`,
 		params: { petSitterUserID: credentials.petSitterUserID },
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
@@ -21,7 +21,7 @@ export const createRequest = async (
 ): Promise<ReserveCreateResponse> => {
 	const { accessToken, ...body } = credentials;
 	return postData({
-		endPoint: `/v1/pets`,
+		endPoint: `/v1/requests/`,
 		data: body,
 		headers: { Authorization: `Bearer ${accessToken}` },
 	});
