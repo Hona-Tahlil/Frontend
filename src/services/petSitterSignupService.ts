@@ -18,7 +18,7 @@ export const createPetSitterData = async (
 	credentials: AccessTokenPayload,
 ): Promise<void> => {
 	return postData({
-		endPoint: `/v1/petsitter/register`,
+		endPoint: `/v1/petsitter/register/`,
 		data: {},
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
@@ -77,7 +77,7 @@ export const getStatus = async (
 	credentials: AccessTokenPayload,
 ): Promise<PetSitterStatusResponse> => {
 	return getData({
-		endPoint: `/v1/petsitter/register/skills`,
+		endPoint: `/v1/petsitter/register/status`,
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
 };

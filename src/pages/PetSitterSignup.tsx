@@ -24,6 +24,7 @@ import ToggleButton from "@/components/PetSitterSignup/ToggleButton/ToggleButton
 import UploadDropZone from "@/components/PetSitterSignup/UploadDropZone/UploadDropZone";
 import { useDesktop } from "@/hooks/ResponsiveHooks";
 import {
+	createPetSitterData,
 	getDocuments,
 	getPersonalInfo,
 	getStatus,
@@ -173,9 +174,19 @@ export const PetSitterSignup = () => {
 			navigate("/login");
 			return;
 		}
-		getStatus({ accessToken }).then((res) => {
-			setInitialFormValues(res.Status);
-		});
+		getStatus({ accessToken })
+			.then((res) => {
+				setInitialFormValues(res.Status);
+			})
+			.catch((error) => {
+				if (error.status === 500) {
+					createPetSitterData({ accessToken: accessToken! }).then(() => {
+						getStatus({ accessToken }).then((res) => {
+							setInitialFormValues(res.Status);
+						});
+					});
+				}
+			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [currentStage]);
 
