@@ -62,7 +62,7 @@ export default function ReserveCreate() {
 
 	const validationSchema = Yup.object({
 		days: Yup.object({
-			day0: Yup.string().required("Day name is required"),
+			day0: Yup.string().required("روز اجباریست"),
 		}),
 	});
 
@@ -185,137 +185,150 @@ export default function ReserveCreate() {
 					});
 				}}
 			>
-				<Form>
-					<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
-						<div
-							className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 lg:max-w-200"
-							dir="rtl"
-						>
-							<p className="text-xl font-bold">اطلاعات رزرو خود را وارد کنید</p>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									نوع سرویس
+				{({ values, errors }) => (
+					<Form>
+						<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
+							<div
+								className="flex flex-col gap-5 rounded-xl drop-shadow-lg bg-white p-6 flex-1 lg:max-w-200"
+								dir="rtl"
+							>
+								<p className="text-xl font-bold">
+									اطلاعات رزرو خود را وارد کنید
 								</p>
-								<ServiceToggleGroup
-									name="serviceID"
-									type="single"
-									classes={{
-										textClassName: "text-xl",
-									}}
-									values={services.map((service) => service.id.toString())}
-									titles={services.map((service) => service.type)}
-								/>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									پت ها
-								</p>
-								<PetToggleGroup
-									classes={{
-										className: "gap-3 flex-1",
-										toggleClassName: "py-5 px-3",
-										textClassName: "text-xl",
-									}}
-									values={pets.map((pet) => pet.id.toString())}
-									titles={pets.map((pet) => pet.name)}
-								/>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									تاریخ
-								</p>
-								<div className="flex-1">
-									<DatePicker
-										className="h-10 border-0 drop-shadow-lg"
-										name="days.day0"
-									></DatePicker>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										نوع سرویس
+									</p>
+									<ServiceToggleGroup
+										name="serviceID"
+										type="single"
+										classes={{
+											textClassName: "text-xl",
+										}}
+										values={services.map((service) => service.id.toString())}
+										titles={services.map((service) => service.type)}
+									/>
 								</div>
-							</div>
-							<div className="flex flex-col sm:flex-row justify-between">
-								<div className="flex flex-col flex-wrap sm:flex-row gap-3">
-									<p className="font-bold leading-10">بازه های انتخاب شده</p>
-									{dayRanges.get(0) ? (
-										dayRanges.get(0)!.map((rangeIndex) => (
-											<div key={rangeIndex} className="font-bold leading-10">
-												{Math.floor((rangeIndex - 1) / 2)}:
-												{rangeIndex % 2 === 0 ? "30" : "00"}
-												{" - "}
-												{Math.floor(rangeIndex / 2)}:
-												{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
-											</div>
-										))
-									) : (
-										<></>
-									)}
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										پت ها
+									</p>
+									<PetToggleGroup
+										classes={{
+											className: "gap-3 flex-1",
+											toggleClassName: "py-5 px-3",
+											textClassName: "text-xl",
+										}}
+										values={pets.map((pet) => pet.id.toString())}
+										titles={pets.map((pet) => pet.name)}
+									/>
 								</div>
-								<Button
-									shadow
-									type="button"
-									onClick={() => openDialogForDay(0)}
-								>
-									ویرایش
-								</Button>
-							</div>
-							{Array.from({ length: dayCount }).map((_, index) => (
-								<>
-									<div className="w-full h-0.5 border-0 bg-black/40"></div>
-									<div className="flex justify-start">
-										<p className="w-50 font-bold leading-10">تاریخ</p>
-										<div className="flex-1">
-											<DatePicker
-												className="h-10 border-0 drop-shadow-lg"
-												name={`days.day${index + 1}`}
-											></DatePicker>
-										</div>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										تاریخ
+									</p>
+									<div className="flex-1">
+										<DatePicker
+											className="h-10 border-0 drop-shadow-lg"
+											name="days.day0"
+										></DatePicker>
 									</div>
-									<div className="flex justify-between">
-										<div className="flex flex-col flex-wrap sm:flex-row gap-3">
-											<p className="font-bold leading-10">
-												بازه های انتخاب شده
-											</p>
-											{dayRanges.get(index + 1) ? (
-												dayRanges.get(index + 1)!.map((rangeIndex) => (
-													<div
-														key={rangeIndex}
-														className="font-bold leading-10"
-													>
-														{Math.floor((rangeIndex - 1) / 2)}:
-														{rangeIndex % 2 === 0 ? "30" : "00"}
-														{" - "}
-														{Math.floor(rangeIndex / 2)}:
-														{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
-													</div>
-												))
-											) : (
-												<></>
-											)}
-										</div>
-										<Button
-											shadow
-											type="button"
-											onClick={() => openDialogForDay(index + 1)}
-										>
-											ویرایش
-										</Button>
+								</div>
+								<div className="flex flex-col sm:flex-row justify-between">
+									<div className="flex flex-col flex-wrap sm:flex-row gap-3">
+										<p className="font-bold leading-10">بازه های انتخاب شده</p>
+										{dayRanges.get(0) ? (
+											dayRanges.get(0)!.map((rangeIndex) => (
+												<div key={rangeIndex} className="font-bold leading-10">
+													{Math.floor((rangeIndex - 1) / 2)}:
+													{rangeIndex % 2 === 0 ? "30" : "00"}
+													{" - "}
+													{Math.floor(rangeIndex / 2)}:
+													{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
+												</div>
+											))
+										) : (
+											<></>
+										)}
 									</div>
-								</>
-							))}
-							{dayCount > 0 && (
-								<div className="flex justify-center">
-									<Button onClick={removeDay} shadow className="bg-red-500">
-										حذف روز
-										<CircleX />
+									<Button
+										shadow
+										type="button"
+										onClick={() => openDialogForDay(0)}
+									>
+										ویرایش
 									</Button>
 								</div>
-							)}
-							<div className="flex justify-center">
-								<Button
-									onClick={addDay}
-									shadow
-									className={`
+								<div className="flex flex-col sm:flex-row justify-between">
+									{errors.days?.day0 && (
+										<p className="text-red-500">{errors.days.day0}</p>
+									)}
+								</div>
+								<div className="flex flex-col sm:flex-row justify-between">
+									{dayRanges.get(0) === undefined && (
+										<p className="text-red-500">حداقل یک بازه انتخاب کنید</p>
+									)}
+								</div>
+								{Array.from({ length: dayCount }).map((_, index) => (
+									<>
+										<div className="w-full h-0.5 border-0 bg-black/40"></div>
+										<div className="flex justify-start">
+											<p className="w-50 font-bold leading-10">تاریخ</p>
+											<div className="flex-1">
+												<DatePicker
+													className="h-10 border-0 drop-shadow-lg"
+													name={`days.day${index + 1}`}
+												></DatePicker>
+											</div>
+										</div>
+										<div className="flex justify-between">
+											<div className="flex flex-col flex-wrap sm:flex-row gap-3">
+												<p className="font-bold leading-10">
+													بازه های انتخاب شده
+												</p>
+												{dayRanges.get(index + 1) ? (
+													dayRanges.get(index + 1)!.map((rangeIndex) => (
+														<div
+															key={rangeIndex}
+															className="font-bold leading-10"
+														>
+															{Math.floor((rangeIndex - 1) / 2)}:
+															{rangeIndex % 2 === 0 ? "30" : "00"}
+															{" - "}
+															{Math.floor(rangeIndex / 2)}:
+															{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
+														</div>
+													))
+												) : (
+													<></>
+												)}
+											</div>
+											<Button
+												shadow
+												type="button"
+												onClick={() => openDialogForDay(index + 1)}
+											>
+												ویرایش
+											</Button>
+										</div>
+									</>
+								))}
+								{dayCount > 0 && (
+									<div className="flex justify-center">
+										<Button onClick={removeDay} shadow className="bg-red-500">
+											حذف روز
+											<CircleX />
+										</Button>
+									</div>
+								)}
+								<div className="flex justify-center">
+									<Button
+										onClick={addDay}
+										shadow
+										className={`
 										flex items-center gap-2 
 										px-6 py-4 
 										border-4 border-dashed 
@@ -326,92 +339,128 @@ export default function ReserveCreate() {
 										rounded-md
 										font-normal
 									`}
-								>
-									<Plus className="" size="auto" />
-									اضافه کردن روز
-								</Button>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									نوع رزرو
-								</p>
-								<Select name="requestType">
-									<SelectTrigger className="flex-1 h-10 border-0">
-										<SelectValue />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectItem value={"monthly"}>ماهانه</SelectItem>
-											<SelectItem value={"weekly"}>هفتگی</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									توضیحات
-								</p>
-								<Textarea
-									className="flex-1"
-									name="note"
-									rows={5}
-									classes={{
-										className: "flex-1",
-										inputClassName: "flex-1 border-0 drop-shadow-lg",
-									}}
-								/>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
-									آدرس
-								</p>
-								<div dir="ltr" className="flex-1 flex justify-end">
-									<Toggle
-										className="!w-full !h-10 mb-10 "
-										text="استفاده از آدرس قبلی"
-										checked={addressIsChecked}
-										onCheckedChange={() => setIsChecked((checked) => !checked)}
-									/>
+									>
+										<Plus className="" size="auto" />
+										اضافه کردن روز
+									</Button>
 								</div>
-							</div>
-							<div className="flex justify-start">
-								<p className="w-auto pl-3 text-transparent sm:w-30 lg:w-50 font-bold leading-10">
-									آدرس
-								</p>
-
-								{addressIsChecked && (
-									<>
-										<Select name="addressID">
-											<SelectTrigger className="flex-1 h-10 border-0">
-												<SelectValue />
-											</SelectTrigger>
-											<SelectContent>
-												<SelectGroup>
-													{addresses.map((address) => (
-														<SelectItem
-															value={address.id}
-														>{`${address.provinceName},${address.cityName},${address.streetAddress.substring(0, 5)}...`}</SelectItem>
-													))}
-												</SelectGroup>
-											</SelectContent>
-										</Select>
-									</>
-								)}
-								{!addressIsChecked && (
-									<Address
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										نوع رزرو
+									</p>
+									<Select name="requestType">
+										<SelectTrigger className="flex-1 h-10 border-0">
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectGroup>
+												<SelectItem value={"monthly"}>ماهانه</SelectItem>
+												<SelectItem value={"weekly"}>هفتگی</SelectItem>
+											</SelectGroup>
+										</SelectContent>
+									</Select>
+								</div>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										توضیحات
+									</p>
+									<Textarea
 										className="flex-1"
+										name="note"
+										rows={5}
 										classes={{
-											inputClassName: "border-0",
-											className: "border-0",
+											className: "flex-1",
+											inputClassName: "flex-1 border-0 drop-shadow-lg",
 										}}
 									/>
-								)}
+								</div>
+								<div className="w-full h-0.5 border-0 bg-black/40"></div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
+										آدرس
+									</p>
+									<div dir="ltr" className="flex-1 flex justify-end">
+										<Toggle
+											className="!w-full !h-10 mb-10 "
+											text="استفاده از آدرس قبلی"
+											checked={addressIsChecked}
+											onCheckedChange={() =>
+												setIsChecked((checked) => !checked)
+											}
+										/>
+									</div>
+								</div>
+								<div className="flex justify-start">
+									<p className="w-auto pl-3 text-transparent sm:w-30 lg:w-50 font-bold leading-10">
+										آدرس
+									</p>
+
+									{addressIsChecked && (
+										<>
+											<Select name="addressID">
+												<SelectTrigger className="flex-1 h-10 border-0">
+													<SelectValue />
+												</SelectTrigger>
+												<SelectContent>
+													<SelectGroup>
+														{addresses.map((address) => (
+															<SelectItem
+																value={address.id}
+															>{`${address.provinceName},${address.cityName},${address.streetAddress.substring(0, 5)}...`}</SelectItem>
+														))}
+													</SelectGroup>
+												</SelectContent>
+											</Select>
+										</>
+									)}
+									{!addressIsChecked && (
+										<Address
+											className="flex-1"
+											classes={{
+												inputClassName: "border-0",
+												className: "border-0",
+											}}
+										/>
+									)}
+								</div>
 							</div>
+							{!isMobile && (
+								<div
+									className="flex flex-col h-fit gap-3 w-full lg:w-100 rounded-xl drop-shadow-lg bg-white p-6"
+									dir="rtl"
+								>
+									<p className="text-xl font-bold">خلاصه پرداخت</p>
+									<div className="w-full h-0.5 border-0 bg-black/40"></div>
+									<div className="flex justify-between">
+										<div className="text-gray-500">هزینه نگهداری</div>
+										<div>12 تومن</div>
+									</div>
+									<div className="flex justify-between">
+										<div className="text-gray-500">هزینه نگهداری</div>
+										<div>12 تومن</div>
+									</div>
+									<div className="w-full h-0.5 border-0 bg-black/40"></div>
+									<div className="flex justify-between">
+										<div className="font-bold">مبلغ نهایی</div>
+										<div className="font-bold text-primary">12 تومن</div>
+									</div>
+									<div className="w-full h-0.5 border-0 bg-black/40"></div>
+									<Button className="mx-5" shadow>
+										تایید و ادامه
+									</Button>
+									<p className="text-center">
+										با کلیلک بر روی تایید شما با{" "}
+										<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
+											قوانین و مقررات
+										</a>{" "}
+										موافقت می کنید.
+									</p>
+								</div>
+							)}
 						</div>
-						{!isMobile && (
+						{isMobile && (
 							<div
 								className="flex flex-col h-fit gap-3 w-full lg:w-100 rounded-xl drop-shadow-lg bg-white p-6"
 								dir="rtl"
@@ -444,41 +493,8 @@ export default function ReserveCreate() {
 								</p>
 							</div>
 						)}
-					</div>
-					{isMobile && (
-						<div
-							className="flex flex-col h-fit gap-3 w-full lg:w-100 rounded-xl drop-shadow-lg bg-white p-6"
-							dir="rtl"
-						>
-							<p className="text-xl font-bold">خلاصه پرداخت</p>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-between">
-								<div className="text-gray-500">هزینه نگهداری</div>
-								<div>12 تومن</div>
-							</div>
-							<div className="flex justify-between">
-								<div className="text-gray-500">هزینه نگهداری</div>
-								<div>12 تومن</div>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<div className="flex justify-between">
-								<div className="font-bold">مبلغ نهایی</div>
-								<div className="font-bold text-primary">12 تومن</div>
-							</div>
-							<div className="w-full h-0.5 border-0 bg-black/40"></div>
-							<Button className="mx-5" shadow>
-								تایید و ادامه
-							</Button>
-							<p className="text-center">
-								با کلیلک بر روی تایید شما با{" "}
-								<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
-									قوانین و مقررات
-								</a>{" "}
-								موافقت می کنید.
-							</p>
-						</div>
-					)}
-				</Form>
+					</Form>
+				)}
 			</Formik>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogContent className="flex flex-col items-center">
