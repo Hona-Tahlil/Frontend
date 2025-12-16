@@ -128,6 +128,35 @@ export default function ReserveCreate() {
 		return calenderSlots;
 	}
 
+	function mergeRanges(indices: number[]) {
+		const result: Array<{ start: number; end: number }> = [];
+		if (indices.length === 0) return result;
+
+		const sorted = [...indices].sort((a, b) => a - b);
+
+		let start = sorted[0];
+		let prev = sorted[0];
+
+		for (let i = 1; i < sorted.length; i++) {
+			if (sorted[i] === prev + 1) {
+				prev = sorted[i];
+			} else {
+				result.push({ start, end: prev });
+				start = sorted[i];
+				prev = sorted[i];
+			}
+		}
+
+		result.push({ start, end: prev });
+		return result;
+	}
+
+	function indexToTime(index: number) {
+		const hour = Math.floor(index / 2);
+		const minute = index % 2 === 0 ? "00" : "30";
+		return `${hour}:${minute}`;
+	}
+
 	useEffect(() => {
 		loadRequestInfo();
 		console.log("id:", petSitterUserID);
@@ -150,6 +179,12 @@ export default function ReserveCreate() {
 					Pelak: "",
 				}}
 				onSubmit={(values) => {
+					if (dayRanges.get(0) === undefined) {
+						dayRanges.set(0, []);
+					}
+					if (dayRanges.get(0)!.length == 0) {
+						return;
+					}
 					console.log(values);
 					console.log({
 						petSitterUserID: petSitterUserID as unknown as number,
@@ -240,19 +275,14 @@ export default function ReserveCreate() {
 								<div className="flex flex-col sm:flex-row justify-between">
 									<div className="flex flex-col flex-wrap sm:flex-row gap-3">
 										<p className="font-bold leading-10">بازه های انتخاب شده</p>
-										{dayRanges.get(0) ? (
-											dayRanges.get(0)!.map((rangeIndex) => (
-												<div key={rangeIndex} className="font-bold leading-10">
-													{Math.floor((rangeIndex - 1) / 2)}:
-													{rangeIndex % 2 === 0 ? "30" : "00"}
-													{" - "}
-													{Math.floor(rangeIndex / 2)}:
-													{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
-												</div>
-											))
-										) : (
-											<></>
-										)}
+										{dayRanges.get(0) &&
+											mergeRanges(dayRanges.get(0)!).map(
+												({ start, end }, i) => (
+													<div key={i} className="font-bold leading-10">
+														{indexToTime(start)} - {indexToTime(end + 1)}
+													</div>
+												),
+											)}
 									</div>
 									<Button
 										shadow
@@ -268,9 +298,10 @@ export default function ReserveCreate() {
 									)}
 								</div>
 								<div className="flex flex-col sm:flex-row justify-between">
-									{dayRanges.get(0) === undefined && (
-										<p className="text-red-500">حداقل یک بازه انتخاب کنید</p>
-									)}
+									{dayRanges.get(0) !== undefined &&
+										dayRanges.get(0)?.length == 0 && (
+											<p className="text-red-500">حداقل یک بازه انتخاب کنید</p>
+										)}
 								</div>
 								{Array.from({ length: dayCount }).map((_, index) => (
 									<>
@@ -289,22 +320,14 @@ export default function ReserveCreate() {
 												<p className="font-bold leading-10">
 													بازه های انتخاب شده
 												</p>
-												{dayRanges.get(index + 1) ? (
-													dayRanges.get(index + 1)!.map((rangeIndex) => (
-														<div
-															key={rangeIndex}
-															className="font-bold leading-10"
-														>
-															{Math.floor((rangeIndex - 1) / 2)}:
-															{rangeIndex % 2 === 0 ? "30" : "00"}
-															{" - "}
-															{Math.floor(rangeIndex / 2)}:
-															{(rangeIndex + 1) % 2 === 0 ? "30" : "00"}
-														</div>
-													))
-												) : (
-													<></>
-												)}
+												{dayRanges.get(0) &&
+													mergeRanges(dayRanges.get(0)!).map(
+														({ start, end }, i) => (
+															<div key={i} className="font-bold leading-10">
+																{indexToTime(start)} - {indexToTime(end + 1)}
+															</div>
+														),
+													)}
 											</div>
 											<Button
 												shadow
