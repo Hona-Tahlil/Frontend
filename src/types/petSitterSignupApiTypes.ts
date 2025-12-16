@@ -11,6 +11,11 @@ export const StringToGender: Record<string, Gender> = {
 	مرد: Gender.Male,
 	زن: Gender.Female,
 };
+export interface PersonalInfoResponse {
+	statusCode: number;
+	message: string;
+	data: PersonalInfo;
+}
 export interface PersonalInfo extends AccessTokenPayload {
 	FirstName: string;
 	LastName: string;
@@ -32,6 +37,11 @@ export interface UploadDocuments extends AccessTokenPayload {
 export interface Documents extends AccessTokenPayload {
 	CertificateFile: string[] | null;
 	File: string[] | null;
+}
+export interface DocumentsResponse {
+	statusCode: number;
+	message: string;
+	data: Documents;
 }
 
 export const PetKind = {
@@ -69,9 +79,15 @@ export type PetSitterStatus =
 	(typeof PetSitterStatus)[keyof typeof PetSitterStatus];
 const OnboardingStep = {};
 type OnboardingStep = keyof typeof OnboardingStep;
-export interface PetSitterStatusResponse {
+export interface PetSitterStatusResponseData {
 	Status: PetSitterStatus;
 	OnboardingStep: OnboardingStep;
+}
+
+export interface PetSitterStatusResponse {
+	statusCode: number;
+	message: number;
+	data: PetSitterStatusResponseData;
 }
 
 export interface AccessTokenPayload {

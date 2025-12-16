@@ -129,16 +129,16 @@ export const PetSitterSignup = () => {
 		const res = await getPersonalInfo({ accessToken: accessToken! });
 		setInitialValues({
 			...initialValues,
-			Email: res.Email || "",
-			FirstName: res.FirstName || "",
-			LastName: res.LastName || "",
-			Gender: GenderString[res.Gender],
-			BirthDate: res.BirthDate || "",
-			PhoneNumber: res.PhoneNumber || "",
-			Address: res.Address || "",
-			Pelak: res.Pelak || "",
-			Vahed: res.Vahed || "",
-			PostalCode: res.PostalCode || "",
+			Email: res.data.Email || "",
+			FirstName: res.data.FirstName || "",
+			LastName: res.data.LastName || "",
+			Gender: GenderString[res.data.Gender],
+			BirthDate: res.data.BirthDate || "",
+			PhoneNumber: res.data.PhoneNumber || "",
+			Address: res.data.Address || "",
+			Pelak: res.data.Pelak || "",
+			Vahed: res.data.Vahed || "",
+			PostalCode: res.data.PostalCode || "",
 		});
 		if (stage === PetSitterStatus.Review) {
 			setCurrentFormikStage(stage);
@@ -147,8 +147,8 @@ export const PetSitterSignup = () => {
 		const res2 = await getDocuments({ accessToken: accessToken! });
 		setInitialValues({
 			...initialValues,
-			ExistingFiles: res2.File || [],
-			ExistingCertificateFiles: res2.CertificateFile || [],
+			ExistingFiles: res2.data.File || [],
+			ExistingCertificateFiles: res2.data.CertificateFile || [],
 		});
 		setCurrentFormikStage(stage);
 	}
@@ -176,14 +176,12 @@ export const PetSitterSignup = () => {
 		}
 		getStatus({ accessToken })
 			.then((res) => {
-				setInitialFormValues(res.Status);
+				setInitialFormValues(res.data.Status);
 			})
 			.catch((error) => {
 				if (error.status === 500) {
-					createPetSitterData({ accessToken: accessToken! }).then(() => {
-						getStatus({ accessToken }).then((res) => {
-							setInitialFormValues(res.Status);
-						});
+					createPetSitterData({ accessToken: accessToken! }).then((res2) => {
+						setInitialFormValues(res2.data.Status);
 					});
 				}
 			});
