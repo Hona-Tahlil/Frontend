@@ -2,6 +2,7 @@ import { Button } from "@/components/Custom/Button/Button";
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { Form, Formik } from "formik";
 
+import jalaali from "jalaali-js"; // we'll use this for Persian calendar
 import {
 	Dialog,
 	DialogContent,
@@ -43,6 +44,7 @@ import type {
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import * as Yup from "yup";
+import { toTehranISOString } from "@/utils/toTehranISOString";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(0);
@@ -65,6 +67,15 @@ export default function ReserveCreate() {
 			day0: Yup.string().required("روز اجباریست"),
 		}),
 	});
+
+	function calculateTotalPrice(petLength: number, serviceID: number) {
+		if (!services) return 0;
+
+		const service = services.find((s) => s?.id === serviceID);
+		if (!service) return 0;
+
+		return petLength * service.price;
+	}
 
 	function openDialogForDay(dayIndex: number) {
 		setCurrentDay(dayIndex);
@@ -100,34 +111,52 @@ export default function ReserveCreate() {
 	function convertToCalenderSlots(
 		days: Days,
 		dayRanges: Map<number, number[]>,
+		weekly: boolean = false,
 	): CalenderSlot[] {
 		const calenderSlots: CalenderSlot[] = [];
-
 		const dayKeys = Object.keys(days);
 
-		dayRanges.forEach((slots: number[], dayIndex: number) => {
-			const dayKey = dayKeys[dayIndex];
+		const processSlot = (dateString: string, slots: number[]) => {
+			calenderSlots.push({ date: dateString, slots });
+		};
 
-			if (dayKey === undefined) {
-				console.warn(
-					`Warning: dayRanges key '${dayIndex}' does not correspond to a valid key in the 'days' object.`,
-				);
-				return; // Skip this iteration
-			}
+		if (!weekly) {
+			// Normal behavior
+			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				const dayKey = dayKeys[dayIndex];
+				if (!dayKey) {
+					console.warn(
+						`Warning: dayRanges key '${dayIndex}' does not correspond to a valid key in the 'days' object.`,
+					);
+					return;
+				}
+				processSlot(days[dayKey], slots);
+			});
+		} else {
+			// Weekly behavior: repeat same weekday until end of Persian month
+			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				const dayKey = dayKeys[dayIndex];
+				if (!dayKey) return;
 
-			const dateString = days[dayKey];
+				const startDate = new Date(days[dayKey]);
+				const startDayOfWeek = startDate.getDay(); // 0 = Sunday, 6 = Saturday
 
-			const newSlot: CalenderSlot = {
-				date: dateString,
-				slots: slots,
-			};
+				const { jy, jm } = jalaali.toJalaali(startDate);
+				const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
 
-			calenderSlots.push(newSlot);
-		});
+				for (let d = startDate.getDate(); d <= daysInMonth; d++) {
+					const { gy, gm, gd } = jalaali.toGregorian(jy, jm, d);
+					const date = new Date(gy, gm - 1, gd);
+					if (date.getDay() === startDayOfWeek) {
+						const dateString = toTehranISOString(date);
+						processSlot(dateString, slots);
+					}
+				}
+			});
+		}
 
 		return calenderSlots;
 	}
-
 	function mergeRanges(indices: number[]) {
 		const result: Array<{ start: number; end: number }> = [];
 		if (indices.length === 0) return result;
@@ -188,7 +217,11 @@ export default function ReserveCreate() {
 					console.log(values);
 					console.log({
 						petSitterUserID: petSitterUserID as unknown as number,
-						calendarSlots: convertToCalenderSlots(values.days, dayRanges),
+						calendarSlots: convertToCalenderSlots(
+							values.days,
+							dayRanges,
+							values.requestType === "weekly",
+						),
 						petIDs: values.petID.map((id) => parseInt(id)),
 						notes: values.notes,
 						addressInfo: {
@@ -204,7 +237,11 @@ export default function ReserveCreate() {
 					});
 					createRequest({
 						petSitterUserID: petSitterUserID as unknown as number,
-						calendarSlots: convertToCalenderSlots(values.days, dayRanges),
+						calendarSlots: convertToCalenderSlots(
+							values.days,
+							dayRanges,
+							values.requestType === "weekly",
+						),
 						petIDs: values.petID.map((id) => parseInt(id)),
 						notes: values.notes,
 						addressInfo: {
@@ -457,17 +494,37 @@ export default function ReserveCreate() {
 									<p className="text-xl font-bold">خلاصه پرداخت</p>
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
 									<div className="flex justify-between">
-										<div className="text-gray-500">هزینه نگهداری</div>
-										<div>12 تومن</div>
+										<div className="text-gray-500">هزینه سرویس</div>
+										<div>
+											{calculateTotalPrice(
+												values.petID.length,
+												parseInt(values.serviceID[0]),
+											)}{" "}
+											تومن
+										</div>
 									</div>
 									<div className="flex justify-between">
 										<div className="text-gray-500">هزینه نگهداری</div>
-										<div>12 تومن</div>
+										<div>
+											{0.1 *
+												calculateTotalPrice(
+													values.petID.length,
+													parseInt(values.serviceID[0]),
+												)}{" "}
+											تومن
+										</div>
 									</div>
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
 									<div className="flex justify-between">
 										<div className="font-bold">مبلغ نهایی</div>
-										<div className="font-bold text-primary">12 تومن</div>
+										<div className="font-bold text-primary">
+											{1.1 *
+												calculateTotalPrice(
+													values.petID.length,
+													parseInt(values.serviceID[0]),
+												)}{" "}
+											تومن
+										</div>
 									</div>
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
 									<Button className="mx-5" shadow>
