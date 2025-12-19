@@ -4,12 +4,12 @@ import { PawPrint, MapPin, Dog, Cat, Bird, Rat, House } from "lucide-react";
 
 import { Button } from "@/components/Custom/Button/Button";
 import { SERVICE_OPTIONS } from "@/types/services";
-import type { SitterCardProps } from "@/types/ExplorePetSitter";
+import type { SitterCardProps } from "@/types/explorePetSitter";
 
 // 🔽 مسیر رو با مسیر واقعی کامپوننت خودت عوض کن
 import {
   Avatar,
-  AvatarImage,
+ // AvatarImage,
   AvatarFallback,
 } from "@/components/ui/avatar";
 
@@ -102,12 +102,12 @@ export default function SitterCard({ sitter }: SitterCardProps) {
       <div className="mt-5 flex gap-3">
         <Button
           variant="outline"
-          className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold text-charcoal-700"
+          className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold text-charcoal-700 cursor-pointer"
         >
           مشاهده پروفایل
         </Button>
 
-        <Button className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold">
+        <Button className="flex-1 rounded-full px-4 py-2.5 text-xs font-semibold cursor-pointer">
           رزرو فوری
         </Button>
       </div>

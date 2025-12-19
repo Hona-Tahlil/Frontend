@@ -1,30 +1,9 @@
 import { useEffect, useState, useRef, useCallback } from "react";
 
-import { PriceRangeSlider } from "@/components/Custom/Slider/slider";
+import FiltersBox from "@/components/ExplorePetSitter/FiltersBox/filterbox";
+import FiltersDrawer from "@/components/ExplorePetSitter/MobileFilterDrawer";
+
 import { Button } from "@/components/Custom/Button/Button";
-import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
-import { TimePickerRoller } from "@/components/Custom/TimePicker/TimeRoller";
-import DatePicker from "@/components/Custom/DatePicker/DatePicker";
-
-import {
-  MOCK_SITTERS,
-  GLOBAL_MIN_PRICE,
-  GLOBAL_MAX_PRICE,
-  PET_OPTIONS,
-  SORT_FIELDS,
-  CITY_OPTIONS,
-} from "@/data/explorePetSitterData";
-
-import type { PetSitter, PetType, ServiceType } from "@/types/PetSitter";
-import type {
-  FilterState,
-  SortField,
-  SortDirection,
-  SearchParams,
-  SitterWithTimeAndDate,
-} from "@/types/explorePetSitter";
-
-import { SERVICE_OPTIONS } from "@/types/services";
 import SitterCard from "@/components/ExplorePetSitter/SitterCard/SitterCard";
 
 import {
@@ -35,14 +14,21 @@ import {
 } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 
 import {
-  explorePetSitterInitialValues,
-  explorePetSitterValidationSchema,
-} from "@/schemas/ExplorePetSitterSchema";
+  MOCK_SITTERS,
+  GLOBAL_MIN_PRICE,
+  GLOBAL_MAX_PRICE,
+  SORT_FIELDS,
+} from "@/data/explorePetSitterData";
 
-import { Formik, Form } from "formik";
-// import * as Yup from "yup";
+import type { PetSitter, PetType, ServiceType } from "@/types/PetSitter";
+import type {
+  SortField,
+  SortDirection,
+  SearchParams,
+  SitterWithTimeAndDate,
+} from "@/types/explorePetSitter";
 
-import { Clock3, PawPrint, ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown, ArrowUp } from "lucide-react";
 
 /* ---------------- mock API (سمت فرانت) ------------- */
 
@@ -87,7 +73,6 @@ function mockFetchSitters(params: SearchParams): {
       const sitterTo = s.availableTo;
 
       if (!sitterFrom || !sitterTo) return false;
-
       if (reqFrom && sitterFrom < reqFrom) return false;
       if (reqTo && sitterTo > reqTo) return false;
 
@@ -97,11 +82,8 @@ function mockFetchSitters(params: SearchParams): {
 
   if (params.date) {
     const reqDate = params.date;
-
     result = result.filter((s) =>
-      Array.isArray(s.availableDates)
-        ? s.availableDates.includes(reqDate)
-        : false
+      Array.isArray(s.availableDates) ? s.availableDates.includes(reqDate) : false
     );
   }
 
@@ -159,13 +141,24 @@ function SitterCardSkeleton() {
 
 /* ------------------ صفحه اصلی --------------------- */
 
-export default function PetSitterSearchPage() {
+export default function ExplorePetSitter() {
   const pageSize = 6;
   const PRICE_STEP = 10000;
 
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  // Drawer (mobile)
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
-  // فیلترها به استیت‌های کوچک شکسته شده‌اند
+  // ✅ UI state - Desktop (برای FiltersBox دسکتاپ)
+  const [showTimePickerDesktop, setShowTimePickerDesktop] = useState(false);
+  const [openServiceDesktop, setOpenServiceDesktop] = useState(false);
+  const [openCityDesktop, setOpenCityDesktop] = useState(false);
+
+  // ✅ UI state - Mobile (برای Drawer)
+  const [showTimePickerMobile, setShowTimePickerMobile] = useState(false);
+  const [openServiceMobile, setOpenServiceMobile] = useState(false);
+  const [openCityMobile, setOpenCityMobile] = useState(false);
+
+  // فیلترها
   const [searchQuery, setSearchQuery] = useState("");
   const [serviceType, setServiceType] = useState<ServiceType | "">("");
   const [pets, setPets] = useState<PetType[]>([]);
@@ -178,34 +171,54 @@ export default function PetSitterSearchPage() {
     GLOBAL_MAX_PRICE,
   ]);
 
-  
-
+  // سورت / صفحه
   const [sortField, setSortField] = useState<SortField>("price");
   const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
   const [page, setPage] = useState(1);
 
-  // برای اینکه هر بار سرچ می‌زنیم، effect بفهمه سرچ جدید شروع شده
+  // برای فهمیدن سرچ جدید
   const [searchToken, setSearchToken] = useState(0);
 
+  // دیتا
   const [data, setData] = useState<PetSitter[]>([]);
   const [totalItems, setTotalItems] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [hasSearched, setHasSearched] = useState(false);
 
-  const observer = useRef<IntersectionObserver | null>(null);
+  // دکمه اسکرول به بالا
+  const [showScrollTop, setShowScrollTop] = useState(false);
+  const [scrollButtonBottom, setScrollButtonBottom] = useState(20);
 
-  const [openService, setOpenService] = useState(false);
-  const [openCity, setOpenCity] = useState(false);
+  // کنترل اینفینیت اسکرول / نمایش بیشتر
+  const [autoLoadEnabled, setAutoLoadEnabled] = useState(true);
+  const [autoLimit, setAutoLimit] = useState(18);
 
-  /* ------------ fetch دیتا بر اساس stateها ------------ */
+  const infiniteObserverRef = useRef<IntersectionObserver | null>(null);
+  const cardsBottomRef = useRef<HTMLDivElement | null>(null);
+
+  /* ✅ وقتی Drawer باز/بسته میشه، UI state های نسخه دیگر رو خاموش کن */
+  useEffect(() => {
+    if (filtersOpen) {
+      // Drawer باز شد => state های دسکتاپ رو ببند
+      setShowTimePickerDesktop(false);
+      setOpenServiceDesktop(false);
+      setOpenCityDesktop(false);
+    } else {
+      // Drawer بسته شد => state های موبایل رو جمع کن
+      setShowTimePickerMobile(false);
+      setOpenServiceMobile(false);
+      setOpenCityMobile(false);
+    }
+  }, [filtersOpen]);
+
+  /* ------------ fetch دیتا ------------ */
 
   useEffect(() => {
     if (!hasSearched) return;
 
     setIsLoading(true);
 
-    // اینجا از stateهای خرد شده یک SearchParams می‌سازیم
     const params: SearchParams = {
       searchQuery,
       serviceType,
@@ -231,12 +244,12 @@ export default function PetSitterSearchPage() {
       setHasMore(loadedSoFar < total);
 
       setIsLoading(false);
-    }, 2500);
+    }, 250);
 
     return () => clearTimeout(timer);
   }, [
     hasSearched,
-    searchToken, // هر بار سرچ جدید می‌زنیم این عوض می‌شود
+    searchToken,
     page,
     sortField,
     sortDirection,
@@ -254,97 +267,150 @@ export default function PetSitterSearchPage() {
   /* --------- اینفینیت‌اسکرول --------- */
 
   const loadMoreSitters = useCallback(() => {
-    if (!hasSearched || isLoading || !hasMore) return;
-
+    if (!hasSearched || isLoading || !hasMore || !autoLoadEnabled) return;
     setPage((prev) => prev + 1);
-  }, [hasSearched, isLoading, hasMore]);
+  }, [hasSearched, isLoading, hasMore, autoLoadEnabled]);
 
   const lastSitterRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (isLoading || !hasSearched) return;
 
-      if (observer.current) observer.current.disconnect();
+      if (infiniteObserverRef.current) infiniteObserverRef.current.disconnect();
 
-      observer.current = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+      infiniteObserverRef.current = new IntersectionObserver((entries) => {
+        if (entries[0]?.isIntersecting && hasMore) {
           loadMoreSitters();
         }
       });
 
-      if (node) observer.current.observe(node);
+      if (node) infiniteObserverRef.current.observe(node);
     },
     [isLoading, hasMore, hasSearched, loadMoreSitters]
   );
 
   useEffect(() => {
     return () => {
-      if (observer.current) observer.current.disconnect();
+      if (infiniteObserverRef.current) infiniteObserverRef.current.disconnect();
     };
   }, []);
 
+  /* --------- کنترل حد اینفینیت --------- */
+
+  useEffect(() => {
+    if (!hasSearched) {
+      setAutoLoadEnabled(true);
+      setAutoLimit(18);
+      return;
+    }
+
+    if (!hasMore) {
+      setAutoLoadEnabled(false);
+      return;
+    }
+
+    setAutoLoadEnabled(data.length < autoLimit);
+  }, [data.length, autoLimit, hasSearched, hasMore]);
+
+  /* --------- اسکرول: دکمه بالا + محدودیت تا انتهای کارت‌ها --------- */
+
+  useEffect(() => {
+    const DEFAULT_BOTTOM = 20;
+    const GAP_FROM_CARDS = 16;
+
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 400);
+
+      if (!hasSearched || totalItems === 0) {
+        setScrollButtonBottom(DEFAULT_BOTTOM);
+        return;
+      }
+
+      const sentinel = cardsBottomRef.current;
+      if (!sentinel) {
+        setScrollButtonBottom(DEFAULT_BOTTOM);
+        return;
+      }
+
+      const rect = sentinel.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+
+      if (rect.bottom >= viewportHeight) {
+        setScrollButtonBottom(DEFAULT_BOTTOM);
+        return;
+      }
+
+      const minBottom = viewportHeight - rect.bottom + GAP_FROM_CARDS;
+      setScrollButtonBottom(Math.max(DEFAULT_BOTTOM, minBottom));
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [hasSearched, totalItems]);
+
   /* --------- handlers --------- */
-
-  const handleTogglePet = (petValue: PetType) => {
-    setPets((prevPets) => {
-      const exists = prevPets.includes(petValue);
-      const nextPets: PetType[] = exists
-        ? prevPets.filter((p) => p !== petValue)
-        : [...prevPets, petValue];
-
-      return nextPets;
-    });
-  };
 
   const handleSearchClick = () => {
     setHasSearched(true);
     setData([]);
     setHasMore(true);
     setPage(1);
-    // باعث می‌شود useEffect بفهمد یک سرچ جدید آغاز شده
     setSearchToken((prev) => prev + 1);
+
+    setAutoLimit(18);
+    setAutoLoadEnabled(true);
   };
 
   const handleClearFilters = () => {
-    const resetFilters: FilterState = {
-      searchQuery: "",
-      serviceType: "",
-      pets: [],
-      city: "",
-      date: "",
-      timeFrom: "",
-      timeTo: "",
-      priceRange: [GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE],
-    };
-
-    // ریست stateهای خرد شده
-    setSearchQuery(resetFilters.searchQuery);
-    setServiceType(resetFilters.serviceType as ServiceType | "");
-    setPets(resetFilters.pets);
-    setCity(resetFilters.city);
-    setDate(resetFilters.date);
-    setTimeFrom(resetFilters.timeFrom);
-    setTimeTo(resetFilters.timeTo);
-    setPriceRange(resetFilters.priceRange);
+    setSearchQuery("");
+    setServiceType("");
+    setPets([]);
+    setCity("");
+    setDate("");
+    setTimeFrom("");
+    setTimeTo("");
+    setPriceRange([GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE]);
 
     setSortField("price");
     setSortDirection("asc");
     setPage(1);
+
     setData([]);
     setTotalItems(0);
     setHasMore(false);
     setHasSearched(false);
+
+    setAutoLimit(18);
+    setAutoLoadEnabled(true);
+
+    // ✅ UI ها هم بسته بشن
+    setShowTimePickerDesktop(false);
+    setOpenServiceDesktop(false);
+    setOpenCityDesktop(false);
+    setShowTimePickerMobile(false);
+    setOpenServiceMobile(false);
+    setOpenCityMobile(false);
   };
 
   const toggleSortDirection = () => {
     setSortDirection((prev) => {
       const next: SortDirection = prev === "asc" ? "desc" : "asc";
-
       setData([]);
       setHasMore(true);
-      setPage(1);
-
+      if (hasSearched) setPage(1);
       return next;
     });
+  };
+
+  const handleScrollTopClick = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleManualLoadMore = () => {
+    if (!hasMore || isLoading) return;
+    setAutoLimit((prev) => prev + 18);
+    setPage((prev) => prev + 1);
   };
 
   /* ----------------- UI ------------------ */
@@ -352,277 +418,68 @@ export default function PetSitterSearchPage() {
   return (
     <div className="min-h-screen bg-second-background px-4 py-6" dir="rtl">
       <div className="mx-auto flex max-w-5xl flex-col gap-6">
-        {/* باکس فیلتر بالا */}
-        <div className="rounded-xl border border-border bg-card px-6 py-6 shadow-lg">
-          <h1 className="mb-1 text-center text-subtitle font-bold text-charcoal-900 md:text-section">
-            پت‌سیتر مناسب خودت رو پیدا کن
-          </h1>
-          <p className="mb-6 text-center text-small text-charcoal-500 md:text-small">
-            نوع سرویس، موقعیت مکانی یا نوع پت خودت رو وارد کن تا بهترین گزینه‌ها
-            رو برات بیاریم.
-          </p>
+        {/* Desktop Filters */}
+        <div className="hidden md:block">
+          <FiltersBox
+            timeFrom={timeFrom}
+            timeTo={timeTo}
+            date={date}
+            serviceType={serviceType}
+            city={city}
+            pets={pets}
+            priceRange={priceRange}
+            priceMin={GLOBAL_MIN_PRICE}
+            priceMax={GLOBAL_MAX_PRICE}
+            priceStep={PRICE_STEP}
+            showTimePicker={showTimePickerDesktop}
+            setShowTimePicker={setShowTimePickerDesktop}
+            openService={openServiceDesktop}
+            setOpenService={setOpenServiceDesktop}
+            openCity={openCityDesktop}
+            setOpenCity={setOpenCityDesktop}
+            setTimeFrom={setTimeFrom}
+            setTimeTo={setTimeTo}
+            setDate={setDate}
+            setServiceType={setServiceType}
+            setCity={setCity}
+            setPets={setPets}
+            setPriceRange={setPriceRange}
+            onSearch={handleSearchClick}
+            onClear={handleClearFilters}
+          />
+        </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            {/* ساعت */}
-            <div className="relative space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">ساعت</label>
-
-              <button
-                type="button"
-                onClick={() => setShowTimePicker((prev) => !prev)}
-                className={`relative flex h-13 w-full items-center rounded-full border border-border bg-card px-6 text-small font-bold shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring ${
-                  timeFrom || timeTo ? "text-charcoal-800" : "text-charcoal-400"
-                }`}
-              >
-                <span className="text-small opacity-70">از&nbsp;</span>
-                <span className="text-small">{timeFrom || "--:--"}</span>
-
-                <span className="mx-3 text-small opacity-70">تا&nbsp;</span>
-
-                <span className="text-small">{timeTo || "--:--"}</span>
-
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <Clock3 className="h-4 w-4 text-charcoal-400" />
-                </span>
-              </button>
-
-              {showTimePicker && (
-                <div className="absolute inset-x-0 top-full z-20 mt-2">
-                  <TimePickerRoller
-                    from={timeFrom}
-                    to={timeTo}
-                    onChangeFrom={(val) => setTimeFrom(val)}
-                    onChangeTo={(val) => setTimeTo(val)}
-                    onClose={() => setShowTimePicker(false)}
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* تاریخ */}
-            <div className="space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">تاریخ</label>
-              <div className="relative">
-                <Formik
-  initialValues={{
-    ...explorePetSitterInitialValues,
-    date: date || "",
-  }}
-  enableReinitialize
-  validationSchema={explorePetSitterValidationSchema}
-  onSubmit={() => {}}
->
-
-                  {({ values, setFieldValue }) => (
-                    <Form>
-                      <div>
-                        <DatePicker
-                          name="date"
-                          className="
-    h-13 w-full rounded-full
-    border border-border bg-card px-6
-    text-small font-bold
-    text-charcoal-800 placeholder:text-charcoal-400
-    shadow-sm"
-                          value={values.date}
-                          onChange={(e) => {
-                            const val = (e.target as HTMLInputElement).value;
-                            setFieldValue("date", val);
-                            setDate(val);
-                          }}
-                        />
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
-              </div>
-            </div>
-
-            {/* نوع سرویس */}
-            <div className="space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">
-                نوع سرویس
-              </label>
-
-              <DropdownMenu open={openService} onOpenChange={setOpenService}>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className={`flex h-13 w-full items-center justify-between rounded-full border border-border bg-card px-6 text-small font-bold shadow-sm ${
-                      serviceType ? "text-charcoal-800" : "text-charcoal-400"
-                    }`}
-                  >
-                    <span>
-                      {serviceType
-                        ? SERVICE_OPTIONS.find(
-                            (o) => o.value === serviceType
-                          )?.label
-                        : "همه سرویس‌ها"}
-                    </span>
-
-                    {openService ? (
-                      <ChevronUp className="h-4 w-4 text-charcoal-400" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4 text-charcoal-400" />
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent
-                  align="end"
-                  className="min-w-[10rem] rounded-xl border border-border bg-card px-1 py-1 text-right shadow-lg"
-                >
-                  <DropdownMenuItem
-                    onSelect={() => setServiceType("")}
-                    className="rounded-lg px-3 py-2 justify-end text-right"
-                  >
-                    همه سرویس‌ها
-                  </DropdownMenuItem>
-
-                  {SERVICE_OPTIONS.map((opt) => (
-                    <DropdownMenuItem
-                      key={opt.value}
-                      onSelect={() => setServiceType(opt.value as ServiceType)}
-                      className="rounded-lg px-3 py-2 justify-end text-right"
-                    >
-                      {opt.label}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* موقعیت مکانی */}
-            <div className="space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">
-                موقعیت مکانی
-              </label>
-
-              <DropdownMenu open={openCity} onOpenChange={setOpenCity}>
-                <DropdownMenuTrigger asChild>
-                  <button
-                    type="button"
-                    className={`flex h-13 w-full items-center justify-between rounded-full border border-border bg-card px-6 font-bold shadow-sm ${
-                      city ? "text-charcoal-800" : "text-charcoal-400"
-                    }`}
-                  >
-                    <span>{city || "انتخاب شهر..."}</span>
-
-                    {openCity ? (
-                      <ChevronUp className="h-4 w-4 text-charcoal-400" />
-                    ) : (
-                      <ChevronDown className="h-4 w-4 text-charcoal-400" />
-                    )}
-                  </button>
-                </DropdownMenuTrigger>
-
-                <DropdownMenuContent
-                  align="end"
-                  className="min-w-[10rem] rounded-xl border border-border bg-card px-1 py-1 text-right shadow-lg"
-                >
-                  <DropdownMenuItem
-                    onSelect={() => setCity("همه شهرها")}
-                    className="rounded-lg px-3 py-2 justify-end text-right"
-                  >
-                    همه شهرها
-                  </DropdownMenuItem>
-
-                  {CITY_OPTIONS.map((cityOption) => (
-                    <DropdownMenuItem
-                      key={cityOption}
-                      onSelect={() => setCity(cityOption)}
-                      className="rounded-lg px-3 py-2 justify-end text-right"
-                    >
-                      {cityOption}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
-
-            {/* پت‌ها */}
-            <div className="space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">پت‌ها</label>
-              <div className="relative">
-                <NonFormikInput
-                  readOnly
-                  name="pets"
-                  type="text"
-                  value={
-                    pets.length === 0
-                      ? "نوع پت را انتخاب کنید"
-                      : pets
-                          .map(
-                            (p) =>
-                              PET_OPTIONS.find((opt) => opt.value === p)
-                                ?.label ?? p
-                          )
-                          .join("، ")
-                  }
-                  classes={{
-                    className: `!h-13 cursor-pointer
-                              !rounded-full !border !border-border !bg-card
-                                text-small font-bold ${
-                      pets.length ? "text-charcoal-800" : "text-charcoal-400"
-                    }`,
-                  }}
-                />
-                <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-                  <PawPrint className="h-4 w-4 text-charcoal-400" />
-                </span>
-              </div>
-
-              <div className="mt-1 flex flex-wrap gap-1 text-small pr-2">
-                {PET_OPTIONS.map((pet) => {
-                  const value = pet.value as PetType;
-                  const active = pets.includes(value);
-                  return (
-                    <button
-                      key={pet.value}
-                      type="button"
-                      onClick={() => handleTogglePet(value)}
-                      className={`rounded-full border px-2 py-0.5 ${
-                        active
-                          ? "border-primary-400 text-primary-600"
-                          : "border-charcoal-100 text-charcoal-500"
-                      }`}
-                    >
-                      {pet.label}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* محدوده قیمت */}
-            <div className="space-y-1 text-small">
-              <label className="text-small text-charcoal-500 pr-5">
-                محدوده قیمت
-              </label>
-              <PriceRangeSlider
-                value={priceRange}
-                min={GLOBAL_MIN_PRICE}
-                max={GLOBAL_MAX_PRICE}
-                step={PRICE_STEP}
-                onChange={(range) =>
-                  setPriceRange(range as [number, number])
-                }
-              />
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center justify-between">
-            <p
-              onClick={handleClearFilters}
-              className="rounded-full text-small cursor-pointer text-charcoal-400 hover:text-charcoal-600 md:text-small"
-            >
-              حذف همه فیلترها
-            </p>
-
-            <Button type="button" onClick={handleSearchClick} className="px-13">
-              جستجو
-            </Button>
-          </div>
+        {/* Mobile Filters Drawer */}
+        <div className="md:hidden">
+          <FiltersDrawer
+            open={filtersOpen}
+            onOpenChange={setFiltersOpen}
+            timeFrom={timeFrom}
+            timeTo={timeTo}
+            date={date}
+            serviceType={serviceType}
+            city={city}
+            pets={pets}
+            priceRange={priceRange}
+            priceMin={GLOBAL_MIN_PRICE}
+            priceMax={GLOBAL_MAX_PRICE}
+            priceStep={PRICE_STEP}
+            showTimePicker={showTimePickerMobile}
+            setShowTimePicker={setShowTimePickerMobile}
+            openService={openServiceMobile}
+            setOpenService={setOpenServiceMobile}
+            openCity={openCityMobile}
+            setOpenCity={setOpenCityMobile}
+            setTimeFrom={setTimeFrom}
+            setTimeTo={setTimeTo}
+            setDate={setDate}
+            setServiceType={setServiceType}
+            setCity={setCity}
+            setPets={setPets}
+            setPriceRange={setPriceRange}
+            onSearch={handleSearchClick}
+            onClear={handleClearFilters}
+          />
         </div>
 
         {/* نوار نتایج + سورت */}
@@ -633,17 +490,15 @@ export default function PetSitterSearchPage() {
 
           <div className="flex items-center gap-2 rounded-full bg-card px-3 py-2 text-small shadow-sm md:text-small">
             <span className="text-charcoal-500">مرتب‌سازی بر اساس</span>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <button
                   type="button"
-                  className="flex items-center gap-1 rounded-full border border-border px-3 py-1 text-small text-charcoal-800"
+                  className="flex items-center cursor-pointer gap-1 rounded-full border border-border px-3 py-1 text-small text-charcoal-800"
                 >
                   <span>
-                    {
-                      SORT_FIELDS.find((opt) => opt.value === sortField)
-                        ?.label
-                    }
+                    {SORT_FIELDS.find((opt) => opt.value === sortField)?.label}
                   </span>
                   <ChevronDown className="h-4 w-4 text-charcoal-400" />
                 </button>
@@ -655,7 +510,7 @@ export default function PetSitterSearchPage() {
                 sideOffset={6}
                 avoidCollisions={false}
                 className="
-                  min-w-[7rem]
+                  min-w-[7rem] cursor-pointer
                   rounded-3xl border border-border
                   px-4 py-2
                   text-small text-charcoal-900
@@ -670,9 +525,7 @@ export default function PetSitterSearchPage() {
                       setSortField(opt.value);
                       setData([]);
                       setHasMore(true);
-                      if (hasSearched) {
-                        setPage(1);
-                      }
+                      if (hasSearched) setPage(1);
                     }}
                     className={`cursor-pointer rounded-2xl px-2 py-1.5 text-right ${
                       sortField === opt.value
@@ -691,7 +544,7 @@ export default function PetSitterSearchPage() {
               variant="outline"
               onClick={toggleSortDirection}
               className="
-                items-center gap-1 rounded-full border border-border
+                items-center gap-1 rounded-full border border-border cursor-pointer
                 text-small text-charcoal-600
                 hover:text-charcoal-900 transition
               "
@@ -711,7 +564,7 @@ export default function PetSitterSearchPage() {
           </div>
         </div>
 
-        {/* لیست سیتِرها + اسکلت + اینفینیت‌اسکرول */}
+        {/* لیست سیتِرها */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {!hasSearched ? (
             <div className="col-span-full flex items-center justify-center py-16 text-small text-charcoal-500">
@@ -735,9 +588,11 @@ export default function PetSitterSearchPage() {
               </div>
             ))
           )}
+
+          <div ref={cardsBottomRef} className="col-span-full h-0" />
         </div>
 
-        {/* لود بیشتر در اینفینیت اسکرول: اسکلت پایین لیست */}
+        {/* اسکلت پایین */}
         {hasSearched && isLoading && data.length > 0 && (
           <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -746,42 +601,74 @@ export default function PetSitterSearchPage() {
           </div>
         )}
 
-        {/* اطلاعات پیجینیشن کلی */}
+        {/* نمایش بیشتر */}
+        {hasSearched && hasMore && data.length >= autoLimit && !isLoading && (
+          <div className="mt-4 flex justify-center ">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleManualLoadMore}
+              className="px-10 cursor-pointer"
+            >
+              نمایش بیشتر
+            </Button>
+          </div>
+        )}
+
+        {/* اطلاعات */}
         <div className="mt-2 flex items-center justify-between text-small md:text-small">
-          <div className="text-charcoal-500">
-            {!hasSearched || totalItems === 0 ? (
-              hasSearched ? (
-                "هیچ آیتمی وجود ندارد."
+          <div className="flex items-center gap-3 text-charcoal-500">
+            <span>
+              {!hasSearched || totalItems === 0 ? (
+                hasSearched ? (
+                  "هیچ آیتمی وجود ندارد."
+                ) : (
+                  ""
+                )
               ) : (
-                ""
-              )
-            ) : (
-              <>
-                نمایش{" "}
-                <span className="font-semibold text-charcoal-900">
-                  {data.length === 0 ? 0 : 1}
-                </span>{" "}
-                تا{" "}
-                <span className="font-semibold text-charcoal-900">
-                  {data.length}
-                </span>{" "}
-                از{" "}
-                <span className="font-semibold text-charcoal-900">
-                  {totalItems}
-                </span>{" "}
-                پت‌سیتر
-              </>
-            )}
+                <>
+                  نمایش{" "}
+                  <span className="font-semibold text-charcoal-900">
+                    {data.length === 0 ? 0 : 1}
+                  </span>{" "}
+                  تا{" "}
+                  <span className="font-semibold text-charcoal-900">
+                    {data.length}
+                  </span>{" "}
+                  از{" "}
+                  <span className="font-semibold text-charcoal-900">
+                    {totalItems}
+                  </span>{" "}
+                  پت‌سیتر
+                </>
+              )}
+            </span>
           </div>
 
           <div className="text-charcoal-500">
-            {hasSearched &&
-              !hasMore &&
-              totalItems > 0 &&
-              "همه نتایج بارگذاری شدند."}
+            {hasSearched && !hasMore && totalItems > 0 && "همه نتایج بارگذاری شدند."}
           </div>
         </div>
       </div>
+
+      {/* دکمه برگشت به بالا */}
+      {showScrollTop && (
+        <button
+          type="button"
+          onClick={handleScrollTopClick}
+          style={{ bottom: `${scrollButtonBottom}px` }}
+          className="
+            fixed right-5 z-40
+            flex h-11 w-11 items-center justify-center
+            rounded-full bg-primary text-white cursor-pointer
+            shadow-lg hover:bg-primary/90
+            focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary
+          "
+          aria-label="بازگشت به بالای صفحه"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
+      )}
     </div>
   );
 }
