@@ -30,6 +30,9 @@ import type {
 
 import { ChevronDown, ArrowUp } from "lucide-react";
 
+import { searchPetSittersService } from "@/services/petSitterService";
+import { buildPetSitterSearchPayload } from "@/utils/buildPetSitterSearchPayload";
+
 /* ---------------- mock API (سمت فرانت) ------------- */
 
 function mockFetchSitters(params: SearchParams): {
@@ -83,7 +86,9 @@ function mockFetchSitters(params: SearchParams): {
   if (params.date) {
     const reqDate = params.date;
     result = result.filter((s) =>
-      Array.isArray(s.availableDates) ? s.availableDates.includes(reqDate) : false
+      Array.isArray(s.availableDates)
+        ? s.availableDates.includes(reqDate)
+        : false
     );
   }
 
@@ -215,8 +220,9 @@ export default function ExplorePetSitter() {
   /* ------------ fetch دیتا ------------ */
 
   useEffect(() => {
-    if (!hasSearched) return;
+  if (!hasSearched) return;
 
+  const fetchData = async () => {
     setIsLoading(true);
 
     const params: SearchParams = {
@@ -234,6 +240,29 @@ export default function ExplorePetSitter() {
       pageSize,
     };
 
+    const payload = buildPetSitterSearchPayload({
+      filters: {
+        searchQuery,
+        serviceType,
+        pets,
+        city,
+        date,
+        timeFrom,
+        timeTo,
+        priceRange,
+      },
+      page,
+      pageSize,
+      sortField,
+      sortDirection,
+    });
+
+    const res = await searchPetSittersService(payload);
+
+    setData((prev) => (page === 1 ? res.items : [...prev, ...res.items]));
+    setTotalItems(res.total);
+    setHasMore(page * pageSize < res.total);
+
     const timer = setTimeout(() => {
       const { items, total } = mockFetchSitters(params);
 
@@ -247,22 +276,27 @@ export default function ExplorePetSitter() {
     }, 250);
 
     return () => clearTimeout(timer);
-  }, [
-    hasSearched,
-    searchToken,
-    page,
-    sortField,
-    sortDirection,
-    searchQuery,
-    serviceType,
-    pets,
-    city,
-    date,
-    timeFrom,
-    timeTo,
-    priceRange,
-    pageSize,
-  ]);
+  };
+
+  fetchData();
+
+}, [
+  hasSearched,
+  searchToken,
+  page,
+  sortField,
+  sortDirection,
+  searchQuery,
+  serviceType,
+  pets,
+  city,
+  date,
+  timeFrom,
+  timeTo,
+  priceRange,
+  pageSize,
+]);
+
 
   /* --------- اینفینیت‌اسکرول --------- */
 
@@ -646,7 +680,10 @@ export default function ExplorePetSitter() {
           </div>
 
           <div className="text-charcoal-500">
-            {hasSearched && !hasMore && totalItems > 0 && "همه نتایج بارگذاری شدند."}
+            {hasSearched &&
+              !hasMore &&
+              totalItems > 0 &&
+              "همه نتایج بارگذاری شدند."}
           </div>
         </div>
       </div>
