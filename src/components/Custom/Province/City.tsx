@@ -13,6 +13,8 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
 import { getIranProvincesFa } from "@/utils/provinces";
+import { fetchCitiesService } from "@/services/provinceService";
+import type { City } from "@/types/addressInfoTypes";
 export const City = ({
 	className,
 	name,
@@ -28,15 +30,13 @@ export const City = ({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
-	const [iranProvincesFa, setIranProvincesFa] = useState<
-		Record<string, string[]>
-	>({});
+	const [iranProvincesFa, setIranProvincesFa] = useState<City[]>([]);
 
 	useEffect(() => {
-		getIranProvincesFa().then((data) => {
-			setIranProvincesFa(data);
+		fetchCitiesService(parseInt(province)).then((data) => {
+			setIranProvincesFa(data.data);
 		});
-	}, []);
+	}, [province]);
 
 	useEffect(() => {
 		if (ref.current) {
@@ -73,14 +73,14 @@ export const City = ({
 			<SelectContent className="">
 				<SelectGroup>
 					{province &&
-						Array.from(iranProvincesFa[province]).map((province) => {
+						Array.from(iranProvincesFa).map((province) => {
 							return (
 								<SelectItem
 									className="text-[8px]"
-									style={{ fontSize: calculateFontSize(province.length) }}
-									value={province}
+									style={{ fontSize: calculateFontSize(province.name.length) }}
+									value={province.num.toString()}
 								>
-									{province}
+									{province.name}
 								</SelectItem>
 							);
 						})}

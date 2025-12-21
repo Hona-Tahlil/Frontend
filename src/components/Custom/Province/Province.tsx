@@ -6,13 +6,14 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../Select/Select";
-import { getIranProvincesFa } from "@/utils/provinces";
 
 import customStyles from "./Province.module.css";
 
 import { useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
+import type { Province } from "@/types/addressInfoTypes";
+import { fetchProvincesService } from "@/services/provinceService";
 
 export function Province({
 	className,
@@ -30,13 +31,11 @@ export function Province({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
-	const [iranProvincesFa, setIranProvincesFa] = useState<
-		Record<string, string[]>
-	>({});
+	const [Cities, setCities] = useState<Province[]>([]);
 
 	useEffect(() => {
-		getIranProvincesFa().then((data) => {
-			setIranProvincesFa(data);
+		fetchProvincesService().then((data) => {
+			setCities(data.data);
 		});
 	}, []);
 	useEffect(() => {
@@ -73,13 +72,13 @@ export function Province({
 			</SelectTrigger>
 			<SelectContent>
 				<SelectGroup>
-					{Array.from(Object.keys(iranProvincesFa)).map((province) => {
+					{Array.from(Array.from(Cities)).map((city) => {
 						return (
 							<SelectItem
-								style={{ fontSize: calculateFontSize(province.length) }}
-								value={province}
+								style={{ fontSize: calculateFontSize(city.name.length) }}
+								value={city.num.toString()}
 							>
-								{province}
+								{city.name}
 							</SelectItem>
 						);
 					})}

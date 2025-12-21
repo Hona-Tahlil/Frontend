@@ -3,7 +3,7 @@ import { getData } from "./services";
 
 export const fetchProvincesService = async (): Promise<ProvinceResponse> => {
 	return getData({
-		endPoint: `/v1/provinces`,
+		endPoint: `/v1/provinces/`,
 	});
 };
 export const fetchCitiesService = async (
