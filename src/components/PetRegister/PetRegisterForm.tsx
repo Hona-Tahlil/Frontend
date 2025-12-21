@@ -24,12 +24,14 @@ import { PetDatePicker } from "../Custom/PetDatePicker/PetDatePicker";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { Button } from "../Custom/Button/Button";
 import CustomToast from "../Custom/CustomToast";
+import { useNavigate } from "react-router-dom";
 
 export default function PetRegisterForm() {
   const [genderDontKnow, setGenderDontKnow] = useState(false);
   const [weightDontKnow, setWeightDontKnow] = useState(false);
   const [birthDontKnow, setBirthDontKnow] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const navigate = useNavigate();
 
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -80,6 +82,10 @@ export default function PetRegisterForm() {
 
   const showToast = (message:string) => {
     CustomToast(message);
+  }
+
+  function navigateToDashboard(){
+    navigate('/Dashboard/pets');
   }
 
   return (
@@ -159,7 +165,7 @@ export default function PetRegisterForm() {
               {registerErrorMessage && (
                 <p className="text-lg mb-6">{registerErrorMessage}</p>
               )}
-              <Button onClick={() => {}}> بازگشت به داشبورد</Button>
+              <Button onClick={() => {navigateToDashboard()}}> بازگشت به داشبورد</Button>
             </div>
           ) : (
             <Stepper

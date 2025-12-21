@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
 				element: <AdminDashboard />,
 			},
 			{
-				path: "/Dashboard",
+				path: "/Dashboard/pets",
 				element: <Dashboard/>
 			}
 		],

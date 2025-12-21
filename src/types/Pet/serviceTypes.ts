@@ -9,8 +9,16 @@ export interface GetAllPetsResponse {
 export type Pet = {
     id: number,
     name: string,
-    kind: number,
-    species: number,
-    gender: number,
+    kind: string,
+    species: string,
+    gender: string,
     pictureLink: string,
+    birthDate: string,
+    isAdult: boolean, 
+}
+
+
+export type DeletePetResponse = {
+    statusCode: number,
+    message?: string,
 }
