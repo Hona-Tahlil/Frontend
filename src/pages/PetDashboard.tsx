@@ -10,10 +10,9 @@ import { PETS_QUERY_KEY } from "@/queryKeys/pets";
 import { ageYearsMonths } from "@/utils/getYearMonthFromDate";
 import LoadingPetCard from "@/components/Pet/LoadingPetCard";
 
-const GENDER_MAP = ["Male", "Female", "DontKnow"];
-
 export default function Dashboard() {
   const isMobile = useMobile();
+  const test = true;
   const { data, isLoading, error } = useQuery<GetAllPetsResponse>({
     queryKey: PETS_QUERY_KEY,
     queryFn: () => {
@@ -22,8 +21,6 @@ export default function Dashboard() {
     staleTime: 1000 * 60,
   });
 
-  if (isLoading)
-    return Array.from({ length: 10 }).map((_, i) => <LoadingPetCard key={i} />);
   if (error) return <p>Error loading pets</p>;
 
   const pets = data?.data;
@@ -32,24 +29,28 @@ export default function Dashboard() {
     <div className="flex justify-center items-center w-screen ml-5">
       {!isMobile && <aside className="sticky w-2/5 bg-white h-40"></aside>}
       <div className="grid-cols-1 md:grid-cols-2 lg:grid-cols-3  gap-x-6 grid mt-20 rtl px-6 space-y-6 w-full mb-6">
-        {pets?.map((pet) => (
-          <DashboardPetCard
-            key={pet.id}
-            pet={{
-              id: pet.id,
-              kind: pet.kind,
-              species: pet.species,
-              isAdult: pet.isAdult,
-              name: pet.name,
-              gender: pet.gender,
-              pictureLink: pet.pictureLink,
-              age: ageYearsMonths(pet.birthDate),
-              
-            }}
-           
-          />
-        ))}
-        <AddPetCard></AddPetCard>
+        {isLoading ? (
+          Array.from({ length: 10 }).map((_, i) => <LoadingPetCard key={i} />)
+        ) : (
+          <>
+            {pets?.map((pet) => (
+              <DashboardPetCard
+                key={pet.id}
+                pet={{
+                  id: pet.id,
+                  kind: pet.kind,
+                  species: pet.species,
+                  isAdult: pet.isAdult,
+                  name: pet.name,
+                  gender: pet.gender,
+                  pictureLink: pet.pictureLink,
+                  age: ageYearsMonths(pet.birthDate),
+                }}
+              />
+            ))}
+            <AddPetCard/>
+          </>
+        )}
       </div>
     </div>
   );

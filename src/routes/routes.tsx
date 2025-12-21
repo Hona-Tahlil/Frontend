@@ -13,7 +13,7 @@ import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
-import Dashboard from "@/pages/Dashboard";
+import Dashboard from "@/pages/PetDashboard";
 
 export const router = createBrowserRouter([
   {

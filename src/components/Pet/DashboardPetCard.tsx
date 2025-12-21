@@ -59,7 +59,7 @@ export default function DashboardPetCard({ pet }: { pet: PetBasicData }) {
             className="font-semibold"
           >
             {pet.name}
-          </span>
+          </span> {" "}
           را حذف کنید؟
         </span>
       </MessageDialog>
