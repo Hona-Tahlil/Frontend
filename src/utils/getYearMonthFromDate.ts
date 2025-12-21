@@ -1,26 +1,37 @@
 export function ageYearsMonths(isoBirthDate: string | null): string | null {
-  if (isoBirthDate == null) return null;
+  if (!isoBirthDate) return null;
+
   const birth = new Date(isoBirthDate);
   const now = new Date();
 
   if (Number.isNaN(birth.getTime())) return "تاریخ نامعتبر";
-  if (birth > now) return "0 سال و 0 ماه";
+  if (birth > now) return "0 سال و 0 ماه و 0 روز";
 
-  let totalMonths =
-    (now.getFullYear() - birth.getFullYear()) * 12 +
-    (now.getMonth() - birth.getMonth());
+  let years = now.getFullYear() - birth.getFullYear();
+  let months = now.getMonth() - birth.getMonth();
+  let days = now.getDate() - birth.getDate();
 
-  if (now.getDate() < birth.getDate()) {
-    totalMonths -= 1;
+  if (days < 0) {
+    months -= 1;
+
+    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prevMonth.getDate();
   }
 
-  totalMonths = Math.max(0, totalMonths);
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
 
-  const years = Math.floor(totalMonths / 12);
-  const months = totalMonths % 12;
+  if (years === 0 && months === 0 && days === 0) {
+    return "سن و وضعیت بلوغ وارد نشده";
+  }
 
-  if (years === 0 && months !== 0) return `${months} ماه`;
-  else if (months === 0 && years !== 0) return `${years} سال`;
-  else if (years === 0 && months === 0) return "سن و وضعیت بلوغ وارد نشده";
-  return `${years} سال و ${months} ماه`;
+  let result = "";
+
+  if (years > 0) result += `${years} سال `;
+  if (months > 0) result += `${months} ماه `;
+  if (days > 0) result += `${days} روز`;
+
+  return result.trim();
 }

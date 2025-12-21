@@ -14,6 +14,7 @@ import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Dashboard from "@/pages/PetDashboard";
+import PetDashboard from "@/pages/PetDashboard";
 
 export const router = createBrowserRouter([
   {
@@ -60,7 +61,7 @@ export const router = createBrowserRouter([
 			},
 			{
 				path: "/Dashboard/pets",
-				element: <Dashboard/>
+				element: <PetDashboard/>
 			}
 		],
 	},
