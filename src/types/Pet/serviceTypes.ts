@@ -1,3 +1,4 @@
+import type { Pet } from "./pet";
 
 
 export interface GetAllPetsResponse {
@@ -6,16 +7,7 @@ export interface GetAllPetsResponse {
     data: Pet[];
 }
 
-export type Pet = {
-    id: number,
-    name: string,
-    kind: string,
-    species: string,
-    gender: string,
-    pictureLink: string,
-    birthDate: string,
-    isAdult: boolean, 
-}
+
 
 
 export type DeletePetResponse = {
