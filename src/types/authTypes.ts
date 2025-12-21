@@ -59,3 +59,21 @@ export interface ForgetPasswordResponse {
 export interface ForgetPasswordErrors {
 	Email?: string;
 }
+
+
+export interface ResetPasswordPayload {
+	email: string;   
+	token: string;   
+	password: string; 
+  }
+  
+  export interface ResetPasswordResponse {
+	statusCode: number;
+	message?: string;
+	messages?: {
+	  password?: string;
+	  email?: string;
+	  token?: string;
+	};
+  }
+  

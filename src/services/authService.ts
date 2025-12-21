@@ -7,8 +7,11 @@ import type {
 	SignupResponse,
 	ForgetPasswordPayload,
 	ForgetPasswordResponse,
+	ResetPasswordPayload,
+  	ResetPasswordResponse,
 } from "@/types/authTypes";
 import { postData } from "./services";
+
 
 export const loginService = async (
 	credentials: LoginPayload,
@@ -37,13 +40,32 @@ export const forgetpasswordService = async (
 	});
 };
 
-export const resetPasswordService = async (data: {
-	email: string;
-	token: string;
-	password: string;
-  }) => {
+
+// export const resetPasswordService = async (
+// 	credentials: ResetPasswordPayload,
+//   ): Promise<ResetPasswordResponse> => {
+// 	// const { email, token, password } = params;
+  
+// 	return postData({
+// 	  endPoint: `/v1/auth/reset-password`,
+// 	  data: credentials, // JSON body
+// 	});
+//   };
+
+
+export const resetPasswordService = async (
+	params: ResetPasswordPayload,
+  ): Promise<ResetPasswordResponse> => {
+	const { email, token, password } = params;
+  
 	return postData({
-	  endPoint: "/v1/auth/reset-password",
-	  data,
+	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(
+		token,
+	  )}&email=${encodeURIComponent(email)}`,
+	  data: { password }, // JSON body
 	});
   };
+  
+
+  
+  
