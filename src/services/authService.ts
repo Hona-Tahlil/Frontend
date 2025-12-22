@@ -11,6 +11,7 @@ import type {
   	ResetPasswordResponse,
 } from "@/types/authTypes";
 import { postData } from "./services";
+import { putData } from "./services";
 
 
 export const loginService = async (
@@ -53,18 +54,31 @@ export const forgetpasswordService = async (
 //   };
 
 
+// export const resetPasswordService = async (
+// 	params: ResetPasswordPayload,
+//   ): Promise<ResetPasswordResponse> => {
+// 	const { email, token, password } = params;
+  
+// 	return postData({
+// 	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(
+// 		token,
+// 	  )}&email=${encodeURIComponent(email)}`,
+// 	  data: { password }, // JSON body
+// 	});
+//   };
+
+
 export const resetPasswordService = async (
 	params: ResetPasswordPayload,
   ): Promise<ResetPasswordResponse> => {
 	const { email, token, password } = params;
   
-	return postData({
-	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(
-		token,
-	  )}&email=${encodeURIComponent(email)}`,
+	return putData({
+	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`,
 	  data: { password }, // JSON body
 	});
   };
+  
   
 
   
