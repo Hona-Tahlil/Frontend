@@ -18,7 +18,6 @@ import ReviewsPage from "@/pages/Admin/ReviewsPage";
 import ComplaintsPage from "@/pages/Admin/ComplaintsPage";
 import BookingsPage from "@/pages/Admin/BookingsPage";
 import AccessPage from "@/pages/Admin/AccessPage";
-import VerifySitterDetailsPage from "@/pages/Admin/VerifySitterDetailsPage";
 
 
 
@@ -76,7 +75,7 @@ export const router = createBrowserRouter([
 	},
 	{
 		path: "/admin/verify-sitter/:id",
-		element: <VerifySitterDetailsPage />,
+		element: <VerifySitterPage />,
 	},
 	{
 		path: "/admin/sitters",

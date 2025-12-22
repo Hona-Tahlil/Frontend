@@ -3,12 +3,26 @@ import { AdminSidebar } from "@/components/Admin/AdminSidebar";
 import { AdminContainer } from "@/components/Admin/AdminContainer";
 import { ChevronLeft, X, ChevronRight } from "lucide-react";
 import { useMobile } from "@/hooks/ResponsiveHooks";
-import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { initialSitters, statusColor, statusLabel } from "@/data/sitterConstants";
 import type { Sitter, SitterStatus } from "@/data/sitterConstants";
+import {
+  Drawer,
+  DrawerTrigger,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerClose,
+} from "@/components/ui/drawer";
+import { StatusButton } from "@/components/Custom/Button/StatusButton";
+import { useParams, useNavigate } from "react-router-dom";
+
+
+
+
 
 export default function VerifySitterPage() {
+  const [openDrawer, setOpenDrawer] = useState(false);
   const isMobile = useMobile();
   const navigate = useNavigate();
   const location = useLocation();
@@ -16,8 +30,8 @@ export default function VerifySitterPage() {
   const [filter, setFilter] = useState<"all" | SitterStatus>("all");
   const [search, setSearch] = useState("");
   const [selectedSitterId, setSelectedSitterId] = useState<number | null>(null);
-  
-  const selectedSitter = selectedSitterId !== null ? sitters.find((s) => s.id === selectedSitterId) ?? null : null;
+  const [selectedSitter, setSelectedSitter] = useState<Sitter | null>(null);
+
 
   useEffect(() => {
     if (location.state?.updatedSitter) {
@@ -31,15 +45,60 @@ export default function VerifySitterPage() {
     navigate("/admin");
   };
 
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (!id) return;
+  
+    const sitter = sitters.find((s) => s.id === Number(id)) ?? null;
+    if (!sitter) return;
+  
+    setSelectedSitter(sitter);
+    setCurrentStatus(sitter.status);
+  
+    if (isMobile) setOpenDrawer(true);
+    else setSelectedSitterId(sitter.id); // اگر دسکتاپ دیالوگت با این باز میشه
+  }, [id, sitters, isMobile]);
+  
+
+const isDialogOpen = Boolean(id);
+
+
+  const [currentStatus, setCurrentStatus] = useState<SitterStatus>("pending");
+
+
+  
+
   const handleOpenDetails = (id: number) => {
-    if (isMobile) {
-      navigate(`/admin/verify-sitter/${id}`, {
-        state: { sitter: sitters.find((s) => s.id === id) }
-      });
-    } else {
-      setSelectedSitterId(id);
-    }
+    const sitter = sitters.find((s) => s.id === id) ?? null;
+    if (!sitter) return;
+  
+    setSelectedSitter(sitter);
+    setCurrentStatus(sitter.status);
+  
+    // ✅ URL را ست کن
+    navigate(`/admin/verify-sitter/${id}`, { replace: false });
+  
+    // ✅ فقط نوع نمایش فرق کند
+    if (isMobile) setOpenDrawer(true);
+    else setSelectedSitterId(id); // اگر برای دسکتاپ از این state استفاده می‌کنی
   };
+  
+
+
+  const changeStatus = (newStatus: SitterStatus) => {
+    if (!selectedSitter) return;
+  
+    setCurrentStatus(newStatus);
+  
+    setSitters((prev) =>
+      prev.map((s) =>
+        s.id === selectedSitter.id ? { ...s, status: newStatus } : s
+      )
+    );
+  };
+  
+  
 
   const filtered = sitters.filter((sitter) => {
     const matchesStatus = filter === "all" ? true : sitter.status === filter;
@@ -192,7 +251,7 @@ export default function VerifySitterPage() {
           <div className="bg-white rounded-3xl w-[95%] max-w-3xl p-6 shadow-xl font-[Alibaba]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold">جزییات پت‌سیتر</h2>
-              <button onClick={() => setSelectedSitterId(null)}>
+              <button onClick={() => setSelectedSitterId(null); }>
                 <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
               </button>
             </div>
@@ -255,6 +314,115 @@ export default function VerifySitterPage() {
           </div>
         </div>
       )}
+      {isMobile && selectedSitter && (
+      <Drawer open={openDrawer} onOpenChange={(open) => {
+        setOpenDrawer(open);
+        if (!open) navigate("/admin/verify-sitter");
+      }}>
+      <DrawerContent className="h-[90vh]">
+
+{/* HEADER (ثابت) */}
+<DrawerHeader className="text-right shrink-0">
+  <DrawerTitle>جزییات پت‌سیتر</DrawerTitle>
+  <p className="text-sm text-muted-foreground">
+    اطلاعات کامل پت‌سیتر انتخاب‌شده.
+  </p>
+</DrawerHeader>
+
+{/* ✅ BODY (تنها جای اسکرول) */}
+<div className="flex-1 overflow-y-auto px-4 pb-6">
+
+  {/* STATUS */}
+  <div className="mb-4">
+    <span
+      className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor[currentStatus]}`}
+    >
+      {statusLabel[currentStatus]}
+    </span>
+  </div>
+
+  {/* STATUS BUTTONS */}
+  <div className="flex flex-col gap-3 mt-4">
+    <StatusButton
+      status="accepted"
+      currentStatus={currentStatus}
+      onClick={() => changeStatus("accepted")}
+    />
+    <StatusButton
+      status="pending"
+      currentStatus={currentStatus}
+      onClick={() => changeStatus("pending")}
+    />
+    <StatusButton
+      status="rejected"
+      currentStatus={currentStatus}
+      onClick={() => changeStatus("rejected")}
+    />
+  </div>
+
+  {/* مشخصات */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+    <span className="font-bold text-admin-700">مشخصات</span>
+    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+      <span><b>نام پت‌یار:</b> {selectedSitter.name}</span>
+      <span><b>جنسیت:</b> زن</span>
+      <span><b>تاریخ تولد:</b> 2005/2/12</span>
+    </div>
+  </div>
+
+  {/* تماس */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+    <span className="font-bold text-admin-700">اطلاعات تماس</span>
+    <div className="mt-2 flex flex-col gap-1">
+      <span><b>ایمیل:</b> {selectedSitter.email}</span>
+      <span><b>شماره تماس:</b> 09123456782</span>
+    </div>
+  </div>
+
+  {/* آدرس */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+    <span className="font-bold text-admin-700">آدرس</span>
+    <p className="mt-2">
+      تهران، خیابان فرهنگ، کوچه ۲۳
+    </p>
+  </div>
+
+  {/* دانلود */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5 text-center text-admin-700 font-bold hover:bg-admin-50">
+    دانلود فایل‌های آپلود شده
+  </div>
+
+  {/* خدمات */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+    <span className="font-bold text-admin-700">خدمات:</span>
+    <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
+  </div>
+
+  {/* بیوگرافی */}
+  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+    <span className="font-bold text-admin-700">بیوگرافی:</span>
+    <p className="leading-relaxed">
+      پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.
+    </p>
+  </div>
+
+</div>
+
+{/* FOOTER (ثابت) */}
+<div className="p-4 border-t shrink-0">
+  <DrawerClose asChild>
+    <button className="w-full rounded-xl border py-2 font-bold">
+      بستن
+    </button>
+  </DrawerClose>
+</div>
+
+</DrawerContent>
+
+    </Drawer>
+    
+    )}
+
     </div>
   );
 }
