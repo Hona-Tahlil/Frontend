@@ -31,11 +31,11 @@ export function Province({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
-	const [Cities, setCities] = useState<Province[]>([]);
+	const [provinces, setProvinces] = useState<Province[]>([]);
 
 	useEffect(() => {
 		fetchProvincesService().then((data) => {
-			setCities(data.data);
+			setProvinces(data.data);
 		});
 	}, []);
 	useEffect(() => {
@@ -72,7 +72,7 @@ export function Province({
 			</SelectTrigger>
 			<SelectContent>
 				<SelectGroup>
-					{Array.from(Array.from(Cities)).map((city) => {
+					{Array.from(Array.from(provinces)).map((city) => {
 						return (
 							<SelectItem
 								style={{ fontSize: calculateFontSize(city.name.length) }}

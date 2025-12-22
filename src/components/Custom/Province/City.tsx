@@ -12,9 +12,8 @@ import customStyles from "./Province.module.css";
 import { useContext, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
-import { getIranProvincesFa } from "@/utils/provinces";
 import { fetchCitiesService } from "@/services/provinceService";
-import type { City } from "@/types/addressInfoTypes";
+import type { City as CityType } from "@/types/addressInfoTypes";
 export const City = ({
 	className,
 	name,
@@ -30,11 +29,11 @@ export const City = ({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
-	const [iranProvincesFa, setIranProvincesFa] = useState<City[]>([]);
+	const [cities, setCities] = useState<CityType[]>([]);
 
 	useEffect(() => {
 		fetchCitiesService(parseInt(province)).then((data) => {
-			setIranProvincesFa(data.data);
+			setCities(data.data);
 		});
 	}, [province]);
 
@@ -73,7 +72,7 @@ export const City = ({
 			<SelectContent className="">
 				<SelectGroup>
 					{province &&
-						Array.from(iranProvincesFa).map((province) => {
+						Array.from(cities).map((province) => {
 							return (
 								<SelectItem
 									className="text-[8px]"

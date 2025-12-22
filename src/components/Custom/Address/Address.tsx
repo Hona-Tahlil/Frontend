@@ -1,6 +1,6 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "../Button/Button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "../Input/Input";
 import { Textarea } from "../Textarea/Textarea";
 import { Plus } from "lucide-react";
@@ -10,17 +10,46 @@ import * as Yup from "yup";
 import { NonFormikInput, type InputClass } from "../Input/NonFormikInput";
 import { City } from "../Province/City";
 import { Province } from "../Province/Province";
+import {
+	type Province as ProvinceType,
+	type City as CityType,
+} from "@/types/addressInfoTypes";
 import { LocationSelector } from "../Province/LocationSelector";
+import {
+	fetchCitiesService,
+	fetchProvincesService,
+} from "@/services/provinceService";
 
 export default function Address({ classes }: { classes?: InputClass }) {
 	const [open, setOpen] = useState(false);
 	const { values, setFieldValue } = useFormikContext<any>();
+
+	const [provinces, setProvinces] = useState<ProvinceType[]>([]);
+	const [cities, setCities] = useState<CityType[]>([]);
+
+	useEffect(() => {
+		fetchProvincesService().then((data) => {
+			setProvinces(data.data);
+		});
+	}, []);
+	useEffect(() => {
+		fetchCitiesService(parseInt(values.Province)).then((data) => {
+			setCities(data.data);
+		});
+	}, [values.Province]);
 
 	function openDiaglog() {
 		setOpen(true);
 	}
 	function closeDiaglog() {
 		setOpen(false);
+	}
+
+	function getNameByNum<T extends { num: number; name: string }>(
+		arr: T[],
+		num: number,
+	): string | undefined {
+		return arr.find((item) => item.num === num)?.name;
 	}
 
 	const validationSchema = Yup.object({
@@ -31,7 +60,7 @@ export default function Address({ classes }: { classes?: InputClass }) {
 		Address: Yup.string().required("اجباری است"),
 	});
 
-	const fullAddress = `${values.Province}، ${values.City}، ${values.Pelak}، ${values.Vahed}، ${values.Address}`;
+	const fullAddress = `${getNameByNum(provinces, parseInt(values.Province))}، ${getNameByNum(cities, parseInt(values.City))}، ${values.Pelak}، ${values.Vahed}، ${values.Address}`;
 	return (
 		<>
 			<div className="flex gap-3">
