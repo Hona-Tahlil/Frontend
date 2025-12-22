@@ -53,28 +53,28 @@ export default function BookingCard({
 			<div
 				className={cn(
 					"relative w-full border-3 sm:border-1 sm:border-black/20 rounded-3xl p-3 bg-white",
-					cardStatus == "rejected" ? "border-red-500" : "",
-					cardStatus == "canceled" ? "border-red-500" : "",
-					cardStatus == "accepted" ? "border-green-500" : "",
+					cardStatus == "rejected" ? "border-rejected-red" : "",
+					cardStatus == "canceled" ? "border-rejected-red" : "",
+					cardStatus == "accepted" ? "border-confirmed-green" : "",
 					cardStatus == "done" ? "border-primary" : "",
-					cardStatus == "pending" ? "border-yellow-500" : "",
+					cardStatus == "pending" ? "border-waiting-yellow" : "",
 				)}
 				dir="rtl"
 			>
 				{isMobile && (
 					<div className="absolute left-5 top-0 -translate-y-1/2 flex">
 						{cardStatus == "canceled" && (
-							<div className="border-0 bg-white rounded-none text-red-500 px-1">
+							<div className="border-0 bg-white rounded-none text-rejected-red px-1">
 								لفو شده
 							</div>
 						)}
 						{cardStatus == "rejected" && (
-							<div className="border-0 bg-white rounded-none text-red-500 px-1">
+							<div className="border-0 bg-white rounded-none text-rejected-red px-1">
 								رد شده
 							</div>
 						)}
 						{cardStatus == "accepted" && (
-							<div className="border-0 bg-white rounded-none text-green-500 px-1">
+							<div className="border-0 bg-white rounded-none text-confirmed-green px-1">
 								تایید شده
 							</div>
 						)}
@@ -84,7 +84,7 @@ export default function BookingCard({
 							</div>
 						)}
 						{cardStatus == "pending" && (
-							<div className="border-0 bg-white rounded-none text-yellow-500 px-1">
+							<div className="border-0 bg-white rounded-none text-waiting-yellow px-1">
 								در انتظار تایید
 							</div>
 						)}
@@ -94,17 +94,17 @@ export default function BookingCard({
 					{!isMobile && (
 						<div className="absolute left-0 flex">
 							{cardStatus == "canceled" && (
-								<div className="border-2 border-red-500 text-red-500 rounded-full px-3">
+								<div className="border-2 border-rejected-red text-rejected-red rounded-full px-3">
 									لفو شده
 								</div>
 							)}
 							{cardStatus == "rejected" && (
-								<div className="border-2 border-red-500 text-red-500 rounded-full px-3">
+								<div className="border-2 border-rejected-red text-rejected-red rounded-full px-3">
 									رد شده
 								</div>
 							)}
 							{cardStatus == "accepted" && (
-								<div className="border-2 border-green-500 text-green-500 rounded-full px-3">
+								<div className="border-2 border-confirmed-green text-confirmed-green rounded-full px-3">
 									تایید شده
 								</div>
 							)}
@@ -114,7 +114,7 @@ export default function BookingCard({
 								</div>
 							)}
 							{cardStatus == "pending" && (
-								<div className="border-2 border-yellow-500 text-yellow-500 rounded-full px-3">
+								<div className="border-2 border-waiting-yellow text-waiting-yellow rounded-full px-3">
 									در انتظار تایید
 								</div>
 							)}
@@ -168,7 +168,7 @@ export default function BookingCard({
 								<Button
 									variant={"outline"}
 									shadow={false}
-									className="shadow-none h-8 py-0 text-red-500 border-red-500 hover:bg-red-500"
+									className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
 									onClick={openCancelReserveDialog}
 								>
 									لغو رزرو
@@ -178,7 +178,7 @@ export default function BookingCard({
 								<Button
 									variant={"outline"}
 									shadow={false}
-									className="shadow-none h-8 py-0 text-red-500 border-red-500 hover:bg-red-500"
+									className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
 									onClick={openCancelRequestDialog}
 								>
 									لغو درخواست
