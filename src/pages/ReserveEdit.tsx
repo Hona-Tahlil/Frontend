@@ -329,6 +329,7 @@ export default function ReserveEdit() {
 										پت ها
 									</p>
 									<PetToggleGroup
+										name="petID"
 										classes={{
 											className: "gap-3 flex-1",
 											toggleClassName: "py-5 px-3",

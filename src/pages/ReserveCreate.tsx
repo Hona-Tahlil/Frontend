@@ -74,7 +74,8 @@ export default function ReserveCreate() {
 		const service = services.find((s) => s?.id === serviceID);
 		if (!service) return 0;
 
-		return petLength * service.price;
+		// return Math.round(petLength * service.price);
+		return Number((petLength * service.price).toFixed(2));
 	}
 
 	function openDialogForDay(dayIndex: number) {
@@ -107,9 +108,10 @@ export default function ReserveCreate() {
 			accessToken: accessToken!,
 			petSitterUserID: petSitterUserID as unknown as number,
 		}).then((response) => {
-			setPets(response.pets);
-			setServices(response.services);
-			setAddresses(response.addresses);
+			console.log(response.data.pets[0].species);
+			setPets(response.data.pets ?? []);
+			setServices(response.data.services ?? []);
+			setAddresses(response.data.addresses ?? []);
 		});
 	}
 
@@ -293,6 +295,7 @@ export default function ReserveCreate() {
 										پت ها
 									</p>
 									<PetToggleGroup
+										name="petID"
 										classes={{
 											className: "gap-3 flex-1",
 											toggleClassName: "py-5 px-3",

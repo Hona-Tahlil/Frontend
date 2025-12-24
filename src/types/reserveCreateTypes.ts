@@ -61,8 +61,13 @@ export interface GetRequestInfoRequest {
 	accessToken: string;
 	requestID: number;
 }
-
 export interface GetCreateRequestInfoResponse {
+	statusCode: number;
+	message: string;
+	data: GetCreateRequestInfo;
+}
+
+export interface GetCreateRequestInfo {
 	services: Service[];
 	addresses: AddressInfoWithId[];
 	pets: Pet[];
