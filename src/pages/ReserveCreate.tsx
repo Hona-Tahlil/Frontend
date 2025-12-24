@@ -32,7 +32,7 @@ import {
 	getCreateRequestInfo,
 } from "@/services/reserveCreateService";
 import useUserStore from "@/store/userStore/userStore";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import type {
 	AddressInfo,
 	AddressInfoWithId,
@@ -96,8 +96,13 @@ export default function ReserveCreate() {
 
 	const isDesktop = useDesktop();
 	const isMobile = useMobile();
+	const navigate = useNavigate();
 
 	function loadRequestInfo() {
+		if (!accessToken) {
+			navigate("/login");
+			return;
+		}
 		getCreateRequestInfo({
 			accessToken: accessToken!,
 			petSitterUserID: petSitterUserID as unknown as number,
