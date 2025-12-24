@@ -75,7 +75,7 @@ export default function ReserveCreate() {
 		if (!service) return 0;
 
 		// return Math.round(petLength * service.price);
-		return Number((petLength * service.price).toFixed(2));
+		return petLength * service.price;
 	}
 
 	function openDialogForDay(dayIndex: number) {
@@ -526,11 +526,13 @@ export default function ReserveCreate() {
 									<div className="flex justify-between">
 										<div className="font-bold">مبلغ نهایی</div>
 										<div className="font-bold text-primary">
-											{1.1 *
-												calculateTotalPrice(
-													values.petID.length,
-													parseInt(values.serviceID[0]),
-												)}{" "}
+											{Math.round(
+												1.1 *
+													calculateTotalPrice(
+														values.petID.length,
+														parseInt(values.serviceID[0]),
+													),
+											)}{" "}
 											تومن
 										</div>
 									</div>
