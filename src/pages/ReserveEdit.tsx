@@ -14,7 +14,7 @@ import {
 
 import customStyles from "./ReserveCreate.module.css";
 import { CircleX, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
 	Select,
 	SelectContent,
@@ -60,6 +60,19 @@ export default function ReserveEdit() {
 
 	const [currentDay, setCurrentDay] = useState<number>(0);
 	const [dayRanges, setDayRanges] = useState<Map<number, number[]>>(new Map());
+	const [initialValues, setInitialValues] = useState({
+		requestType: "monthly",
+		serviceID: [] as string[],
+		petID: [] as string[],
+		notes: "",
+		addressID: "",
+		days: {} as Days,
+		Province: "",
+		City: "",
+		Address: "",
+		Vahed: "",
+		Pelak: "",
+	});
 
 	const { accessToken } = useUserStore();
 	const { requestID } = useParams();
@@ -69,15 +82,6 @@ export default function ReserveEdit() {
 			day0: Yup.string().required("روز اجباریست"),
 		}),
 	});
-
-	function calculateTotalPrice(petLength: number, serviceID: number) {
-		if (!services) return 0;
-
-		const service = services.find((s) => s?.id === serviceID);
-		if (!service) return 0;
-
-		return petLength * service.price;
-	}
 
 	function openDialogForDay(dayIndex: number) {
 		setCurrentDay(dayIndex);
@@ -97,21 +101,56 @@ export default function ReserveEdit() {
 	}
 
 	const isDesktop = useDesktop();
-	const isMobile = useMobile();
 
-	function loadRequestInfo() {
-		getRequestInfo({
+	async function loadRequestInfo() {
+		if (!accessToken || !requestID) return;
+		const response = await getRequestInfo({
 			accessToken: accessToken!,
 			requestID: requestID as unknown as number,
-		}).then((response) => {
-			getCreateRequestInfo({
-				accessToken: accessToken!,
-				petSitterUserID: response.petSitterUserID,
-			}).then((response2) => {
-				setPets(response2.pets);
-				setServices(response2.services);
-				setAddresses(response2.addresses);
-			});
+		});
+		const response2 = await getCreateRequestInfo({
+			accessToken: accessToken!,
+			petSitterUserID: response.petSitterUserID,
+		});
+		setPets(response2.pets);
+		setServices(response2.services);
+		setAddresses(response2.addresses);
+
+		const nextDayRanges = new Map<number, number[]>();
+		const nextDays: Days = {};
+		response.calendarSlots.forEach((slot, index) => {
+			nextDayRanges.set(index, slot.slots);
+			nextDays[`day${index}`] = slot.date;
+		});
+		setDayRanges(nextDayRanges);
+		setDayCount(Math.max(0, response.calendarSlots.length - 1));
+
+		const normalize = (value: string | undefined) => value?.trim() ?? "";
+		const matchedAddress = response2.addresses.find((address) => {
+			return (
+				normalize(address.provinceName) ===
+					normalize(response.address?.provinceName) &&
+				normalize(address.cityName) === normalize(response.address?.cityName) &&
+				normalize(address.streetAddress) ===
+					normalize(response.address?.streetAddress) &&
+				normalize(address.houseNumber) ===
+					normalize(response.address?.houseNumber) &&
+				normalize(address.unit) === normalize(response.address?.unit)
+			);
+		});
+		setIsChecked(Boolean(matchedAddress));
+		setInitialValues({
+			requestType: "monthly",
+			serviceID: response.service?.id ? [response.service.id.toString()] : [],
+			petID: response.pets.map((pet) => pet.id.toString()),
+			notes: response.notes ?? "",
+			addressID: matchedAddress?.id ?? "",
+			days: nextDays,
+			Province: matchedAddress ? "" : (response.address?.provinceName ?? ""),
+			City: matchedAddress ? "" : (response.address?.cityName ?? ""),
+			Address: matchedAddress ? "" : (response.address?.streetAddress ?? ""),
+			Vahed: matchedAddress ? "" : (response.address?.unit ?? ""),
+			Pelak: matchedAddress ? "" : (response.address?.houseNumber ?? ""),
 		});
 	}
 
@@ -197,28 +236,23 @@ export default function ReserveEdit() {
 		loadRequestInfo();
 		console.log("id:", requestID);
 	}, [requestID]);
+
+	const dialogInitialValues = useMemo(() => {
+		const ranges = dayRanges.get(currentDay) ?? [];
+		return {
+			range1: ranges.filter((range) => range % 2 === 1).map(String),
+			range2: ranges.filter((range) => range % 2 === 0).map(String),
+		};
+	}, [currentDay, dayRanges]);
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik
 				validationSchema={validationSchema}
-				initialValues={{
-					requestType: "monthly",
-					serviceID: [] as string[],
-					petID: [] as string[],
-					notes: "",
-					addressID: "",
-					days: {},
-					Province: "",
-					City: "",
-					Address: "",
-					Vahed: "",
-					Pelak: "",
-				}}
+				initialValues={initialValues}
+				enableReinitialize
 				onSubmit={(values) => {
-					if (dayRanges.get(0) === undefined) {
-						dayRanges.set(0, []);
-					}
-					if (dayRanges.get(0)!.length == 0) {
+					const dayZeroRanges = dayRanges.get(0) ?? [];
+					if (dayZeroRanges.length == 0) {
 						return;
 					}
 					console.log(values);
@@ -364,8 +398,8 @@ export default function ReserveEdit() {
 												<p className="font-bold leading-10">
 													بازه های انتخاب شده
 												</p>
-												{dayRanges.get(0) &&
-													mergeRanges(dayRanges.get(0)!).map(
+												{dayRanges.get(index + 1) &&
+													mergeRanges(dayRanges.get(index + 1)!).map(
 														({ start, end }, i) => (
 															<div key={i} className="font-bold leading-10">
 																{indexToTime(start)} - {indexToTime(end + 1)}
@@ -435,7 +469,7 @@ export default function ReserveEdit() {
 									</p>
 									<Textarea
 										className="flex-1"
-										name="note"
+										name="notes"
 										rows={5}
 										classes={{
 											className: "flex-1",
@@ -505,18 +539,20 @@ export default function ReserveEdit() {
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogContent className="flex flex-col items-center">
 					<Formik
-						initialValues={{
-							range1: [] as string[],
-							range2: [] as string[],
-						}}
+						initialValues={dialogInitialValues}
+						enableReinitialize
 						onSubmit={(values) => {
 							const allRanges = [values.range1, values.range2]
 								.flat()
 								.filter((range) => range !== undefined);
-							dayRanges.set(
-								currentDay,
-								allRanges.map((r) => parseInt(r)),
-							);
+							setDayRanges((prev) => {
+								const next = new Map(prev);
+								next.set(
+									currentDay,
+									allRanges.map((r) => parseInt(r)),
+								);
+								return next;
+							});
 							console.log(
 								"Selected ranges for day",
 								currentDay,
