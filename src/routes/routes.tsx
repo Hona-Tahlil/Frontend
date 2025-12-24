@@ -9,7 +9,7 @@ import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import ReserveCreate from "@/pages/ReserveCreate";
-import { ReserveEdit } from "@/pages/ReserveEdit";
+import ReserveEdit from "@/pages/ReserveEdit";
 
 export const router = createBrowserRouter([
 	{
@@ -46,7 +46,7 @@ export const router = createBrowserRouter([
 				element: <ReserveCreate />,
 			},
 			{
-				path: "/reserve-edit",
+				path: "/reserve-edit/:requestID",
 				element: <ReserveEdit />,
 			},
 		],

@@ -1,11 +1,14 @@
 import type {
 	GetCreateRequestInfoRequest,
 	GetCreateRequestInfoResponse,
+	GetRequestInfoRequest,
+	GetRequestInfoResponse,
 	Pet,
 	ReserveCreateRequest,
 	ReserveCreateResponse,
+	ReserveEditRequest,
 } from "@/types/reserveCreateTypes";
-import { getData, postData } from "./services";
+import { getData, postData, putData } from "./services";
 
 export const getCreateRequestInfo = async (
 	credentials: GetCreateRequestInfoRequest,
@@ -16,11 +19,30 @@ export const getCreateRequestInfo = async (
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
 };
+export const getRequestInfo = async (
+	credentials: GetRequestInfoRequest,
+): Promise<GetRequestInfoResponse> => {
+	return getData({
+		endPoint: `/v1/requests/`,
+		params: { requestID: credentials.requestID },
+		headers: { Authorization: `Bearer ${credentials.accessToken}` },
+	});
+};
 export const createRequest = async (
 	credentials: ReserveCreateRequest,
 ): Promise<ReserveCreateResponse> => {
 	const { accessToken, ...body } = credentials;
 	return postData({
+		endPoint: `/v1/requests/`,
+		data: body,
+		headers: { Authorization: `Bearer ${accessToken}` },
+	});
+};
+export const editRequest = async (
+	credentials: ReserveEditRequest,
+): Promise<ReserveCreateResponse> => {
+	const { accessToken, ...body } = credentials;
+	return putData({
 		endPoint: `/v1/requests/`,
 		data: body,
 		headers: { Authorization: `Bearer ${accessToken}` },

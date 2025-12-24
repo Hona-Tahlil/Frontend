@@ -13,8 +13,7 @@ import type {
 	PutParams,
 } from "../types/apiTypes";
 
-export const baseURL =
-	"https://untranslatable-jeffry-formatively.ngrok-free.dev"; // backend URL
+export const baseURL = "https://api.hona-petyar.ir"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,

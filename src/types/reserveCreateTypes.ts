@@ -57,12 +57,32 @@ export interface GetCreateRequestInfoRequest {
 	accessToken: string;
 	petSitterUserID: number;
 }
+export interface GetRequestInfoRequest {
+	accessToken: string;
+	requestID: number;
+}
 
 export interface GetCreateRequestInfoResponse {
 	services: Service[];
 	addresses: AddressInfoWithId[];
 	pets: Pet[];
 	freeCalendarSlots: CalenderSlot[];
+}
+export interface GetRequestInfoResponse {
+	requestID: number;
+	petSitterUserID: number;
+	petSitterFirstName: string;
+	petSitterLastName: string;
+	userFirstName: string;
+	userLastName: string;
+	service: Service;
+	pets: Pet[];
+	calendarSlots: CalenderSlot[];
+	notes: string;
+	totalPrice: number;
+	address: AddressInfo;
+	status: string;
+	transferID?: number;
 }
 export interface ReserveCreateRequest {
 	petSitterUserID: number;
@@ -73,6 +93,10 @@ export interface ReserveCreateRequest {
 	addressID: number;
 	serviceID: number;
 	accessToken: string;
+}
+export interface ReserveEditRequest
+	extends Omit<ReserveCreateRequest, "petSitterUserID"> {
+	requestID: number;
 }
 export interface ReserveCreateResponse {
 	petSitterUserID: number;
