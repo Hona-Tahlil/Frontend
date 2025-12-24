@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "../Button/Button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { Input } from "../Input/Input";
 import { Textarea } from "../Textarea/Textarea";
 import { Plus } from "lucide-react";
@@ -11,32 +12,38 @@ import { NonFormikInput, type InputClass } from "../Input/NonFormikInput";
 import { City } from "../Province/City";
 import { Province } from "../Province/Province";
 import {
-	type Province as ProvinceType,
-	type City as CityType,
+	type CityResponse,
+	type ProvinceResponse,
 } from "@/types/addressInfoTypes";
 import { LocationSelector } from "../Province/LocationSelector";
 import {
 	fetchCitiesService,
 	fetchProvincesService,
 } from "@/services/provinceService";
+import { PROVINCES_QUERY_KEY, citiesQueryKey } from "@/keys/locationKeys";
 
 export default function Address({ classes }: { classes?: InputClass }) {
 	const [open, setOpen] = useState(false);
 	const { values, setFieldValue } = useFormikContext<any>();
 
-	const [provinces, setProvinces] = useState<ProvinceType[]>([]);
-	const [cities, setCities] = useState<CityType[]>([]);
+	const { data: provincesData } = useQuery<ProvinceResponse>({
+		queryKey: PROVINCES_QUERY_KEY,
+		queryFn: fetchProvincesService,
+		staleTime: 1000 * 60 * 30,
+		gcTime: 1000 * 60 * 60,
+	});
+	const provinceNumber = Number.parseInt(values.Province, 10);
+	const canFetchCities = Number.isFinite(provinceNumber);
+	const { data: citiesData } = useQuery<CityResponse>({
+		queryKey: citiesQueryKey(provinceNumber),
+		queryFn: () => fetchCitiesService(provinceNumber),
+		enabled: canFetchCities,
+		staleTime: 1000 * 60 * 30,
+		gcTime: 1000 * 60 * 60,
+	});
 
-	useEffect(() => {
-		fetchProvincesService().then((data) => {
-			setProvinces(data.data);
-		});
-	}, []);
-	useEffect(() => {
-		fetchCitiesService(parseInt(values.Province)).then((data) => {
-			setCities(data.data);
-		});
-	}, [values.Province]);
+	const provinces = provincesData?.data ?? [];
+	const cities = citiesData?.data ?? [];
 
 	function openDiaglog() {
 		setOpen(true);

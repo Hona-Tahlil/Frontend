@@ -10,10 +10,12 @@ import {
 import customStyles from "./Province.module.css";
 
 import { useContext, useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import { LocationContext } from "@/types/locationSelectorTypes";
 import { fetchCitiesService } from "@/services/provinceService";
-import type { City as CityType } from "@/types/addressInfoTypes";
+import type { CityResponse } from "@/types/addressInfoTypes";
+import { citiesQueryKey } from "@/keys/locationKeys";
 export const City = ({
 	className,
 	name,
@@ -29,13 +31,15 @@ export const City = ({
 	const ref = useRef<HTMLButtonElement>(null);
 	const [width, setWidth] = useState(0);
 
-	const [cities, setCities] = useState<CityType[]>([]);
-
-	useEffect(() => {
-		fetchCitiesService(parseInt(province)).then((data) => {
-			setCities(data.data);
-		});
-	}, [province]);
+	const provinceNumber = Number.parseInt(province, 10);
+	const canFetchCities = Number.isFinite(provinceNumber);
+	const { data } = useQuery<CityResponse>({
+		queryKey: citiesQueryKey(provinceNumber),
+		queryFn: () => fetchCitiesService(provinceNumber),
+		enabled: canFetchCities,
+		staleTime: 1000 * 60 * 30,
+		gcTime: 1000 * 60 * 60,
+	});
 
 	useEffect(() => {
 		if (ref.current) {
@@ -71,8 +75,8 @@ export const City = ({
 			</SelectTrigger>
 			<SelectContent className="">
 				<SelectGroup>
-					{province &&
-						Array.from(cities).map((province) => {
+					{canFetchCities &&
+						Array.from(data?.data ?? []).map((province) => {
 							return (
 								<SelectItem
 									className="text-[8px]"
