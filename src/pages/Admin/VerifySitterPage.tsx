@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { AdminSidebar } from "@/components/Admin/AdminSidebar";
 import { AdminContainer } from "@/components/Admin/AdminContainer";
 import { ChevronLeft, X, ChevronRight } from "lucide-react";
-import { useMobile } from "@/hooks/ResponsiveHooks";
+import { useDesktop, useTablet, useMobile } from "@/hooks/ResponsiveHooks"; // همون فایل هوک‌هات
 import { useLocation } from "react-router-dom";
 import { initialSitters, statusColor, statusLabel } from "@/data/sitterConstants";
 import type { Sitter, SitterStatus } from "@/data/sitterConstants";
@@ -23,10 +23,12 @@ import { useParams, useNavigate } from "react-router-dom";
 
 export default function VerifySitterPage() {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const isDesktop = useDesktop();
+  const isTablet = useTablet();
   const isMobile = useMobile();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sitters, setSitters] = useState<Sitter[]>(location.state?.sitters ?? initialSitters);
+  const [sitters, setSitters] = useState<Sitter[]>(initialSitters);
   const [filter, setFilter] = useState<"all" | SitterStatus>("all");
   const [search, setSearch] = useState("");
   const [selectedSitterId, setSelectedSitterId] = useState<number | null>(null);
@@ -45,6 +47,15 @@ export default function VerifySitterPage() {
     navigate("/admin");
   };
 
+  const mainWrapClass = isMobile
+  ? "w-full max-w-full px-4"
+  : isTablet
+  ? "w-full max-w-[820px] mx-auto px-4"
+  : "w-full max-w-[1200px] mx-auto px-6 overflow-x-hidden";
+
+
+
+
   const { id } = useParams();
 
   useEffect(() => {
@@ -61,7 +72,7 @@ export default function VerifySitterPage() {
   }, [id, sitters, isMobile]);
   
 
-const isDialogOpen = Boolean(id);
+  const isDialogOpen = Boolean(id);
 
 
   const [currentStatus, setCurrentStatus] = useState<SitterStatus>("pending");
@@ -83,6 +94,21 @@ const isDialogOpen = Boolean(id);
     if (isMobile) setOpenDrawer(true);
     else setSelectedSitterId(id); // اگر برای دسکتاپ از این state استفاده می‌کنی
   };
+
+
+  useEffect(() => {
+    if (!id) return;
+  
+    const sitter = sitters.find((s) => s.id === Number(id)) ?? null;
+    if (!sitter) return;
+  
+    setSelectedSitter(sitter);
+    setCurrentStatus(sitter.status);
+  
+    if (isMobile) setOpenDrawer(true);
+    else setSelectedSitterId(sitter.id); // اگر دسکتاپ دیالوگت با این باز میشه
+  }, [id, sitters, isMobile]);
+  
   
 
 
@@ -102,8 +128,19 @@ const isDialogOpen = Boolean(id);
 
   const filtered = sitters.filter((sitter) => {
     const matchesStatus = filter === "all" ? true : sitter.status === filter;
-    const matchesSearch = sitter.name.includes(search) || sitter.email.includes(search);
-    return matchesStatus && matchesSearch;
+    const q = search.trim();
+
+    const matchesSearch =
+      q === ""
+        ? true
+        : [
+            sitter.name,
+            sitter.email,
+            sitter.requestedAt,
+            statusLabel[sitter.status], // سرچ با متن فارسی وضعیت
+            sitter.status,              // سرچ با pending/accepted/rejected
+          ].some((field) => field.toLowerCase().includes(q.toLowerCase()));
+        return matchesStatus && matchesSearch;
   });
 
   const handleChangeStatus = (newStatus: SitterStatus) => {
@@ -115,11 +152,20 @@ const isDialogOpen = Boolean(id);
     );
   };
 
+  const handleDrawerOpenChange = (open: boolean) => {
+    setOpenDrawer(open);
+    if (!open) navigate("/admin/verify-sitter");
+  };
+
   return (
-    <div className="flex min-h-screen font-[Alibaba]" dir="rtl">
-      {!isMobile && <AdminSidebar activeItemId="verify-sitter" />}
-      
-      <div className={`flex-1 ${isMobile ? "w-screen" : ""}`} dir="rtl">
+  <div className="min-h-screen font-[Alibaba] flex flex-col md:flex-row overflow-x-hidden" dir="rtl">
+  {/* {isDesktop  && <AdminSidebar activeItemId="verify-sitter" />} */}
+  <div className="hidden md:block w-[260px] shrink-0 overflow-x-hidden">
+      <AdminSidebar activeItemId="verify-sitter" />
+    </div>
+  <div className="flex-1 min-w-0 overflow-x-hidden">
+  <div className={mainWrapClass}>
+
         {isMobile && (
           <div className="flex mt-5">
             <button
@@ -135,19 +181,10 @@ const isDialogOpen = Boolean(id);
         
         <AdminContainer title="اعتبارسنجی پت‌سیتر" description="لیست پت‌سیترها و وضعیت بررسی آنها.">
           <div className={`mb-5 flex gap-3 ${isMobile ? "flex-col w-full" : "flex-row justify-end"}`}>
-            <select
-              className={`border border-gray-300 rounded-lg px-2 py-1 text-small ${isMobile ? "w-full" : ""}`}
-              value={filter}
-              onChange={(e) => setFilter(e.target.value as "all" | SitterStatus)}
-            >
-              <option value="all">همه وضعیت‌ها</option>
-              <option value="pending">در حال انتظار</option>
-              <option value="accepted">قبول شده</option>
-              <option value="rejected">رد شده</option>
-            </select>
+            
             <input
               type="text"
-              placeholder="جستجو نام یا ایمیل..."
+              placeholder="جستجو   ..."
               className={`border border-gray-300 rounded-lg px-3 py-1 text-small ${isMobile ? "w-full" : ""}`}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -156,13 +193,14 @@ const isDialogOpen = Boolean(id);
           
           {isMobile ? (
             <div className="border border-gray-300 rounded-xl overflow-hidden">
-              <table className="w-full table-fixed text-right border-collapse text-xs">
+              <table className="w-full text-right border-collapse text-xs">
                 <thead>
                   <tr className="border-b border-gray-300 bg-gray-100">
-                    <th className="py-2 px-1 font-semibold w-10">ردیف</th>
+                    <th className="py-2 px-1 font-semibold ">ردیف</th>
                     <th className="py-2 px-1 font-semibold">نام</th>
-                    <th className="py-2 px-1 font-semibold w-20">وضعیت</th>
-                    <th className="py-2 px-1 font-semibold w-20">جزئیات</th>
+                    <th className="py-2 px-1 font-semibold ">زمان درخواست</th>
+                    <th className="py-2 px-1 font-semibold ">وضعیت</th>
+                    <th className="py-2 px-1 font-semibold ">جزئیات</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -170,6 +208,10 @@ const isDialogOpen = Boolean(id);
                     <tr key={sitter.id} className="border-b border-gray-300 hover:bg-gray-50">
                       <td className="py-1.5 px-1 text-center">{index + 1}</td>
                       <td className="py-1.5 px-1 break-words">{sitter.name}</td>
+                      <td className="py-1.5 px-1 text-[10px] break-all">
+                        {sitter.requestedAt}
+                      </td>
+
                       <td className="py-1.5 px-1">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${statusColor[sitter.status]}`}>
                           {statusLabel[sitter.status]}
@@ -189,7 +231,7 @@ const isDialogOpen = Boolean(id);
                   ))}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="py-4 text-center text-xs text-gray-500">
+                      <td colSpan={5} className="py-4 text-center text-xs text-gray-500">
                         موردی با این فیلتر پیدا نشد.
                       </td>
                     </tr>
@@ -199,14 +241,15 @@ const isDialogOpen = Boolean(id);
             </div>
           ) : (
             <div className="border border-gray-300 rounded-xl overflow-hidden">
-              <table className="w-full text-right border-collapse">
+              <table className="w-full table-auto text-right border-collapse">
                 <thead>
                   <tr className="border-b border-gray-300 bg-gray-100">
-                    <th className="py-3 px-2 text-small font-semibold w-4/48">ردیف</th>
-                    <th className="py-3 px-2 text-small font-semibold w-12/48 whitespace-nowrap">نام و نام خانوادگی</th>
-                    <th className="py-3 px-2 text-small font-semibold w-16/48">ایمیل</th>
-                    <th className="py-3 px-2 text-small font-semibold w-9/48">وضعیت</th>
-                    <th className="py-3 px-2 text-small font-semibold w-7/48 text-right">جزئیات</th>
+                    <th className="py-3 px-2 text-small font-semibold">ردیف</th>
+                    <th className="py-3 px-2 text-small font-semibold whitespace-nowrap">نام و نام خانوادگی</th>
+                    <th className="py-3 px-2 text-small font-semibold whitespace-nowrap">زمان ارسال درخواست</th>
+                    <th className="py-3 px-2 text-small font-semibold">ایمیل</th>
+                    <th className="py-3 px-2 text-small font-semibold">وضعیت</th>
+                    <th className="py-3 px-2 text-small font-semibold text-right">جزئیات</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -214,6 +257,10 @@ const isDialogOpen = Boolean(id);
                     <tr key={sitter.id} className="border-b border-gray-300 hover:bg-gray-50">
                       <td className="py-3 px-2 text-small">{index + 1}</td>
                       <td className="py-3 px-2 text-small">{sitter.name}</td>
+                      <td className="py-3 px-2 text-small whitespace-nowrap">
+                        {sitter.requestedAt}
+                      </td>
+
                       <td className="py-3 px-2 text-small">{sitter.email}</td>
                       <td className="py-3 px-2 text-small">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${statusColor[sitter.status]}`}>
@@ -234,7 +281,7 @@ const isDialogOpen = Boolean(id);
                   ))}
                   {filtered.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="py-6 text-center text-small text-gray-500">
+                      <td colSpan={6} className="py-6 text-center text-small text-gray-500">
                         موردی با این فیلتر پیدا نشد.
                       </td>
                     </tr>
@@ -251,9 +298,16 @@ const isDialogOpen = Boolean(id);
           <div className="bg-white rounded-3xl w-[95%] max-w-3xl p-6 shadow-xl font-[Alibaba]">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-base font-bold">جزییات پت‌سیتر</h2>
-              <button onClick={() => setSelectedSitterId(null); }>
+              <button
+                onClick={() => {
+                  setSelectedSitterId(null);
+                  setSelectedSitter(null);
+                  navigate("/admin/verify-sitter");
+                }}
+              >
                 <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
               </button>
+              
             </div>
             <div className="space-y-3 text-small">
               <div className="border border-gray-300 rounded-2xl px-4 py-3">
@@ -313,116 +367,103 @@ const isDialogOpen = Boolean(id);
             </div>
           </div>
         </div>
+        
       )}
       {isMobile && selectedSitter && (
-      <Drawer open={openDrawer} onOpenChange={(open) => {
-        setOpenDrawer(open);
-        if (!open) navigate("/admin/verify-sitter");
-      }}>
-      <DrawerContent className="h-[90vh]">
+      <Drawer open={openDrawer} onOpenChange={handleDrawerOpenChange}>
 
-{/* HEADER (ثابت) */}
-<DrawerHeader className="text-right shrink-0">
-  <DrawerTitle>جزییات پت‌سیتر</DrawerTitle>
-  <p className="text-sm text-muted-foreground">
-    اطلاعات کامل پت‌سیتر انتخاب‌شده.
-  </p>
-</DrawerHeader>
+<DrawerContent className="h-[90vh] flex flex-col text-right" dir="rtl">
 
-{/* ✅ BODY (تنها جای اسکرول) */}
-<div className="flex-1 overflow-y-auto px-4 pb-6">
+        <DrawerHeader className="text-right shrink-0">
+          <DrawerTitle>جزییات پت‌سیتر</DrawerTitle>
+          <p className="text-sm text-muted-foreground">
+            اطلاعات کامل پت‌سیتر انتخاب‌شده.
+          </p>
+        </DrawerHeader>
 
-  {/* STATUS */}
-  <div className="mb-4">
-    <span
-      className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor[currentStatus]}`}
-    >
-      {statusLabel[currentStatus]}
-    </span>
-  </div>
+        <div className="flex-1 overflow-y-auto px-4 pb-6">
 
-  {/* STATUS BUTTONS */}
-  <div className="flex flex-col gap-3 mt-4">
-    <StatusButton
-      status="accepted"
-      currentStatus={currentStatus}
-      onClick={() => changeStatus("accepted")}
-    />
-    <StatusButton
-      status="pending"
-      currentStatus={currentStatus}
-      onClick={() => changeStatus("pending")}
-    />
-    <StatusButton
-      status="rejected"
-      currentStatus={currentStatus}
-      onClick={() => changeStatus("rejected")}
-    />
-  </div>
+          <div className="mb-4">
+            <span
+              className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor[currentStatus]}`}
+            >
+              {statusLabel[currentStatus]}
+            </span>
+          </div>
 
-  {/* مشخصات */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-    <span className="font-bold text-admin-700">مشخصات</span>
-    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-      <span><b>نام پت‌یار:</b> {selectedSitter.name}</span>
-      <span><b>جنسیت:</b> زن</span>
-      <span><b>تاریخ تولد:</b> 2005/2/12</span>
-    </div>
-  </div>
+          <div className="flex flex-col gap-3 mt-4">
+            <StatusButton
+              status="accepted"
+              currentStatus={currentStatus}
+              onClick={() => changeStatus("accepted")}
+            />
+            <StatusButton
+              status="pending"
+              currentStatus={currentStatus}
+              onClick={() => changeStatus("pending")}
+            />
+            <StatusButton
+              status="rejected"
+              currentStatus={currentStatus}
+              onClick={() => changeStatus("rejected")}
+            />
+          </div>
 
-  {/* تماس */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-    <span className="font-bold text-admin-700">اطلاعات تماس</span>
-    <div className="mt-2 flex flex-col gap-1">
-      <span><b>ایمیل:</b> {selectedSitter.email}</span>
-      <span><b>شماره تماس:</b> 09123456782</span>
-    </div>
-  </div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+            <span className="font-bold text-admin-700">مشخصات</span>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
+              <span><b>نام پت‌یار:</b> {selectedSitter.name}</span>
+              <span><b>جنسیت:</b> زن</span>
+              <span><b>تاریخ تولد:</b> 2005/2/12</span>
+            </div>
+          </div>
 
-  {/* آدرس */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-    <span className="font-bold text-admin-700">آدرس</span>
-    <p className="mt-2">
-      تهران، خیابان فرهنگ، کوچه ۲۳
-    </p>
-  </div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+            <span className="font-bold text-admin-700">اطلاعات تماس</span>
+            <div className="mt-2 flex flex-col gap-1">
+              <span><b>ایمیل:</b> {selectedSitter.email}</span>
+              <span><b>شماره تماس:</b> 09123456782</span>
+            </div>
+          </div>
 
-  {/* دانلود */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5 text-center text-admin-700 font-bold hover:bg-admin-50">
-    دانلود فایل‌های آپلود شده
-  </div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+            <span className="font-bold text-admin-700">آدرس</span>
+            <p className="mt-2">
+              تهران، خیابان فرهنگ، کوچه ۲۳
+            </p>
+          </div>
 
-  {/* خدمات */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-    <span className="font-bold text-admin-700">خدمات:</span>
-    <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
-  </div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5 text-center text-admin-700 font-bold hover:bg-admin-50">
+            دانلود فایل‌های آپلود شده
+          </div>
 
-  {/* بیوگرافی */}
-  <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-    <span className="font-bold text-admin-700">بیوگرافی:</span>
-    <p className="leading-relaxed">
-      پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.
-    </p>
-  </div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+            <span className="font-bold text-admin-700">خدمات:</span>
+            <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
+          </div>
 
-</div>
+          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
+            <span className="font-bold text-admin-700">بیوگرافی:</span>
+            <p className="leading-relaxed">
+              پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.
+            </p>
+          </div>
 
-{/* FOOTER (ثابت) */}
-<div className="p-4 border-t shrink-0">
-  <DrawerClose asChild>
-    <button className="w-full rounded-xl border py-2 font-bold">
-      بستن
-    </button>
-  </DrawerClose>
-</div>
+        </div>
 
-</DrawerContent>
+        <div className="p-4 border-t shrink-0">
+          <DrawerClose asChild>
+            <button className="w-full rounded-xl border py-2 font-bold">
+              بستن
+            </button>
+          </DrawerClose>
+        </div>
+
+      </DrawerContent>
 
     </Drawer>
-    
+
     )}
 
-    </div>
-  );
-}
+  </div></div>
+          );}

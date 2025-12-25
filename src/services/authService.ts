@@ -6,7 +6,8 @@ import type {
 	SignupPayload,
 	SignupResponse,
 } from "@/types/authTypes";
-import { postData } from "./services";
+import { postData , getData  } from "./services";
+import type { PetSitterFull } from "@/types/PetSitterFull";
 
 export const loginService = async (
 	credentials: LoginPayload,
@@ -25,3 +26,20 @@ export const signupService = async (
 		data: credentials,
 	});
 };
+
+
+
+
+export const getPetSitterDetailsService = async (
+	petsitterUserID: number
+  ): Promise<PetSitterFull> => {
+	return getData({
+	  endPoint: `/petsitters/${petsitterUserID}`,
+	  headers: {
+		Authorization: `Bearer ${localStorage.getItem("token")}`,
+	  },
+	});
+  };
+
+
+  
