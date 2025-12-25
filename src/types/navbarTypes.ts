@@ -1,4 +1,5 @@
 import type { JSX } from "react";
+import type { UserBasicData } from "./userTypes";
 
 export type NavbarItemsProps = {
   text: string;
@@ -22,3 +23,9 @@ export type NavLink = {
   href: string;
   icon: JSX.Element;
 };
+
+export type GetNamEmailResponse = {
+  message?: string,
+  statusCode: number,
+  data: UserBasicData
+}

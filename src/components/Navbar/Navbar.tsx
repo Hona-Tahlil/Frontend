@@ -17,6 +17,8 @@ import NavbarProfileDropdonwMenu from "./NavbarProfile";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
 import { Link } from "react-router-dom";
 import type { NavbarProps } from "@/types/navbarTypes";
+import { getNameEmailService } from "@/services/navbarService";
+import useUserStore from "@/store/userStore/userStore";
 
 const MOBILE_NAV_LINKS = [
   {
@@ -82,8 +84,28 @@ const USER_OPTIONS = [
   },
 ];
 
-export default function Navbar({ isUserLoggedin }: NavbarProps) {
+export default function Navbar() {
   const isMobile = useMobile();
+
+  const isUserLoggedin = useUserStore((s) => s.isAuthenticated());
+  const { setProfile } = useUserStore();
+
+  getNameEmailService()
+    .then((response) => {
+      if (response.statusCode == 200) {
+        console.log("success");
+
+        setProfile({
+          firstName: response.data.firstName,
+          lastName: response.data.lastName,
+          email: response.data.email,
+        });
+      }
+    })
+    .catch((error) => {
+      if (error) console.log(error);
+      else console.log("خطایی رخ داد");
+    });
   return (
     <nav
       dir="rtl"

@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export default function LoginForm() {
     const navigate = useNavigate();
-    const { setAccessToken } = useUserStore();
+    const { setAccessToken, setProfile } = useUserStore();
     const [overAllError, setOverAllError] = useState<string>("");
 
     function navigateToSignupPage() {
@@ -53,6 +53,7 @@ export default function LoginForm() {
                                 }
                                 if (loginResponse.statusCode === 200) {
                                     setAccessToken(loginResponse.data?.accessToken);
+                                    
                                     navigateToDashboard();
                                 }
                             })

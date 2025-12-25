@@ -11,8 +11,12 @@ import {
 
   DropdownMenuTrigger,
 } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
+import useUserStore from "@/store/userStore/userStore";
 
 export default function NavbarProfile() {
+
+    const {firstName, lastName , email} = useUserStore();
+
   const userImage = "";
   return (
     <div className="h-full flex items-center gap-0.5 text-right lg:ml-7">
@@ -42,10 +46,10 @@ export default function NavbarProfile() {
           sideOffset={8}
         >
           <DropdownMenuLabel className="mt-2">
-            محمد امین بهاری
+           {firstName} {lastName}
           </DropdownMenuLabel>
           <DropdownMenuLabel className="text-xs font-light">
-            bahariamin.1384@gmail.com
+            {email}
           </DropdownMenuLabel>
           <DropdownMenuGroup>
             <DropdownMenuItem>
