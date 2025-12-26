@@ -12,6 +12,7 @@ import type {
 	PostParams,
 	PutParams,
 } from "../types/apiTypes";
+import useUserStore from "@/store/userStore/userStore";
 
 export const baseURL = "https://api.hona-petyar.ir"; // backend URL
 
@@ -26,8 +27,8 @@ const apiClient: AxiosInstance = axios.create({
 
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// const token = getTokenFromStore();
-		// if (token) config.headers.Authorization = `Bearer ${token}`;
+		const token = useUserStore.getState().accessToken;
+		if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
 	(error) => Promise.reject(error),
@@ -68,7 +69,7 @@ export const postData = async ({ endPoint, data, headers }: PostParams) => {
 	}
 };
 
-// ✅ POST image/form-data
+//✅ POST image/form-data
 export const postImageData = async ({ endPoint, data }: PostParams) => {
 	try {
 		const response: AxiosResponse = await apiClient.post(endPoint, data, {
