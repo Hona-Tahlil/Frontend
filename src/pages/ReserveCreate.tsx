@@ -74,8 +74,20 @@ export default function ReserveCreate() {
 		const service = services.find((s) => s?.id === serviceID);
 		if (!service) return 0;
 
+		// Count total time slots across all selected days (up to dayCount)
+		let totalSlots = 0;
+		for (let i = 0; i <= dayCount; i++) {
+			const slots = dayRanges.get(i);
+			if (slots) {
+				totalSlots += slots.length;
+			}
+		}
+
+		// If no slots selected, return 0
+		if (totalSlots === 0) return 0;
+
 		// return Math.round(petLength * service.price);
-		return petLength * service.price;
+		return petLength * service.price * totalSlots;
 	}
 
 	function openDialogForDay(dayIndex: number) {
@@ -512,7 +524,7 @@ export default function ReserveCreate() {
 										</div>
 									</div>
 									<div className="flex justify-between">
-										<div className="text-gray-500">هزینه نگهداری</div>
+										<div className="text-gray-500">مالیات</div>
 										<div>
 											{0.1 *
 												calculateTotalPrice(
