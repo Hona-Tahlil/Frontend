@@ -35,8 +35,8 @@ export interface Days {
 }
 
 export interface AddressInfo {
-	provinceName: string;
-	cityName: string;
+	provinceName: number;
+	cityName: number;
 	streetAddress: string;
 	houseNumber: string;
 	unit: string;

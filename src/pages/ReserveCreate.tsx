@@ -255,7 +255,7 @@ export default function ReserveCreate() {
 						accessToken: accessToken!,
 					});
 					createRequest({
-						petSitterUserID: petSitterUserID as unknown as number,
+						petSitterUserID: parseInt(petSitterUserID as unknown as string),
 						calendarSlots: convertToCalenderSlots(
 							values.days,
 							dayRanges,
@@ -264,8 +264,8 @@ export default function ReserveCreate() {
 						petIDs: values.petID.map((id) => parseInt(id)),
 						notes: values.notes,
 						addressInfo: {
-							provinceName: values.Province,
-							cityName: values.City,
+							provinceName: parseInt(values.Province),
+							cityName: parseInt(values.City),
 							streetAddress: values.Address,
 							houseNumber: values.Pelak,
 							unit: values.Vahed,

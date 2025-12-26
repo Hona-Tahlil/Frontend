@@ -3,7 +3,6 @@ import type {
 	GetCreateRequestInfoResponse,
 	GetRequestInfoRequest,
 	GetRequestInfoResponse,
-	Pet,
 	ReserveCreateRequest,
 	ReserveCreateResponse,
 	ReserveEditRequest,
