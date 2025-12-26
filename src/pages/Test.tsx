@@ -6,7 +6,7 @@ import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { MultiStage } from "@/components/PetSitterSignup/MultiStage/MultiStage";
 import { useDesktop, useMobile, useTablet } from "@/hooks/ResponsiveHooks";
 import adjustInputDirection from "@/utils/adjustInputDirection";
-import { Form, Formik, useFormikContext } from "formik";
+import { Form, Formik } from "formik";
 import * as Yup from "yup";
 
 import {
@@ -17,8 +17,10 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/Custom/Select/Select";
+
 import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { PetDatePicker } from "@/components/Custom/PetDatePicker/PetDatePicker";
+
 import {
 	Dialog,
 	DialogContent,
@@ -27,39 +29,47 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+
 import Stepper, { Step } from "@/components/Custom/PetRegister/PetMultiStage";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "@/components/ui/avatar";
 import { NonFormikInput } from "@/components/Custom/Input/NonFormikInput";
 import PawIcon from "@/components/Custom/PetRegister/PawIcon";
-import { BabyIcon, Bird, Cat, Dog, Mars, Rabbit, Venus } from "lucide-react";
+import { BabyIcon, Bird, Cat, Dog } from "lucide-react";
+
 import IsAdultToggleGroup from "@/components/PetRegister/IsAdultToggleGroup";
 import PetKindToggleGroup from "@/components/PetRegister/PetKindToggleGroup";
-import DashboardPetCard from "@/components/Pet/DashboardPetCard";
 
 import Toggle from "@/components/Custom/Toggle/Toggle";
 import { useState } from "react";
-import { name } from "react-date-object/calendars/julian";
+
 import { DropdownMenu } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
+
 import {
 	getPetSpeciesService,
 	registerPetService,
 } from "@/services/petRegisterService";
+
 import {
 	Tabs,
 	TabsContent,
 	TabsList,
 	TabsTrigger,
 } from "@/components/Custom/Tabs/Tabs";
+
 import Address from "@/components/Custom/Address/Address";
 import { LocationSelector } from "@/components/Custom/Province/LocationSelector";
 import { Province } from "@/components/Custom/Province/Province";
 import { City } from "@/components/Custom/Province/City";
+
 import PetToggleGroup from "@/components/Booking/PetOwner/PetToggleGroup";
 import ServiceToggleGroup from "@/components/Booking/PetOwner/ServiceToggleGroup";
 import ToggleGroupField from "@/components/Booking/PetOwner/ToggleGroupField";
+
 import EditableAvatar from "@/components/Custom/Avatar/EditableAvatar";
 import PetRegisterForm from "@/components/PetRegister/PetRegisterForm";
+
+import DashboardPetCard from "@/components/Pet/DashboardPetCard";
 
 const validationSchema = Yup.object({
 	email: Yup.string()
@@ -77,8 +87,8 @@ function Test() {
 	const isDesktop = useDesktop();
 	const isMobile = useMobile();
 	const isTablet = useTablet();
-
 	const navigate = useNavigate();
+	const [isChecked, setIsChecked] = useState(false);
 
 	return (
 		<div className="flex flex-col items-center">
@@ -89,7 +99,6 @@ function Test() {
 					password: "he",
 					love: false,
 				}}
-				//validationSchema={validationSchema}
 				onSubmit={(values) => {
 					console.log("Form values:", values);
 				}}
@@ -102,13 +111,11 @@ function Test() {
 							</SelectTrigger>
 							<SelectContent>
 								<SelectGroup>
-									<SelectItem value={"1"}>1</SelectItem>
-									<SelectItem value={"2"}>2</SelectItem>
-									<SelectItem value={"3"}>3</SelectItem>
-									<SelectItem value={"4"}>4</SelectItem>
-									<SelectItem value={"5"}>5</SelectItem>
-									<SelectItem value={"6"}>6</SelectItem>
-									<SelectItem value={"7"}>7</SelectItem>
+									{["1", "2", "3", "4", "5", "6", "7"].map((n) => (
+										<SelectItem value={n} key={n}>
+											{n}
+										</SelectItem>
+									))}
 								</SelectGroup>
 							</SelectContent>
 						</Select>
@@ -235,113 +242,22 @@ function Test() {
 			{isMobile && <p> mobile mode</p>}
 			{isTablet && <p> tablet mode</p>}
 
-			<Button shadow={true} size={"giant"} bold={true}>
-				ورود
-			</Button>
-
-			<br />
-			<br />
-
-			<Button isLoading={true} shadow={true} size={"giant"} bold={true}>
-				ورود
-			</Button>
-
-			<br />
-			<br />
-
-			<Button
-				isLoading={true}
-				loadingClassName="!size-8"
-				shadow={true}
-				size={"giant"}
-				bold={true}
-			>
-				ورود
-			</Button>
-
-			<br />
-			<br />
-			<br />
-			<br />
-
-			<Button variant={"link"} shadow={false} bold={true}>
-				فراموشی رمز عبور
-			</Button>
-
-			<MultiStage>
-				<MultiStage.Header>
-					<MultiStage.StageHeader index={0}>
-						بررسی اطلاعات
-					</MultiStage.StageHeader>
-					<MultiStage.StageHeader index={1}>مدارک</MultiStage.StageHeader>
-					<MultiStage.StageHeader index={2}>بیوگرافی</MultiStage.StageHeader>
-				</MultiStage.Header>
-
-				<MultiStage.StageHolder>
-					<MultiStage.Stage index={0}>
-						<p>Account form goes here</p>
-					</MultiStage.Stage>
-
-					<MultiStage.Stage index={1}>
-						<p>Profile form goes here</p>
-					</MultiStage.Stage>
-				</MultiStage.StageHolder>
-			</MultiStage>
-
-			<Formik
-				initialValues={{ isAdult: "false", petKind: "dog" }}
-				onSubmit={(values) => console.log(values)}
-			>
-				<Form>
-					<IsAdultToggleGroup
-						name="isAdult"
-						items={[
-							{ name: "false", icon: BabyIcon, value: "جوجه" },
-							{ name: "true", icon: Dog, value: "بالغ" },
-						]}
-					/>
-
-					<PetKindToggleGroup
-						name="petKind"
-						items={[
-							{ name: "dog", icon: Dog, value: "سگ" },
-							{ name: "cat", icon: Cat, value: "گربه" },
-							{ name: "bird", icon: Bird, value: "پرنده" },
-						]}
-					/>
-				</Form>
-			</Formik>
-
-			{/* FIXED: Removed the extra broken MultiStage.StageHolder */}
-
 			<Dialog>
 				<DialogTrigger asChild>
 					{!isMobile && <Button>کلیک کن</Button>}
 				</DialogTrigger>
-				<DialogContent className="w-200 h-[90%] " dir="rtl">
-					<PetRegisterForm></PetRegisterForm>
+				<DialogContent className="w-200 h-[90%]" dir="rtl">
+					<PetRegisterForm />
 				</DialogContent>
 			</Dialog>
 
 			{isMobile && (
-				<Button
-					onClick={() => {
-						navigate("/RegisterPet");
-					}}
-				>
-					سلام
-				</Button>
+				<Button onClick={() => navigate("/RegisterPet")}>سلام</Button>
 			)}
 
-			<PawIcon step={2} className=""></PawIcon>
-			{/* <Toggle
-        className="mb-10 h-50"
-        text="نمیدونم"
-        checked={isChecked}
-        onCheckedChange={() => setIsChecked((checked) => !checked)}
-      /> */}
+			<PawIcon step={2} />
 
-			<div className="flex w-200 flex-col gap-6">
+			<div className="flex w-200 flex-col gap-6 mt-10">
 				<Tabs defaultValue="account">
 					<TabsList>
 						<TabsTrigger value="account" number={3}>
@@ -352,42 +268,33 @@ function Test() {
 						</TabsTrigger>
 						<TabsTrigger value="salam">رزرو های گذشته</TabsTrigger>
 					</TabsList>
+
 					<TabsContent value="account">salam</TabsContent>
 					<TabsContent value="password">naaaaa</TabsContent>
 					<TabsContent value="salam">naaaaa</TabsContent>
 				</Tabs>
 			</div>
 
-			<Formik
-				initialValues={{}}
-				//validationSchema={validationSchema}
-				onSubmit={(values) => {
-					console.log("Form values:", values);
-				}}
-			>
-				<Form className="mt-6 border rounded flex flex-col gap-4 items-center w-200">
-					<div className="flex gap-2">
-						{/* <DashboardPetCard */}
-						{/* 	name="فندق" */}
-						{/* 	kind="سگ" */}
-						{/* 	species="ژرمن" */}
-						{/* 	age="۱۲" */}
-						{/* 	isAdult={false} */}
-						{/* 	gender="male" */}
-						{/* 	id={1} */}
-						{/* ></DashboardPetCard> */}
-						{/* <DashboardPetCard */}
-						{/* 	name="فندق" */}
-						{/* 	kind="سگ" */}
-						{/* 	species="ژرمن" */}
-						{/* 	age="۱۲" */}
-						{/* 	isAdult={false} */}
-						{/* 	gender="male" */}
-						{/* 	id={1} */}
-						{/* ></DashboardPetCard> */}
-					</div>
-				</Form>
-			</Formik>
+			<div className="flex gap-2 mt-10">
+				{/* <DashboardPetCard */}
+				{/* 	name="فندق" */}
+				{/* 	kind="سگ" */}
+				{/* 	species="ژرمن" */}
+				{/* 	age="۱۲" */}
+				{/* 	isAdult={false} */}
+				{/* 	gender="male" */}
+				{/* 	id={1} */}
+				{/* /> */}
+				{/* <DashboardPetCard */}
+				{/* 	name="فندق" */}
+				{/* 	kind="سگ" */}
+				{/* 	species="ژرمن" */}
+				{/* 	age="۱۲" */}
+				{/* 	isAdult={false} */}
+				{/* 	gender="male" */}
+				{/* 	id={1} */}
+				{/* /> */}
+			</div>
 		</div>
 	);
 }
