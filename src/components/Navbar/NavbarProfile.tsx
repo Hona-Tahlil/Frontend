@@ -8,14 +8,15 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-
   DropdownMenuTrigger,
 } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 import useUserStore from "@/store/userStore/userStore";
+import { useNavigate } from "react-router-dom";
 
 export default function NavbarProfile() {
-
-    const {firstName, lastName , email} = useUserStore();
+  const { firstName, lastName, email } = useUserStore();
+  const { logout } = useUserStore();
+  const navigate = useNavigate();
 
   const userImage = "";
   return (
@@ -46,23 +47,35 @@ export default function NavbarProfile() {
           sideOffset={8}
         >
           <DropdownMenuLabel className="mt-2">
-           {firstName} {lastName}
+            {firstName} {lastName}
           </DropdownMenuLabel>
           <DropdownMenuLabel className="text-xs font-light">
             {email}
           </DropdownMenuLabel>
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer" onClick={() => {navigate("/Dashboard/pets")}}>
+              <Heart />
+              داشبورد صاحب پت
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                navigate("/test");
+              }}
+            >
               <PawPrint />
               داشبورد پت‌یار
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
-              <Heart />
-              داشبورد صاحب پت
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                logout();
+                navigate("/")
+              }}
+            >
               <LogOut />
               خروج از حساب
             </DropdownMenuItem>

@@ -36,7 +36,7 @@ export default function Temp() {
 				</button>
 			</div>
 
-			<Select name="akhoond">
+			{/* <Select name="akhoond">
 				<SelectTrigger className="w-45">
 					<SelectValue placeholder="روز" />
 				</SelectTrigger>
@@ -51,7 +51,7 @@ export default function Temp() {
 						<SelectItem value={"7"}>7</SelectItem>
 					</SelectGroup>
 				</SelectContent>
-			</Select>
+			</Select> */}
 			<div className="bg-neutral-400 w-fit p-4 rounded-md flex flex-col place-self-center gap-4">
 				<input
 					value={email}

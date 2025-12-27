@@ -15,7 +15,7 @@ import { useMobile } from "@/hooks/ResponsiveHooks";
 import logoImage from "@/assets/images/Logo.svg";
 import NavbarProfileDropdonwMenu from "./NavbarProfile";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type { NavbarProps } from "@/types/navbarTypes";
 import { getNameEmailService } from "@/services/navbarService";
 import useUserStore from "@/store/userStore/userStore";
@@ -51,7 +51,7 @@ const MOBILE_NAV_LINKS = [
 const DESKTOP_NAV_LINKS = [
   {
     label: "خانه",
-    href: "/landing",
+    href: "/",
     icon: <Home className="h-5" />,
   },
   {
@@ -89,6 +89,7 @@ export default function Navbar() {
 
   const isUserLoggedin = useUserStore((s) => s.isAuthenticated());
   const { setProfile } = useUserStore();
+  const navigate = useNavigate();
 
   getNameEmailService()
     .then((response) => {
@@ -146,7 +147,7 @@ export default function Navbar() {
         </div>
       ) : (
         <div className="flex h-full items-center">
-          <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
+          <Button type={"button"} className="rounded-xl h-[70%] flex items-center gap-1 " onClick={()=>{navigate('/login')}}>
             <LogOut strokeWidth={3} />
             <span className="font-bold text-sm w-fit">ورود</span>
             <div className="bg-white w-0.5 h-full rounded-4xl"></div>
