@@ -68,25 +68,58 @@ export default function ReserveCreate() {
 		}),
 	});
 
-	function calculateTotalPrice(petLength: number, serviceID: number) {
+	function calculateTotalPrice(
+		petLength: number,
+		serviceID: number,
+		requestType: string = "monthly",
+		days: Days = {},
+	) {
 		if (!services) return 0;
 
 		const service = services.find((s) => s?.id === serviceID);
 		if (!service) return 0;
 
-		// Count total time slots across all selected days (up to dayCount)
 		let totalSlots = 0;
-		for (let i = 0; i <= dayCount; i++) {
-			const slots = dayRanges.get(i);
-			if (slots) {
-				totalSlots += slots.length;
+
+		if (requestType === "weekly") {
+			console.log("Yeeees");
+			// For weekly: for each selected day, count repetitions and multiply by slot count
+			const dayKeys = Object.keys(days);
+			dayKeys.forEach((dayKey, dayIndex) => {
+				const daySlots = dayRanges.get(dayIndex);
+				if (!daySlots || daySlots.length === 0) return;
+
+				const dateString = days[dayKey];
+				if (!dateString) return;
+
+				const startDate = new Date(dateString);
+				const startDayOfWeek = startDate.getDay();
+
+				const { jy, jm } = jalaali.toJalaali(startDate);
+				const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
+
+				// Count how many times this weekday appears in the month starting from startDate
+				let count = 0;
+				for (let d = startDate.getDate(); d <= daysInMonth; d++) {
+					const { gy, gm, gd } = jalaali.toGregorian(jy, jm, d);
+					const date = new Date(gy, gm - 1, gd);
+					if (date.getDay() === startDayOfWeek) {
+						count++;
+					}
+				}
+				totalSlots += daySlots.length * count;
+			});
+		} else {
+			// For monthly: sum all slots from all selected days
+			for (let i = 0; i <= dayCount; i++) {
+				const slots = dayRanges.get(i);
+				if (slots) {
+					totalSlots += slots.length;
+				}
 			}
 		}
 
-		// If no slots selected, return 0
 		if (totalSlots === 0) return 0;
-
-		// return Math.round(petLength * service.price);
 		return petLength * service.price * totalSlots;
 	}
 
@@ -519,6 +552,8 @@ export default function ReserveCreate() {
 											{calculateTotalPrice(
 												values.petID.length,
 												parseInt(values.serviceID[0]),
+												values.requestType,
+												values.days,
 											)}{" "}
 											تومن
 										</div>
@@ -530,6 +565,8 @@ export default function ReserveCreate() {
 												calculateTotalPrice(
 													values.petID.length,
 													parseInt(values.serviceID[0]),
+													values.requestType,
+													values.days,
 												)}{" "}
 											تومن
 										</div>
@@ -543,6 +580,8 @@ export default function ReserveCreate() {
 													calculateTotalPrice(
 														values.petID.length,
 														parseInt(values.serviceID[0]),
+														values.requestType,
+														values.days,
 													),
 											)}{" "}
 											تومن
