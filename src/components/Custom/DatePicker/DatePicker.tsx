@@ -37,6 +37,7 @@ export default function DatePicker({
 	return (
 		<div className="flex items-center relative w-full">
 			<MultiDatePicker
+				{...props}
 				value={
 					field.value
 						? new DateObject({
@@ -51,7 +52,8 @@ export default function DatePicker({
 						: ""
 				}
 				onChange={(value) => {
-					helpers.setValue(toTehranISOString(value!.toDate()));
+					const dateObj = Array.isArray(value) ? value[0] : value;
+					helpers.setValue(toTehranISOString(dateObj!.toDate()));
 				}}
 				calendar={persian}
 				locale={persian_fa}
