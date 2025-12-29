@@ -249,6 +249,7 @@ export default function ReserveCreate() {
 					petID: [] as string[],
 					notes: "",
 					addressID: "",
+					addressSelection: "",
 					days: {},
 					Province: "",
 					City: "",
@@ -257,7 +258,7 @@ export default function ReserveCreate() {
 					Pelak: "",
 					calendarSlot: "",
 				}}
-				onSubmit={(values, { setErrors }) => {
+				onSubmit={(values, { setErrors, setFieldError }) => {
 					const day0Ranges = dayRanges.get(0) ?? [];
 					if (dayRanges.get(0) === undefined) {
 						updateDayRanges(0, []);
@@ -265,6 +266,25 @@ export default function ReserveCreate() {
 					if (day0Ranges.length === 0) {
 						return;
 					}
+					const needsPreviousAddress =
+						addressIsChecked && !values.addressID;
+					const needsNewAddress =
+						!addressIsChecked &&
+						(!values.Province ||
+							!values.City ||
+							!values.Address ||
+							!values.Pelak ||
+							!values.Vahed);
+					if (needsPreviousAddress || needsNewAddress) {
+						setFieldError(
+							"addressSelection",
+							addressIsChecked
+								? "انتخاب آدرس قبلی الزامی است"
+								: "تکمیل آدرس جدید الزامی است",
+						);
+						return;
+					}
+					setFieldError("addressSelection", "");
 					console.log(values);
 					console.log({
 						petSitterUserID: petSitterUserID as unknown as number,
@@ -544,7 +564,12 @@ export default function ReserveCreate() {
 												inputClassName: "border-0",
 												className: "border-0",
 											}}
-										/>
+											/>
+									)}
+								</div>
+								<div className="flex flex-col sm:flex-row justify-between">
+									{errors.addressSelection && (
+										<p className="text-red-500">{errors.addressSelection}</p>
 									)}
 								</div>
 							</div>
