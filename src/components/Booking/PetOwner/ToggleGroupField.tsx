@@ -25,7 +25,7 @@ export default function ToggleGroupField({
 	const isPet = variant === "pet";
 
 	const containerClassName = isPet
-		? "flex flex-wrap"
+		? "flex flex-wrap justify-start"
 		: "flex flex-col items-start";
 
 	const toggleClassName = isPet
