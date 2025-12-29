@@ -104,11 +104,6 @@ export interface ReserveEditRequest
 	requestID: number;
 }
 export interface ReserveCreateResponse {
-	petSitterUserID: number;
-	calendarSlots: CalenderSlot[];
-	petIDs: number[];
-	notes: string;
-	addressInfo: AddressInfo;
-	addressID: number;
-	serviceID: number;
+	statusCode: number;
+	message: string;
 }
