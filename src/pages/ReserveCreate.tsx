@@ -93,19 +93,13 @@ export default function ReserveCreate() {
 				if (!dateString) return;
 
 				const startDate = new Date(dateString);
-				const startDayOfWeek = startDate.getDay();
-
-				const { jy, jm } = jalaali.toJalaali(startDate);
+				const { jy, jm, jd } = jalaali.toJalaali(startDate);
 				const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
 
 				// Count how many times this weekday appears in the month starting from startDate
 				let count = 0;
-				for (let d = startDate.getDate(); d <= daysInMonth; d++) {
-					const { gy, gm, gd } = jalaali.toGregorian(jy, jm, d);
-					const date = new Date(gy, gm - 1, gd);
-					if (date.getDay() === startDayOfWeek) {
-						count++;
-					}
+				for (let d = jd; d <= daysInMonth; d += 7) {
+					count++;
 				}
 				totalSlots += daySlots.length * count;
 			});
@@ -191,18 +185,14 @@ export default function ReserveCreate() {
 				if (!dayKey) return;
 
 				const startDate = new Date(days[dayKey]);
-				const startDayOfWeek = startDate.getDay(); // 0 = Sunday, 6 = Saturday
-
-				const { jy, jm } = jalaali.toJalaali(startDate);
+				const { jy, jm, jd } = jalaali.toJalaali(startDate);
 				const daysInMonth = jalaali.jalaaliMonthLength(jy, jm);
 
-				for (let d = startDate.getDate(); d <= daysInMonth; d++) {
+				for (let d = jd; d <= daysInMonth; d += 7) {
 					const { gy, gm, gd } = jalaali.toGregorian(jy, jm, d);
 					const date = new Date(gy, gm - 1, gd);
-					if (date.getDay() === startDayOfWeek) {
-						const dateString = toTehranISOString(date);
-						processSlot(dateString, slots);
-					}
+					const dateString = toTehranISOString(date);
+					processSlot(dateString, slots);
 				}
 			});
 		}
@@ -258,8 +248,9 @@ export default function ReserveCreate() {
 					Address: "",
 					Vahed: "",
 					Pelak: "",
+					calendarSlot: "",
 				}}
-				onSubmit={(values) => {
+				onSubmit={(values, { setErrors }) => {
 					if (dayRanges.get(0) === undefined) {
 						dayRanges.set(0, []);
 					}
@@ -300,12 +291,16 @@ export default function ReserveCreate() {
 							provinceName: parseInt(values.Province),
 							cityName: parseInt(values.City),
 							streetAddress: values.Address,
-							houseNumber: values.Pelak,
-							unit: values.Vahed,
+							houseNumber: parseInt(values.Pelak),
+							unit: parseInt(values.Vahed),
 						},
 						addressID: parseInt(values.addressID),
 						serviceID: parseInt(values.serviceID![0]),
 						accessToken: accessToken!,
+					}).catch((error) => {
+						if (error.response?.data?.messages) {
+							setErrors(error.response.data.messages);
+						}
 					});
 				}}
 			>
@@ -457,6 +452,12 @@ export default function ReserveCreate() {
 										اضافه کردن روز
 									</Button>
 								</div>
+								<div className="flex flex-col sm:flex-row justify-between">
+									{errors.calendarSlot && (
+										<p className="text-red-500">{errors.calendarSlot}</p>
+									)}
+								</div>
+
 								<div className="w-full h-0.5 border-0 bg-black/40"></div>
 								<div className="flex justify-start">
 									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">

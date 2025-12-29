@@ -38,8 +38,8 @@ export interface AddressInfo {
 	provinceName: number;
 	cityName: number;
 	streetAddress: string;
-	houseNumber: string;
-	unit: string;
+	houseNumber: number;
+	unit: number;
 	postalCode?: string;
 }
 
