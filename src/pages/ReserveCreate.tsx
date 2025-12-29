@@ -124,6 +124,13 @@ export default function ReserveCreate() {
 	function closeDialog() {
 		setDialogOpen(false);
 	}
+	function updateDayRanges(dayIndex: number, ranges: number[]) {
+		setDayRanges((prev) => {
+			const next = new Map(prev);
+			next.set(dayIndex, ranges);
+			return next;
+		});
+	}
 
 	function addDay() {
 		setDayCount(dayCount + 1);
@@ -251,10 +258,11 @@ export default function ReserveCreate() {
 					calendarSlot: "",
 				}}
 				onSubmit={(values, { setErrors }) => {
+					const day0Ranges = dayRanges.get(0) ?? [];
 					if (dayRanges.get(0) === undefined) {
-						dayRanges.set(0, []);
+						updateDayRanges(0, []);
 					}
-					if (dayRanges.get(0)!.length == 0) {
+					if (day0Ranges.length === 0) {
 						return;
 					}
 					console.log(values);
@@ -649,7 +657,7 @@ export default function ReserveCreate() {
 							const allRanges = [values.range1, values.range2]
 								.flat()
 								.filter((range) => range !== undefined);
-							dayRanges.set(
+							updateDayRanges(
 								currentDay,
 								allRanges.map((r) => parseInt(r)),
 							);
