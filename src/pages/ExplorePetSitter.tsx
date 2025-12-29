@@ -13,116 +13,15 @@ import {
   DropdownMenuItem,
 } from "@/components/Custom/Dropdonw-Menu/DropdownMenu";
 
-import {
-  MOCK_SITTERS,
-  GLOBAL_MIN_PRICE,
-  GLOBAL_MAX_PRICE,
-  SORT_FIELDS,
-} from "@/data/explorePetSitterData";
+import { SORT_FIELDS } from "@/data/explorePetSitterData";
 
 import type { PetSitter, PetType, ServiceType } from "@/types/PetSitter";
-import type {
-  SortField,
-  SortDirection,
-  SearchParams,
-  SitterWithTimeAndDate,
-} from "@/types/explorePetSitter";
+import type { SortField, SortDirection } from "@/types/explorePetSitter";
 
 import { ChevronDown, ArrowUp } from "lucide-react";
 
 import { searchPetSittersService } from "@/services/petSitterService";
 import { buildPetSitterSearchPayload } from "@/utils/buildPetSitterSearchPayload";
-
-/* ---------------- mock API (سمت فرانت) ------------- */
-
-function mockFetchSitters(params: SearchParams): {
-  items: PetSitter[];
-  total: number;
-} {
-  let result: SitterWithTimeAndDate[] = [...MOCK_SITTERS];
-
-  if (params.searchQuery.trim()) {
-    const q = params.searchQuery.trim().toLowerCase();
-    result = result.filter((s) => s.name.toLowerCase().includes(q));
-  }
-
-  if (params.serviceType) {
-    result = result.filter((s) =>
-      s.services.includes(params.serviceType as ServiceType)
-    );
-  }
-
-  if (params.pets && params.pets.length > 0) {
-    result = result.filter((s) =>
-      s.pets.some((pet) => params.pets.includes(pet))
-    );
-  }
-
-  if (params.city && params.city !== "همه شهرها") {
-    result = result.filter((s) => s.city === params.city);
-  }
-
-  const [minPrice, maxPrice] = params.priceRange;
-  result = result.filter(
-    (s) => s.pricePerNight >= minPrice && s.pricePerNight <= maxPrice
-  );
-
-  if (params.timeFrom || params.timeTo) {
-    const reqFrom = params.timeFrom || "";
-    const reqTo = params.timeTo || "";
-
-    result = result.filter((s) => {
-      const sitterFrom = s.availableFrom;
-      const sitterTo = s.availableTo;
-
-      if (!sitterFrom || !sitterTo) return false;
-      if (reqFrom && sitterFrom < reqFrom) return false;
-      if (reqTo && sitterTo > reqTo) return false;
-
-      return true;
-    });
-  }
-
-  if (params.date) {
-    const reqDate = params.date;
-    result = result.filter((s) =>
-      Array.isArray(s.availableDates)
-        ? s.availableDates.includes(reqDate)
-        : false
-    );
-  }
-
-  result.sort((a, b) => {
-    let av: number;
-    let bv: number;
-
-    switch (params.sortField) {
-      case "rating":
-        av = a.rating;
-        bv = b.rating;
-        break;
-      case "experience":
-        av = a.experienceYears;
-        bv = b.experienceYears;
-        break;
-      case "price":
-      default:
-        av = a.pricePerNight;
-        bv = b.pricePerNight;
-        break;
-    }
-
-    const base = av - bv;
-    return params.sortDirection === "asc" ? base : -base;
-  });
-
-  const total = result.length;
-  const start = (params.page - 1) * params.pageSize;
-  const end = start + params.pageSize;
-  const items = result.slice(start, end);
-
-  return { items, total };
-}
 
 /* ---------------- Skeleton Card ---------------- */
 
@@ -149,6 +48,8 @@ function SitterCardSkeleton() {
 export default function ExplorePetSitter() {
   const pageSize = 6;
   const PRICE_STEP = 10000;
+  const DEFAULT_MIN_PRICE = 0;
+  const DEFAULT_MAX_PRICE = 100000;
 
   // Drawer (mobile)
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -172,8 +73,8 @@ export default function ExplorePetSitter() {
   const [timeFrom, setTimeFrom] = useState("");
   const [timeTo, setTimeTo] = useState("");
   const [priceRange, setPriceRange] = useState<[number, number]>([
-    GLOBAL_MIN_PRICE,
-    GLOBAL_MAX_PRICE,
+    DEFAULT_MIN_PRICE,
+    DEFAULT_MAX_PRICE,
   ]);
 
   // سورت / صفحه
@@ -201,6 +102,7 @@ export default function ExplorePetSitter() {
 
   const infiniteObserverRef = useRef<IntersectionObserver | null>(null);
   const cardsBottomRef = useRef<HTMLDivElement | null>(null);
+  const lastCardRef = useRef<HTMLDivElement | null>(null);
 
   /* ✅ وقتی Drawer باز/بسته میشه، UI state های نسخه دیگر رو خاموش کن */
   useEffect(() => {
@@ -220,83 +122,61 @@ export default function ExplorePetSitter() {
   /* ------------ fetch دیتا ------------ */
 
   useEffect(() => {
-  if (!hasSearched) return;
+    if (!hasSearched) return;
 
-  const fetchData = async () => {
-    setIsLoading(true);
+    const fetchData = async () => {
+      setIsLoading(true);
 
-    const params: SearchParams = {
-      searchQuery,
-      serviceType,
-      pets,
-      city,
-      date,
-      timeFrom,
-      timeTo,
-      priceRange,
-      sortField,
-      sortDirection,
-      page,
-      pageSize,
+      const payload = buildPetSitterSearchPayload({
+        filters: {
+          searchQuery,
+          serviceType,
+          pets,
+          city,
+          date,
+          timeFrom,
+          timeTo,
+          priceRange,
+        },
+        page,
+        pageSize,
+        sortField,
+        sortDirection,
+      });
+      try {
+        console.log("[ExplorePetSitter] search payload", payload);
+        console.log("[ExplorePetSitter] search filters", payload.filters);
+        const res = await searchPetSittersService(payload);
+        console.log("[ExplorePetSitter] search response", res);
+
+        setData((prev) => (page === 1 ? res.items : [...prev, ...res.items]));
+        setTotalItems(res.total);
+        setHasMore(page * pageSize < res.total);
+      } catch (error) {
+        console.error("[ExplorePetSitter] search error", error);
+        setHasMore(false);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
-    const payload = buildPetSitterSearchPayload({
-      filters: {
-        searchQuery,
-        serviceType,
-        pets,
-        city,
-        date,
-        timeFrom,
-        timeTo,
-        priceRange,
-      },
-      page,
-      pageSize,
-      sortField,
-      sortDirection,
-    });
-
-    const res = await searchPetSittersService(payload);
-
-    setData((prev) => (page === 1 ? res.items : [...prev, ...res.items]));
-    setTotalItems(res.total);
-    setHasMore(page * pageSize < res.total);
-
-    const timer = setTimeout(() => {
-      const { items, total } = mockFetchSitters(params);
-
-      setData((prev) => (page === 1 ? items : [...prev, ...items]));
-      setTotalItems(total);
-
-      const loadedSoFar = page * pageSize;
-      setHasMore(loadedSoFar < total);
-
-      setIsLoading(false);
-    }, 250);
-
-    return () => clearTimeout(timer);
-  };
-
-  fetchData();
-
-}, [
-  hasSearched,
-  searchToken,
-  page,
-  sortField,
-  sortDirection,
-  searchQuery,
-  serviceType,
-  pets,
-  city,
-  date,
-  timeFrom,
-  timeTo,
-  priceRange,
-  pageSize,
-]);
-
+    fetchData();
+  }, [
+    hasSearched,
+    searchToken,
+    page,
+    sortField,
+    sortDirection,
+    searchQuery,
+    serviceType,
+    pets,
+    city,
+    date,
+    timeFrom,
+    timeTo,
+    priceRange,
+    pageSize,
+  ]);
 
   /* --------- اینفینیت‌اسکرول --------- */
 
@@ -320,6 +200,14 @@ export default function ExplorePetSitter() {
       if (node) infiniteObserverRef.current.observe(node);
     },
     [isLoading, hasMore, hasSearched, loadMoreSitters]
+  );
+
+  const setLastCardNode = useCallback(
+    (node: HTMLDivElement | null) => {
+      lastCardRef.current = node;
+      lastSitterRef(node);
+    },
+    [lastSitterRef]
   );
 
   useEffect(() => {
@@ -350,8 +238,15 @@ export default function ExplorePetSitter() {
   useEffect(() => {
     const DEFAULT_BOTTOM = 20;
     const GAP_FROM_CARDS = 16;
+    const BUTTON_SIZE = 44;
+    const NAVBAR_OFFSET = 72;
 
     const handleScroll = () => {
+      if (!hasSearched || data.length === 0) {
+        setShowScrollTop(false);
+        return;
+      }
+
       setShowScrollTop(window.scrollY > 400);
 
       if (!hasSearched || totalItems === 0) {
@@ -359,7 +254,7 @@ export default function ExplorePetSitter() {
         return;
       }
 
-      const sentinel = cardsBottomRef.current;
+      const sentinel = lastCardRef.current ?? cardsBottomRef.current;
       if (!sentinel) {
         setScrollButtonBottom(DEFAULT_BOTTOM);
         return;
@@ -374,14 +269,22 @@ export default function ExplorePetSitter() {
       }
 
       const minBottom = viewportHeight - rect.bottom + GAP_FROM_CARDS;
-      setScrollButtonBottom(Math.max(DEFAULT_BOTTOM, minBottom));
+      const maxBottom = Math.max(
+        DEFAULT_BOTTOM,
+        viewportHeight - NAVBAR_OFFSET - BUTTON_SIZE
+      );
+      const nextBottom = Math.min(
+        Math.max(DEFAULT_BOTTOM, minBottom),
+        maxBottom
+      );
+      setScrollButtonBottom(nextBottom);
     };
 
     window.addEventListener("scroll", handleScroll);
     handleScroll();
 
     return () => window.removeEventListener("scroll", handleScroll);
-  }, [hasSearched, totalItems]);
+  }, [hasSearched, totalItems, data.length]);
 
   /* --------- handlers --------- */
 
@@ -404,7 +307,7 @@ export default function ExplorePetSitter() {
     setDate("");
     setTimeFrom("");
     setTimeTo("");
-    setPriceRange([GLOBAL_MIN_PRICE, GLOBAL_MAX_PRICE]);
+    setPriceRange([DEFAULT_MIN_PRICE, DEFAULT_MAX_PRICE]);
 
     setSortField("price");
     setSortDirection("asc");
@@ -462,8 +365,8 @@ export default function ExplorePetSitter() {
             city={city}
             pets={pets}
             priceRange={priceRange}
-            priceMin={GLOBAL_MIN_PRICE}
-            priceMax={GLOBAL_MAX_PRICE}
+            priceMin={DEFAULT_MIN_PRICE}
+            priceMax={DEFAULT_MAX_PRICE}
             priceStep={PRICE_STEP}
             showTimePicker={showTimePickerDesktop}
             setShowTimePicker={setShowTimePickerDesktop}
@@ -495,8 +398,8 @@ export default function ExplorePetSitter() {
             city={city}
             pets={pets}
             priceRange={priceRange}
-            priceMin={GLOBAL_MIN_PRICE}
-            priceMax={GLOBAL_MAX_PRICE}
+            priceMin={DEFAULT_MIN_PRICE}
+            priceMax={DEFAULT_MAX_PRICE}
             priceStep={PRICE_STEP}
             showTimePicker={showTimePickerMobile}
             setShowTimePicker={setShowTimePickerMobile}
@@ -614,9 +517,9 @@ export default function ExplorePetSitter() {
             </div>
           ) : (
             data.map((sitter, index) => (
-              <div
-                key={sitter.id}
-                ref={index === data.length - 1 ? lastSitterRef : undefined}
+          <div
+                key={`${sitter.id}-${index}`}
+                ref={index === data.length - 1 ? setLastCardNode : undefined}
               >
                 <SitterCard sitter={sitter} />
               </div>

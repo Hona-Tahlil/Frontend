@@ -66,14 +66,14 @@ export default function SitterCard({ sitter }: SitterCardProps) {
         <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
           {/* خدمات */}
           <div className="flex flex-wrap gap-2">
-            {sitter.services.map((service) => {
+            {sitter.services.map((service, index) => {
               const label =
                 SERVICE_OPTIONS.find((s) => s.value === service)?.label ??
                 "سرویس";
 
               return (
                 <div
-                  key={service}
+                  key={`${service}-${index}`}
                   className="
                     flex items-center gap-1 rounded-full
                     bg-gradient-to-b from-primary-400 to-primary-500
