@@ -22,8 +22,7 @@ export const getRequestInfo = async (
 	credentials: GetRequestInfoRequest,
 ): Promise<GetRequestInfoResponse> => {
 	return getData({
-		endPoint: `/v1/requests/`,
-		params: { requestID: credentials.requestID },
+		endPoint: `/v1/requests/${credentials.requestID}`,
 		headers: { Authorization: `Bearer ${credentials.accessToken}` },
 	});
 };

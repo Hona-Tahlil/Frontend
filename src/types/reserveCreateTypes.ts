@@ -74,6 +74,44 @@ export interface GetCreateRequestInfo {
 	freeCalendarSlots: CalenderSlot[];
 }
 export interface GetRequestInfoResponse {
+	statusCode: number;
+	message: string;
+	data: RequestInfo;
+}
+export interface RequestPet {
+	id: number;
+	name: string;
+	kind: string;
+	species: string;
+	gender: string;
+	pictureLink: string;
+	birthDate: string;
+	isAdult: boolean;
+}
+export interface RequestCalendarSlot {
+	id: number;
+	date: string;
+	slots: number[];
+	status: number;
+}
+export interface RequestComment {
+	userID: number;
+	userFirstName: string;
+	userLastName: string;
+	updatedAt: string;
+	text: string | null;
+	rating: number;
+}
+export interface RequestAddress {
+	id: number;
+	provinceName: string;
+	cityName: string;
+	streetAddress: string;
+	houseNumber: number;
+	unit: number;
+	postalCode: string | null;
+}
+export interface RequestInfo {
 	requestID: number;
 	petSitterUserID: number;
 	petSitterFirstName: string;
@@ -81,13 +119,15 @@ export interface GetRequestInfoResponse {
 	userFirstName: string;
 	userLastName: string;
 	service: Service;
-	pets: Pet[];
-	calendarSlots: CalenderSlot[];
+	pets: RequestPet[];
+	calendarSlots: RequestCalendarSlot[];
 	notes: string;
 	totalPrice: number;
-	address: AddressInfo;
+	comment: RequestComment;
+	address: RequestAddress;
 	status: string;
-	transferID?: number;
+	transferID: number | null;
+	updatedAt: string;
 }
 export interface ReserveCreateRequest {
 	petSitterUserID: number;
@@ -100,8 +140,13 @@ export interface ReserveCreateRequest {
 	accessToken: string;
 }
 export interface ReserveEditRequest
-	extends Omit<ReserveCreateRequest, "petSitterUserID"> {
+	extends Omit<
+		ReserveCreateRequest,
+		"petSitterUserID" | "addressInfo" | "addressID"
+	> {
 	requestID: number;
+	addressInfo?: AddressInfo;
+	addressID?: number;
 }
 export interface ReserveCreateResponse {
 	statusCode: number;
