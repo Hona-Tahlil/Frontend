@@ -5,9 +5,14 @@ import type {
 	LoginResponse,
 	SignupPayload,
 	SignupResponse,
+	ForgetPasswordPayload,
+	ForgetPasswordResponse,
+	ResetPasswordPayload,
+  	ResetPasswordResponse,
 } from "@/types/authTypes";
 import { postData , getData  } from "./services";
-import type { PetSitterFull } from "@/types/PetSitterFull";
+import { putData } from "./services";
+
 
 export const loginService = async (
 	credentials: LoginPayload,
@@ -27,19 +32,62 @@ export const signupService = async (
 	});
 };
 
+export const forgetpasswordService = async (
+	credentials: ForgetPasswordPayload,
+): Promise<ForgetPasswordResponse> => {
+	return postData({
+		endPoint: `/v1/auth/forgot-password`,
+		data: credentials,
+	});
+};
 
 
+// export const resetPasswordService = async (
+// 	credentials: ResetPasswordPayload,
+//   ): Promise<ResetPasswordResponse> => {
+// 	// const { email, token, password } = params;
+  
+// 	return postData({
+// 	  endPoint: `/v1/auth/reset-password`,
+// 	  data: credentials, // JSON body
+// 	});
+//   };
 
-export const getPetSitterDetailsService = async (
-	petsitterUserID: number
-  ): Promise<PetSitterFull> => {
-	return getData({
-	  endPoint: `/petsitters/${petsitterUserID}`,
-	  headers: {
-		Authorization: `Bearer ${localStorage.getItem("token")}`,
-	  },
+
+// export const resetPasswordService = async (
+// 	params: ResetPasswordPayload,
+//   ): Promise<ResetPasswordResponse> => {
+// 	const { email, token, password } = params;
+  
+// 	return postData({
+// 	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(
+// 		token,
+// 	  )}&email=${encodeURIComponent(email)}`,
+// 	  data: { password }, // JSON body
+// 	});
+//   };
+
+
+export const resetPasswordService = async (
+	params: ResetPasswordPayload,
+  ): Promise<ResetPasswordResponse> => {
+	const { email, token, password } = params;
+  
+	return putData({
+	  endPoint: `/v1/auth/reset-password?token=${encodeURIComponent(token)}&email=${encodeURIComponent(email)}`,
+	  data: { password }, // JSON body
 	});
   };
+  
+  
+
+  
+  
+
+
+
+
+
 
 
   

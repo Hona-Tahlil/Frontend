@@ -2,10 +2,19 @@ import { useState, useEffect } from "react";
 import { AdminSidebar } from "@/components/Admin/AdminSidebar";
 import { AdminContainer } from "@/components/Admin/AdminContainer";
 import { ChevronLeft, X, ChevronRight } from "lucide-react";
-import { useDesktop, useTablet, useMobile } from "@/hooks/ResponsiveHooks"; // همون فایل هوک‌هات
+import { useDesktop, useTablet, useMobile } from "@/hooks/ResponsiveHooks"; 
 import { useLocation } from "react-router-dom";
-import { initialSitters, statusColor, statusLabel } from "@/data/sitterConstants";
 import type { Sitter, SitterStatus } from "@/data/sitterConstants";
+import SitterDetailDialog from "@/components/SitterDetailDialog";
+import SitterDetailsDrawer from "@/components/SitterDetailsDrawer";
+import { useMutation , useQueryClient} from "@tanstack/react-query";
+import { searchPetSittersService } from "@/services/petSitterService";
+import type { SearchPetSittersPayload, SearchPetSittersResponse, PetSitterListItem } from "@/types/PetSitter/searchTypes";
+import { changePetSitterStatusService } from "@/services/Sitter/verifySitterService";
+import type { ChangePetSitterStatusPayload } from "@/types/PetSitter/changeStatusTypes";
+
+
+
 import {
   Drawer,
   DrawerTrigger,
@@ -16,8 +25,8 @@ import {
 } from "@/components/ui/drawer";
 import { StatusButton } from "@/components/Custom/Button/StatusButton";
 import { useParams, useNavigate } from "react-router-dom";
-
-
+import { useQuery } from "@tanstack/react-query";
+import { getPetSitterDetailsService } from "@/services/Sitter/verifySitterService";
 
 
 
@@ -28,11 +37,74 @@ export default function VerifySitterPage() {
   const isMobile = useMobile();
   const navigate = useNavigate();
   const location = useLocation();
-  const [sitters, setSitters] = useState<Sitter[]>(initialSitters);
+  const [sitters, setSitters] = useState<PetSitterListItem[]>([]);
   const [filter, setFilter] = useState<"all" | SitterStatus>("all");
   const [search, setSearch] = useState("");
   const [selectedSitterId, setSelectedSitterId] = useState<number | null>(null);
-  const [selectedSitter, setSelectedSitter] = useState<Sitter | null>(null);
+  const [selectedSitter, setSelectedSitter] = useState<PetSitterListItem | null>(null);
+  const { id } = useParams();
+  const queryClient = useQueryClient();
+
+
+  const {
+    data: sitterDetailsRes,
+    isLoading: sitterDetailsLoading,
+    error: sitterDetailsError,
+  } = useQuery({
+    queryKey: ["pet-sitter-details", id],
+    queryFn: () => getPetSitterDetailsService(Number(id)),
+    enabled: Boolean(id), 
+  });
+  
+  const sitterDetails = sitterDetailsRes?.data;
+
+  const {
+    mutate: fetchSitters,
+    data: sittersData,
+    isPending: sittersLoading,
+    error: sittersError,
+  } = useMutation({
+    mutationFn: (payload: SearchPetSittersPayload) => searchPetSittersService(payload),
+  });
+  const pagination = sittersData?.data?.pagination;
+
+
+  const [page, setPage] = useState(1);
+  const pageSize = 10;
+
+
+  const { mutate: changeStatus, isPending: changingStatus } = useMutation({
+    mutationFn: (payload: ChangePetSitterStatusPayload) =>
+      changePetSitterStatusService(payload),
+  
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pet-sitter-details", id] });
+  
+      fetchSitters({
+        page,
+        count: pageSize,
+        filters: [{ field: "pet_sitters.status", op: "=", value: 1 }],
+        sorts: [{ field: "updated_at", dir: "DESC" }],
+      });
+    },
+  });
+  
+  
+
+
+  useEffect(() => {
+    fetchSitters({
+      page,
+      count: pageSize,
+      filters: [
+        { field: "pet_sitters.status", op: "=", value: 1 },
+      ],
+      sorts: [{ field: "updated_at", dir: "DESC" }],
+    });
+  }, [page, fetchSitters]);
+  
+  
+  
 
 
   useEffect(() => {
@@ -53,47 +125,57 @@ export default function VerifySitterPage() {
   ? "w-full max-w-[820px] mx-auto px-4"
   : "w-full max-w-[1200px] mx-auto px-6 overflow-x-hidden";
 
-
-
-
-  const { id } = useParams();
-
+  useEffect(() => {
+    const list = sittersData?.data?.data ?? []; 
+    if (list.length) {
+      setSitters(
+        list.map((x) => ({
+          id: x.id,
+          user_id: x.user_id, 
+          first_name: x.first_name, 
+          last_name: x.last_name, 
+          email: x.email,
+          phone_number: x.phone_number,
+          status: x.status, 
+          onboarding_step: x.onboarding_step,
+          created_at: x.created_at.split(" +")[0],
+        }))
+      );
+    }
+  }, [sittersData]);
+  
+  
   useEffect(() => {
     if (!id) return;
-  
-    const sitter = sitters.find((s) => s.id === Number(id)) ?? null;
+    if (!sittersData?.data?.data) return;  
+    const sitter = sittersData.data.data.find((s) => s.id === Number(id)) ?? null;
     if (!sitter) return;
   
     setSelectedSitter(sitter);
-    setCurrentStatus(sitter.status);
+    setCurrentStatus(sitter.status); 
+
   
     if (isMobile) setOpenDrawer(true);
-    else setSelectedSitterId(sitter.id); // اگر دسکتاپ دیالوگت با این باز میشه
-  }, [id, sitters, isMobile]);
+    else setSelectedSitterId(sitter.id); 
+  }, [id, sittersData, isMobile]);
   
 
-  const isDialogOpen = Boolean(id);
+  const isDialogOpen =
+  Boolean(id) &&
+  !isMobile &&
+  !sitterDetailsLoading &&
+  !!sitterDetails;
 
 
-  const [currentStatus, setCurrentStatus] = useState<SitterStatus>("pending");
+  const [currentStatus, setCurrentStatus] = useState<number>(1);
 
 
   
 
   const handleOpenDetails = (id: number) => {
-    const sitter = sitters.find((s) => s.id === id) ?? null;
-    if (!sitter) return;
-  
-    setSelectedSitter(sitter);
-    setCurrentStatus(sitter.status);
-  
-    // ✅ URL را ست کن
-    navigate(`/admin/verify-sitter/${id}`, { replace: false });
-  
-    // ✅ فقط نوع نمایش فرق کند
-    if (isMobile) setOpenDrawer(true);
-    else setSelectedSitterId(id); // اگر برای دسکتاپ از این state استفاده می‌کنی
+    navigate(`/admin/verify-sitter/${id}`);
   };
+  
 
 
   useEffect(() => {
@@ -103,67 +185,85 @@ export default function VerifySitterPage() {
     if (!sitter) return;
   
     setSelectedSitter(sitter);
-    setCurrentStatus(sitter.status);
-  
+    setCurrentStatus(sitter.status); 
+
     if (isMobile) setOpenDrawer(true);
-    else setSelectedSitterId(sitter.id); // اگر دسکتاپ دیالوگت با این باز میشه
+    else setSelectedSitterId(sitter.id); 
   }, [id, sitters, isMobile]);
   
   
-
-
-  const changeStatus = (newStatus: SitterStatus) => {
-    if (!selectedSitter) return;
   
-    setCurrentStatus(newStatus);
-  
-    setSitters((prev) =>
-      prev.map((s) =>
-        s.id === selectedSitter.id ? { ...s, status: newStatus } : s
-      )
-    );
+  const statusMap: Record<"pending" | "accepted" | "rejected", number> = {
+    pending: 1,
+    accepted: 2,
+    rejected: 3,
   };
-  
   
 
   const filtered = sitters.filter((sitter) => {
-    const matchesStatus = filter === "all" ? true : sitter.status === filter;
-    const q = search.trim();
+    const matchesStatus = filter === "all" ? true : sitter.status === statusMap[filter];
+    const q = search.trim().toLowerCase();
+
+    const fullName = `${sitter.first_name} ${sitter.last_name}`.toLowerCase();
+    const email = sitter.email.toLowerCase();
+    const phone = (sitter.phone_number || "").toLowerCase();
+    const createdAt = sitter.created_at.toLowerCase();
+
+    const statusText =
+    sitter.status === 1
+      ? "در انتظار pending"
+      : sitter.status === 2
+      ? "قبول شده accepted"
+      : sitter.status === 3
+      ? "رد شده rejected"
+      : "unknown";
 
     const matchesSearch =
-      q === ""
-        ? true
-        : [
-            sitter.name,
-            sitter.email,
-            sitter.requestedAt,
-            statusLabel[sitter.status], // سرچ با متن فارسی وضعیت
-            sitter.status,              // سرچ با pending/accepted/rejected
-          ].some((field) => field.toLowerCase().includes(q.toLowerCase()));
-        return matchesStatus && matchesSearch;
+    q === ""
+      ? true
+      : [fullName, email, phone, createdAt , statusText.toLowerCase()].some((field) =>
+          field.includes(q),
+        );
+
+    return matchesStatus && matchesSearch;
   });
 
-  const handleChangeStatus = (newStatus: SitterStatus) => {
-    if (!selectedSitterId) return;
-    setSitters((prev) =>
-      prev.map((s) =>
-        s.id === selectedSitterId ? { ...s, status: newStatus } : s
-      )
-    );
+  const handleChangeStatus = (newStatus: number) => {
+    if (!sitterDetails) return;
+  
+    // setSitters((prev) =>
+    //   prev.map((s) =>
+    //     s.id === selectedSitterId
+    //       ? { ...s, status: newStatus }
+    //       : s
+    //   )
+    // );
+    changeStatus({
+      petSitterUserID: sitterDetails.personalInfo.id,
+      status: newStatus,
+    });
   };
 
-  const handleDrawerOpenChange = (open: boolean) => {
-    setOpenDrawer(open);
-    if (!open) navigate("/admin/verify-sitter");
+
+  const statusColor: Record<string, string> = {
+    "1": "bg-yellow-100 text-yellow-600",  
+    "2": "bg-green-100 text-green-600",    
+    "3": "bg-red-100 text-red-600",       
   };
+
+
+
+  
+  
+  
 
   return (
   <div className="min-h-screen font-[Alibaba] flex flex-col md:flex-row overflow-x-hidden" dir="rtl">
-  {/* {isDesktop  && <AdminSidebar activeItemId="verify-sitter" />} */}
-  <div className="hidden md:block w-[260px] shrink-0 overflow-x-hidden">
+  <div className="fixed hidden md:block w-[260px] shrink-0 overflow-x-hidden">
       <AdminSidebar activeItemId="verify-sitter" />
-    </div>
-  <div className="flex-1 min-w-0 overflow-x-hidden">
+  </div>
+  <div className={"flex-1 min-w-0 overflow-x-hidden w-screen md:w-auto md:-ml-[260px]"}>
+
   <div className={mainWrapClass}>
 
         {isMobile && (
@@ -180,8 +280,8 @@ export default function VerifySitterPage() {
         )}
         
         <AdminContainer title="اعتبارسنجی پت‌سیتر" description="لیست پت‌سیترها و وضعیت بررسی آنها.">
+        
           <div className={`mb-5 flex gap-3 ${isMobile ? "flex-col w-full" : "flex-row justify-end"}`}>
-            
             <input
               type="text"
               placeholder="جستجو   ..."
@@ -207,14 +307,20 @@ export default function VerifySitterPage() {
                   {filtered.map((sitter, index) => (
                     <tr key={sitter.id} className="border-b border-gray-300 hover:bg-gray-50">
                       <td className="py-1.5 px-1 text-center">{index + 1}</td>
-                      <td className="py-1.5 px-1 break-words">{sitter.name}</td>
+                      <td className="py-1.5 px-1 break-words"> {sitter.first_name} {sitter.last_name}</td>
                       <td className="py-1.5 px-1 text-[10px] break-all">
-                        {sitter.requestedAt}
+                        {sitter.created_at}
                       </td>
 
                       <td className="py-1.5 px-1">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold whitespace-nowrap ${statusColor[sitter.status]}`}>
-                          {statusLabel[sitter.status]}
+                        {sitter.status === 1
+                          ? "در انتظار"
+                          : sitter.status === 2
+                          ? "فبول شده"
+                          : sitter.status === 3
+                          ? "رد شده"
+                          : "unknown"}
                         </span>
                       </td>
                       <td className="py-1.5 px-1 text-center">
@@ -256,15 +362,21 @@ export default function VerifySitterPage() {
                   {filtered.map((sitter, index) => (
                     <tr key={sitter.id} className="border-b border-gray-300 hover:bg-gray-50">
                       <td className="py-3 px-2 text-small">{index + 1}</td>
-                      <td className="py-3 px-2 text-small">{sitter.name}</td>
+                      <td className="py-3 px-2 text-small"> {sitter.first_name} {sitter.last_name}</td>
                       <td className="py-3 px-2 text-small whitespace-nowrap">
-                        {sitter.requestedAt}
+                        {sitter.created_at}
                       </td>
 
                       <td className="py-3 px-2 text-small">{sitter.email}</td>
                       <td className="py-3 px-2 text-small">
                         <span className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${statusColor[sitter.status]}`}>
-                          {statusLabel[sitter.status]}
+                        {sitter.status === 1
+                          ? "در انتظار"
+                          : sitter.status === 2
+                          ? "قبول شده"
+                          : sitter.status === 3
+                          ? "رد شده"
+                          : "unknown"}
                         </span>
                       </td>
                       <td className="py-3 px-2 text-small text-left whitespace-nowrap">
@@ -290,180 +402,66 @@ export default function VerifySitterPage() {
               </table>
             </div>
           )}
+          {pagination && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <button
+              disabled={!pagination.hasPrevPage}
+              onClick={() => setPage((p) => p - 1)}
+              className="px-3 py-1 rounded border text-sm disabled:opacity-40"
+            >
+              قبلی
+            </button>
+
+            <span className="text-sm">
+              صفحه {pagination.currentPage} از {pagination.totalPages}
+            </span>
+
+            <button
+              disabled={!pagination.hasNextPage}
+              onClick={() => setPage((p) => p + 1)}
+              className="px-3 py-1 rounded border text-sm disabled:opacity-40"
+            >
+              بعدی
+            </button>
+          </div>
+          )}
+
         </AdminContainer>
+
       </div>
 
-      {!isMobile && selectedSitter && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-          <div className="bg-white rounded-3xl w-[95%] max-w-3xl p-6 shadow-xl font-[Alibaba]">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-base font-bold">جزییات پت‌سیتر</h2>
-              <button
-                onClick={() => {
-                  setSelectedSitterId(null);
-                  setSelectedSitter(null);
-                  navigate("/admin/verify-sitter");
-                }}
-              >
-                <X className="w-5 h-5 text-gray-500 hover:text-gray-700" />
-              </button>
-              
-            </div>
-            <div className="space-y-3 text-small">
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">مشخصات</span>
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                  <span><b>نام پت‌یار:</b> {selectedSitter.name}</span>
-                  <span><b>جنسیت:</b> زن</span>
-                  <span><b>تاریخ تولد:</b> 2005/2/12</span>
-                </div>
-              </div>
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">اطلاعات تماس</span>
-                <div className="mt-2 flex flex-col gap-1">
-                  <span><b>ایمیل:</b> {selectedSitter.email}</span>
-                  <span><b>شماره تماس:</b> 09123456782</span>
-                </div>
-              </div>
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">آدرس</span>
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                  <span><b>استان:</b> تهران</span>
-                  <span><b>شهر:</b> تهران</span>
-                  <span><b>نشانی:</b> خیابان فرهنگ، کوچه ۲۳، پلاک ۱۲۳۴۵</span>
-                </div>
-              </div>
-              <div className="border border-gray-300 rounded-2xl px-4 py-3 text-center text-blue-700 font-bold cursor-pointer hover:bg-blue-50">
-                دانلود فایل‌های آپلود شده
-              </div>
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">خدمات:</span>
-                <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
-              </div>
-              <div className="border border-gray-300 rounded-2xl px-4 py-3">
-                <span className="font-bold text-blue-700">بیوگرافی:</span>
-                <p className="leading-relaxed">پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.</p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-col sm:flex-row gap-3">
-              <button
-                onClick={() => handleChangeStatus("accepted")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${selectedSitter.status === "accepted" ? "bg-green-500 text-white" : "border border-green-500 text-green-700 hover:bg-green-50"}`}
-              >
-                تایید
-              </button>
-              <button
-                onClick={() => handleChangeStatus("pending")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${selectedSitter.status === "pending" ? "bg-yellow-400 text-white" : "border border-yellow-400 text-yellow-600 hover:bg-yellow-50"}`}
-              >
-                در انتظار
-              </button>
-              <button
-                onClick={() => handleChangeStatus("rejected")}
-                className={`flex-1 rounded-full py-2 text-small font-bold ${selectedSitter.status === "rejected" ? "bg-red-500 text-white" : "border border-red-500 text-red-600 hover:bg-red-50"}`}
-              >
-                رد
-              </button>
-            </div>
-          </div>
-        </div>
-        
+      {isDialogOpen && !isMobile && Boolean(id) &&(
+        <SitterDetailDialog
+        open={isDialogOpen}
+        data={sitterDetails}   
+        loading={sitterDetailsLoading}
+        error={!!sitterDetailsError}
+        currentStatus={sitterDetails?.status ?? 1}
+        onChangeStatus={handleChangeStatus}
+        onClose={() => {
+          navigate("/admin/verify-sitter");
+        }}
+      />
+
       )}
-      {isMobile && selectedSitter && (
-      <Drawer open={openDrawer} onOpenChange={handleDrawerOpenChange}>
 
-<DrawerContent className="h-[90vh] flex flex-col text-right" dir="rtl">
+      {isMobile && selectedSitterId && (
+        <SitterDetailsDrawer
+        open={openDrawer}
+        data={sitterDetails} 
+        loading={sitterDetailsLoading}
+        error={!!sitterDetailsError}
+        currentStatus={sitterDetails?.status ?? 1}
+        onChangeStatus={handleChangeStatus}
+        onClose={() => {
+          setOpenDrawer(false);
+          navigate("/admin/verify-sitter");
+        }}
+      />
 
-        <DrawerHeader className="text-right shrink-0">
-          <DrawerTitle>جزییات پت‌سیتر</DrawerTitle>
-          <p className="text-sm text-muted-foreground">
-            اطلاعات کامل پت‌سیتر انتخاب‌شده.
-          </p>
-        </DrawerHeader>
+      )}
 
-        <div className="flex-1 overflow-y-auto px-4 pb-6">
 
-          <div className="mb-4">
-            <span
-              className={`px-3 py-1 rounded-full text-xs font-bold ${statusColor[currentStatus]}`}
-            >
-              {statusLabel[currentStatus]}
-            </span>
-          </div>
-
-          <div className="flex flex-col gap-3 mt-4">
-            <StatusButton
-              status="accepted"
-              currentStatus={currentStatus}
-              onClick={() => changeStatus("accepted")}
-            />
-            <StatusButton
-              status="pending"
-              currentStatus={currentStatus}
-              onClick={() => changeStatus("pending")}
-            />
-            <StatusButton
-              status="rejected"
-              currentStatus={currentStatus}
-              onClick={() => changeStatus("rejected")}
-            />
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-            <span className="font-bold text-admin-700">مشخصات</span>
-            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-              <span><b>نام پت‌یار:</b> {selectedSitter.name}</span>
-              <span><b>جنسیت:</b> زن</span>
-              <span><b>تاریخ تولد:</b> 2005/2/12</span>
-            </div>
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-            <span className="font-bold text-admin-700">اطلاعات تماس</span>
-            <div className="mt-2 flex flex-col gap-1">
-              <span><b>ایمیل:</b> {selectedSitter.email}</span>
-              <span><b>شماره تماس:</b> 09123456782</span>
-            </div>
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-            <span className="font-bold text-admin-700">آدرس</span>
-            <p className="mt-2">
-              تهران، خیابان فرهنگ، کوچه ۲۳
-            </p>
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5 text-center text-admin-700 font-bold hover:bg-admin-50">
-            دانلود فایل‌های آپلود شده
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-            <span className="font-bold text-admin-700">خدمات:</span>
-            <p>سگ‌ها، گربه‌ها — نگهداری، پیاده‌روی</p>
-          </div>
-
-          <div className="border border-charcoal-100 rounded-2xl px-4 py-3 mt-5">
-            <span className="font-bold text-admin-700">بیوگرافی:</span>
-            <p className="leading-relaxed">
-              پت‌یار با تجربه و علاقه‌مند به نگهداری از حیوانات خانگی.
-            </p>
-          </div>
-
-        </div>
-
-        <div className="p-4 border-t shrink-0">
-          <DrawerClose asChild>
-            <button className="w-full rounded-xl border py-2 font-bold">
-              بستن
-            </button>
-          </DrawerClose>
-        </div>
-
-      </DrawerContent>
-
-    </Drawer>
-
-    )}
-
-  </div></div>
-          );}
+    </div>
+  </div>
+);}
