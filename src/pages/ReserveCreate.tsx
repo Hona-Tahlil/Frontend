@@ -242,8 +242,9 @@ export default function ReserveCreate() {
 	}
 
 	function indexToTime(index: number) {
-		const hour = Math.floor(index / 2);
-		const minute = index % 2 === 0 ? "00" : "30";
+		const safeIndex = Math.max(index, 0);
+		const hour = Math.floor(safeIndex / 2) % 24;
+		const minute = safeIndex % 2 === 0 ? "00" : "30";
 		return `${hour}:${minute}`;
 	}
 
@@ -443,7 +444,7 @@ export default function ReserveCreate() {
 											mergeRanges(dayRanges.get(0)!).map(
 												({ start, end }, i) => (
 													<div key={i} className="font-bold leading-10">
-														{indexToTime(start)} - {indexToTime(end + 1)}
+														{indexToTime(start - 1)} - {indexToTime(end)}
 													</div>
 												),
 											)}
@@ -488,7 +489,7 @@ export default function ReserveCreate() {
 													mergeRanges(dayRanges.get(0)!).map(
 														({ start, end }, i) => (
 															<div key={i} className="font-bold leading-10">
-																{indexToTime(start)} - {indexToTime(end + 1)}
+																{indexToTime(start - 1)} - {indexToTime(end)}
 															</div>
 														),
 													)}

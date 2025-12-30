@@ -38,8 +38,9 @@ export default function ReserveSuccess() {
 	}
 
 	function indexToTime(index: number) {
-		const hour = Math.floor(index / 2);
-		const minute = index % 2 === 0 ? "00" : "30";
+		const safeIndex = Math.max(index, 0);
+		const hour = Math.floor(safeIndex / 2) % 24;
+		const minute = safeIndex % 2 === 0 ? "00" : "30";
 		return `${hour}:${minute}`;
 	}
 
@@ -57,7 +58,7 @@ export default function ReserveSuccess() {
 			.join("، ");
 		const firstSlot = state.calendarSlots[0];
 		const timeText = mergeRanges(firstSlot.slots ?? [])
-			.map(({ start, end }) => `${indexToTime(start)} - ${indexToTime(end + 1)}`)
+			.map(({ start, end }) => `${indexToTime(start - 1)} - ${indexToTime(end)}`)
 			.join("، ");
 		return { dateText, timeText: timeText || "-" };
 	}, [state]);
