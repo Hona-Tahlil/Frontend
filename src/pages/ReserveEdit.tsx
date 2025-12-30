@@ -493,7 +493,7 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 					}
 				}}
 			>
-				{({ values, errors, setFieldValue }) => (
+				{({ values, errors, isSubmitting, setFieldValue }) => (
 					<Form>
 						<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
 							<div
@@ -789,7 +789,7 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 										</div>
 									</div>
 									<div className="w-full h-0.5 border-0 bg-black/40"></div>
-									<Button className="mx-5" shadow>
+									<Button className="mx-5" isLoading={isSubmitting} shadow>
 										ذخیره تغییرات
 									</Button>
 								</div>
@@ -816,7 +816,7 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 									<div className="font-bold text-primary">12 تومن</div>
 								</div>
 								<div className="w-full h-0.5 border-0 bg-black/40"></div>
-								<Button className="mx-5" shadow>
+								<Button className="mx-5" isLoading={isSubmitting} shadow>
 									ذخیره تغییرات
 								</Button>
 							</div>
