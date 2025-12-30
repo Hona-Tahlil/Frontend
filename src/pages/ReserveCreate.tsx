@@ -65,6 +65,10 @@ export default function ReserveCreate() {
 	const { petSitterUserID } = useParams();
 
 	const validationSchema = Yup.object({
+		serviceID: Yup.array()
+			.of(Yup.string())
+			.min(1, "انتخاب سرویس الزامی است"),
+		petID: Yup.array().of(Yup.string()).min(1, "انتخاب پت الزامی است"),
 		days: Yup.object({
 			day0: Yup.string().required("روز اجباریست"),
 		}),
@@ -436,6 +440,9 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 										titles={services.map((service) => service.type)}
 									/>
 								</div>
+								{errors.serviceID && (
+									<p className="text-red-500">{errors.serviceID}</p>
+								)}
 								<div className="w-full h-0.5 border-0 bg-black/40"></div>
 								<div className="flex justify-start">
 									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
@@ -452,6 +459,7 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 										titles={pets.map((pet) => pet.name)}
 									/>
 								</div>
+								{errors.petID && <p className="text-red-500">{errors.petID}</p>}
 								<div className="w-full h-0.5 border-0 bg-black/40"></div>
 								<div className="flex justify-start">
 									<p className="w-auto pl-3 sm:w-30 lg:w-50 font-bold leading-10">
