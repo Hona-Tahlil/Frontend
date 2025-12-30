@@ -3,10 +3,7 @@ import DatePicker from "@/components/Custom/DatePicker/DatePicker";
 import { Form, Formik } from "formik";
 
 import jalaali from "jalaali-js";
-import {
-	Dialog,
-	DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 
 import { CircleX, Plus } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -58,9 +55,7 @@ export default function ReserveEdit() {
 	const [requestInfo, setRequestInfo] = useState<RequestInfo | null>(null);
 	const [initialDays, setInitialDays] = useState<Days>({});
 	const [selectedPetIds, setSelectedPetIds] = useState([] as string[]);
-	const [selectedServiceIds, setSelectedServiceIds] = useState(
-		[] as string[],
-	);
+	const [selectedServiceIds, setSelectedServiceIds] = useState([] as string[]);
 	const [addressFormValues, setAddressFormValues] = useState({
 		Province: "",
 		City: "",
@@ -361,9 +356,7 @@ export default function ReserveEdit() {
 				service.type.trim() === requestServiceType &&
 				(service.description?.trim() ?? "") === requestServiceDescription,
 		);
-		setSelectedServiceIds(
-			matchedService ? [matchedService.id.toString()] : [],
-		);
+		setSelectedServiceIds(matchedService ? [matchedService.id.toString()] : []);
 	}, [requestInfo, services]);
 
 	return (
@@ -380,8 +373,7 @@ export default function ReserveEdit() {
 					if (day0Ranges.length === 0) {
 						return;
 					}
-					const needsPreviousAddress =
-						addressIsChecked && !values.addressID;
+					const needsPreviousAddress = addressIsChecked && !values.addressID;
 					const needsNewAddress =
 						!addressIsChecked &&
 						(!values.Province ||
@@ -722,13 +714,6 @@ export default function ReserveEdit() {
 									<Button className="mx-5" shadow>
 										ذخیره تغییرات
 									</Button>
-									<p className="text-center">
-										با کلیلک بر روی تایید شما با{" "}
-										<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
-											قوانین و مقررات
-										</a>{" "}
-										موافقت می کنید.
-									</p>
 								</div>
 							)}
 						</div>
@@ -756,13 +741,6 @@ export default function ReserveEdit() {
 								<Button className="mx-5" shadow>
 									ذخیره تغییرات
 								</Button>
-								<p className="text-center">
-									با کلیلک بر روی تایید شما با{" "}
-									<a className="text-primary underline underline-offset-4 hover:text-primary-hover hover:cursor-pointer">
-										قوانین و مقررات
-									</a>{" "}
-									موافقت می کنید.
-								</p>
 							</div>
 						)}
 					</Form>
