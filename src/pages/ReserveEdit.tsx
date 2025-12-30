@@ -58,6 +58,9 @@ export default function ReserveEdit() {
 	const [requestInfo, setRequestInfo] = useState<RequestInfo | null>(null);
 	const [initialDays, setInitialDays] = useState<Days>({});
 	const [selectedPetIds, setSelectedPetIds] = useState([] as string[]);
+	const [selectedServiceIds, setSelectedServiceIds] = useState(
+		[] as string[],
+	);
 	const [addressFormValues, setAddressFormValues] = useState({
 		Province: "",
 		City: "",
@@ -81,9 +84,7 @@ export default function ReserveEdit() {
 	const initialValues = useMemo(
 		() => ({
 			requestType: "monthly",
-			serviceID: requestInfo?.service?.id
-				? [requestInfo.service.id.toString()]
-				: ([] as string[]),
+			serviceID: selectedServiceIds,
 			petID: selectedPetIds,
 			note: requestInfo?.notes ?? "",
 			notes: requestInfo?.notes ?? "",
@@ -99,7 +100,13 @@ export default function ReserveEdit() {
 			Pelak: addressFormValues.Pelak,
 			calendarSlot: "",
 		}),
-		[addressFormValues, initialDays, requestInfo, selectedPetIds],
+		[
+			addressFormValues,
+			initialDays,
+			requestInfo,
+			selectedPetIds,
+			selectedServiceIds,
+		],
 	);
 
 	function calculateTotalPrice(
@@ -329,6 +336,22 @@ export default function ReserveEdit() {
 			.map((pet) => pet.id.toString());
 		setSelectedPetIds(matchedIds);
 	}, [pets, requestInfo]);
+	useEffect(() => {
+		if (!requestInfo || services.length === 0) {
+			return;
+		}
+		const requestServiceType = requestInfo.service?.type.trim() ?? "";
+		const requestServiceDescription =
+			requestInfo.service?.description?.trim() ?? "";
+		const matchedService = services.find(
+			(service) =>
+				service.type.trim() === requestServiceType &&
+				(service.description?.trim() ?? "") === requestServiceDescription,
+		);
+		setSelectedServiceIds(
+			matchedService ? [matchedService.id.toString()] : [],
+		);
+	}, [requestInfo, services]);
 
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
