@@ -45,9 +45,11 @@ import Toggle from "@/components/Custom/Toggle/Toggle";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import * as Yup from "yup";
 import { toTehranISOString } from "@/utils/toTehranISOString";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ReserveCreate() {
 	const [dayCount, setDayCount] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [addressIsChecked, setIsChecked] = useState(false);
@@ -169,18 +171,24 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 
 	function loadRequestInfo() {
 		if (!accessToken) {
+			setIsLoading(false);
 			navigate("/login");
 			return;
 		}
+		setIsLoading(true);
 		getCreateRequestInfo({
 			accessToken: accessToken!,
 			petSitterUserID: petSitterUserID as unknown as number,
-		}).then((response) => {
-			console.log(response.data.pets[0].species);
-			setPets(response.data.pets ?? []);
-			setServices(response.data.services ?? []);
-			setAddresses(response.data.addresses ?? []);
-		});
+		})
+			.then((response) => {
+				console.log(response.data.pets[0].species);
+				setPets(response.data.pets ?? []);
+				setServices(response.data.services ?? []);
+				setAddresses(response.data.addresses ?? []);
+			})
+			.finally(() => {
+				setIsLoading(false);
+			});
 	}
 
 	function convertToCalenderSlots(
@@ -264,6 +272,13 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 		loadRequestInfo();
 		console.log("id:", petSitterUserID);
 	}, [petSitterUserID]);
+	if (isLoading) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<Spinner className="size-8" />
+			</div>
+		);
+	}
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik

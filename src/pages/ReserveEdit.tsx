@@ -42,9 +42,11 @@ import Toggle from "@/components/Custom/Toggle/Toggle";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import * as Yup from "yup";
 import { toTehranISOString } from "@/utils/toTehranISOString";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ReserveEdit() {
 	const [dayCount, setDayCount] = useState(0);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [addressIsChecked, setIsChecked] = useState(false);
@@ -276,68 +278,77 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 
 	useEffect(() => {
 		if (!accessToken) {
+			setIsLoading(false);
 			navigate("/login");
 			return;
 		}
 		const requestIdNumber = Number(requestID);
 		if (!requestID || Number.isNaN(requestIdNumber)) {
+			setIsLoading(false);
 			return;
 		}
 		let isActive = true;
 		const loadRequestInfo = async () => {
-			const response = await getRequestInfo({
-				accessToken: accessToken!,
-				requestID: requestIdNumber,
-			});
-			if (!isActive) return;
-			const request = response.data;
-			setRequestInfo(request);
-			setIsChecked(false);
-			const nextDayRanges = new Map<number, number[]>();
-			const days: Days = {};
-			request.calendarSlots?.forEach((slot, index) => {
-				days[`day${index}`] = slot.date;
-				nextDayRanges.set(index, slot.slots ?? []);
-			});
-			setInitialDays(days);
-			setDayRanges(nextDayRanges);
-			setDayCount(Math.max((request.calendarSlots?.length ?? 1) - 1, 0));
-			const nextAddressFormValues = {
-				Province: "",
-				City: "",
-				Address: request.address?.streetAddress ?? "",
-				Vahed: request.address?.unit?.toString() ?? "",
-				Pelak: request.address?.houseNumber?.toString() ?? "",
-			};
-			if (request.address?.provinceName) {
-				try {
-					const provinceResponse = await fetchProvincesService();
-					const province = provinceResponse.data.find(
-						(item) => item.name === request.address?.provinceName,
-					);
-					if (province) {
-						nextAddressFormValues.Province = province.num.toString();
-						const cityResponse = await fetchCitiesService(province.num);
-						const city = cityResponse.data.find(
-							(item) => item.name === request.address?.cityName,
+			try {
+				setIsLoading(true);
+				const response = await getRequestInfo({
+					accessToken: accessToken!,
+					requestID: requestIdNumber,
+				});
+				if (!isActive) return;
+				const request = response.data;
+				setRequestInfo(request);
+				setIsChecked(false);
+				const nextDayRanges = new Map<number, number[]>();
+				const days: Days = {};
+				request.calendarSlots?.forEach((slot, index) => {
+					days[`day${index}`] = slot.date;
+					nextDayRanges.set(index, slot.slots ?? []);
+				});
+				setInitialDays(days);
+				setDayRanges(nextDayRanges);
+				setDayCount(Math.max((request.calendarSlots?.length ?? 1) - 1, 0));
+				const nextAddressFormValues = {
+					Province: "",
+					City: "",
+					Address: request.address?.streetAddress ?? "",
+					Vahed: request.address?.unit?.toString() ?? "",
+					Pelak: request.address?.houseNumber?.toString() ?? "",
+				};
+				if (request.address?.provinceName) {
+					try {
+						const provinceResponse = await fetchProvincesService();
+						const province = provinceResponse.data.find(
+							(item) => item.name === request.address?.provinceName,
 						);
-						if (city) {
-							nextAddressFormValues.City = city.num.toString();
+						if (province) {
+							nextAddressFormValues.Province = province.num.toString();
+							const cityResponse = await fetchCitiesService(province.num);
+							const city = cityResponse.data.find(
+								(item) => item.name === request.address?.cityName,
+							);
+							if (city) {
+								nextAddressFormValues.City = city.num.toString();
+							}
 						}
+					} catch {
+						// Keep address fields without province/city when lookup fails.
 					}
-				} catch {
-					// Keep address fields without province/city when lookup fails.
+				}
+				setAddressFormValues(nextAddressFormValues);
+				const createInfo = await getCreateRequestInfo({
+					accessToken: accessToken!,
+					petSitterUserID: request.petSitterUserID,
+				});
+				if (!isActive) return;
+				setPets(createInfo.data.pets ?? []);
+				setServices(createInfo.data.services ?? []);
+				setAddresses(createInfo.data.addresses ?? []);
+			} finally {
+				if (isActive) {
+					setIsLoading(false);
 				}
 			}
-			setAddressFormValues(nextAddressFormValues);
-			const createInfo = await getCreateRequestInfo({
-				accessToken: accessToken!,
-				petSitterUserID: request.petSitterUserID,
-			});
-			if (!isActive) return;
-			setPets(createInfo.data.pets ?? []);
-			setServices(createInfo.data.services ?? []);
-			setAddresses(createInfo.data.addresses ?? []);
 		};
 		loadRequestInfo();
 		return () => {
@@ -371,6 +382,13 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 		setSelectedServiceIds(matchedService ? [matchedService.id.toString()] : []);
 	}, [requestInfo, services]);
 
+	if (isLoading) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<Spinner className="size-8" />
+			</div>
+		);
+	}
 	return (
 		<div className="p-0 sm:p-4" dir={!isDesktop ? "rtl" : "ltr"}>
 			<Formik
