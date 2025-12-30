@@ -12,6 +12,8 @@ import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import ExplorePetSitter from "@/pages/ExplorePetSitter";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import ReserveCreate from "@/pages/ReserveCreate";
+import ReserveEdit from "@/pages/ReserveEdit";
 import ReserveSuccess from "@/pages/ReserveSuccess";
 import AdminDashboard from "@/pages/AdminDashboard";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
@@ -61,24 +63,32 @@ export const router = createBrowserRouter([
         path: "/AboutUs",
         element: <AboutUs />,
       },
+			{
+				path: "/ExplorePetSitter",
+				element: <ExplorePetSitter />,
+			},
+			{
+				path: "/admin",
+				element: <AdminDashboard />,
+			},
+			{
+				path: "/reserve-create/:petSitterUserID",
+				element: <ReserveCreate />,
+			},
+			{
+				path: "/reserve-edit/:requestID",
+				element: <ReserveEdit />,
+			},
       {
-        path: "/ExplorePetSitter",
-        element: <ExplorePetSitter />,
-      },
-      {
-        path: "/admin",
-        element: <AdminDashboard />,
-      },
-      {
-        path: "/Reserve-Success",
+        path: "/Reserve-Success/:requestID?",
         element: <ReserveSuccess />,
       },
       {
         path: "/Petsitters",
         element: <ExplorePetSitter />,
       },
-      {
-        path: "/Dashboard/pets",
+			{
+				path: "/Dashboard/pets",
         element: <PetDashboard />,
       },
       {

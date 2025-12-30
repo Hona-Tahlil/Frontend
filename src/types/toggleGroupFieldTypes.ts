@@ -5,6 +5,7 @@ export interface ToggleGroupFieldProps {
 	dir?: "ltr" | "rtl";
 	classes?: ToggleGroupFieldClasses;
 	variant?: "pet" | "service";
+	type?: "single" | "multiple";
 }
 
 export interface ToggleGroupFieldClasses {
