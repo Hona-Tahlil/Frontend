@@ -3,7 +3,6 @@ import { cn } from "@/lib/utils";
 import type { ToggleGroupFieldProps } from "@/types/toggleGroupFieldTypes";
 import { useField } from "formik";
 import { CircleCheck } from "lucide-react";
-import { useState } from "react";
 
 export default function ToggleGroupField({
 	name,
@@ -11,15 +10,22 @@ export default function ToggleGroupField({
 	titles,
 	dir = "rtl",
 	classes,
+	type = "multiple",
 	variant = "pet",
 }: ToggleGroupFieldProps) {
-	const [, , helpers] = useField<string[]>(name || "");
-	const [, setSelectedValues] = useState<string[]>([]);
+	const [field, , helpers] = useField<string[] | string>(name || "");
+	const selectedValues = Array.isArray(field.value)
+		? field.value
+		: field.value
+			? [field.value]
+			: [];
+	const isSingle = type === "single";
+	const currentValue = isSingle ? selectedValues[0] : selectedValues;
 
 	const isPet = variant === "pet";
 
 	const containerClassName = isPet
-		? "flex flex-wrap"
+		? "flex flex-wrap justify-start"
 		: "flex flex-col items-start";
 
 	const toggleClassName = isPet
@@ -31,41 +37,35 @@ export default function ToggleGroupField({
 		: "";
 
 	return (
-		<div>
-			<ToggleGroup
-				dir={dir}
-				type="multiple"
-				variant="outline"
-				size="sm"
-				className={cn(containerClassName, classes?.className)}
-			>
-				{values?.map((value, index) => (
-					<ToggleGroupItem
-						key={value}
-						value={value}
-						aria-label="Toggle star"
-						onClick={() => {
-							setSelectedValues((prevSelected) => {
-								if (!prevSelected.includes(value)) {
-									const newValues = [...prevSelected, value];
-									helpers.setValue(newValues);
-									return newValues;
-								} else {
-									const newValues = prevSelected.filter((v) => v !== value);
-									helpers.setValue(newValues);
-									return newValues;
-								}
-							});
-						}}
-						className={cn(toggleClassName, classes?.toggleClassName)}
-					>
-						<CircleCheck size={"auto"} />
-						<p className={cn(textClassName, classes?.textClassName)}>
-							{titles?.[index] || ""}
-						</p>
-					</ToggleGroupItem>
-				))}
-			</ToggleGroup>
-		</div>
+		<ToggleGroup
+			dir={dir}
+			type={type}
+			variant="outline"
+			className={cn(containerClassName, classes?.className)}
+			value={currentValue}
+			onValueChange={(nextValue) => {
+				if (isSingle) {
+					helpers.setValue(nextValue ? [nextValue] : []);
+				} else {
+					helpers.setValue(
+						Array.isArray(nextValue) ? nextValue : nextValue ? [nextValue] : [],
+					);
+				}
+			}}
+		>
+			{values?.map((value, index) => (
+				<ToggleGroupItem
+					key={value}
+					value={value}
+					aria-label="Toggle star"
+					className={cn(toggleClassName, classes?.toggleClassName)}
+				>
+					<CircleCheck className="size-auto" />
+					<p className={cn(textClassName, classes?.textClassName)}>
+						{titles?.[index] || ""}
+					</p>
+				</ToggleGroupItem>
+			))}
+		</ToggleGroup>
 	);
 }

@@ -8,7 +8,7 @@ import { Plus } from "lucide-react";
 import { Form, Formik, useFormikContext } from "formik";
 
 import * as Yup from "yup";
-import { NonFormikInput, type InputClass } from "../Input/NonFormikInput";
+import { NonFormikInput } from "../Input/NonFormikInput";
 import { City } from "../Province/City";
 import { Province } from "../Province/Province";
 import {
@@ -16,13 +16,21 @@ import {
 	type ProvinceResponse,
 } from "@/types/addressInfoTypes";
 import { LocationSelector } from "../Province/LocationSelector";
+import type { InputClass } from "@/types/inputTypes";
+import { cn } from "@/lib/utils";
 import {
 	fetchCitiesService,
 	fetchProvincesService,
 } from "@/services/provinceService";
 import { PROVINCES_QUERY_KEY, citiesQueryKey } from "@/keys/locationKeys";
 
-export default function Address({ classes }: { classes?: InputClass }) {
+export default function Address({
+	className,
+	classes,
+}: {
+	className?: string;
+	classes?: InputClass;
+}) {
 	const [open, setOpen] = useState(false);
 	const { values, setFieldValue } = useFormikContext<any>();
 
@@ -70,16 +78,29 @@ export default function Address({ classes }: { classes?: InputClass }) {
 	const fullAddress = `${getNameByNum(provinces, parseInt(values.Province))}، ${getNameByNum(cities, parseInt(values.City))}، ${values.Pelak}، ${values.Vahed}، ${values.Address}`;
 	return (
 		<>
-			<div className="flex gap-3">
-				<Button className="" onClick={openDiaglog} type="button">
-					<Plus />
-				</Button>
+			<div className={cn("flex gap-3", className)}>
 				<NonFormikInput
 					classes={classes}
 					disabled
 					shadow
 					value={values.Province ? fullAddress : ""}
 				/>
+				<Button
+					className={`
+										flex items-center gap-2 
+										p-0
+										border-4 border-dashed 
+										border-primary 
+										bg-primary-100 
+										text-primary-600 
+										text-xl font-semibold
+										rounded-xl h-auto aspect-square
+									`}
+					onClick={openDiaglog}
+					type="button"
+				>
+					<Plus />
+				</Button>
 			</div>
 
 			<Dialog open={open} onOpenChange={setOpen}>

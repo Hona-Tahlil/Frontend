@@ -10,7 +10,7 @@ function FooterDesktop() {
 				<div className="flex justify-center">
 					<div className="justify-center w-full flex items-start h-60">
 						<div className="flex flex-col justify-center w-fit">
-							<p className="text-lg font-bold px-4">پتیار</p>
+							<p className="text-lg font-bold px-4">پت‌یار</p>
 							<ul className="space-y-1 mt-5">
 								<li>
 									<Button className="text-white" variant="link" shadow={false}>
@@ -34,7 +34,7 @@ function FooterDesktop() {
 					<div className="w-full flex justify-center items-start">
 						<div className="flex flex-col justify-center w-fit">
 							<p className="text-lg font-bold px-4 whitespace-nowrap">
-								راههای ارتباطی
+								راه های ارتباطی
 							</p>
 							<ul className="space-y-1 mt-5">
 								<li>
@@ -54,7 +54,7 @@ function FooterDesktop() {
 					<div className="w-full flex justify-center items-start">
 						<div className="flex flex-col justify-center w-fit">
 							<p className="text-lg whitespace-nowrap font-bold">
-								شبکههای اجتماعی
+								شبکه های اجتماعی
 							</p>
 							<div className="mt-3 flex items-center gap-4">
 								<a
@@ -106,7 +106,7 @@ function FooterDesktop() {
 				<div className="mt-20 mx-auto w-[90%]">
 					<div className="border-b-2 border-white"></div>
 					<p className="text-sm py-4 text-center md:text-right">
-						کلیه حقوق مادی و معنوی این سایت متعلق به پتیار است.
+						کلیه حقوق مادی و معنوی این سایت متعلق به پت‌یار است.
 					</p>
 				</div>
 			</div>
@@ -120,7 +120,7 @@ function FooterMobile() {
 			<div className="bg-teal-900 text-white py-8 rtl">
 				<div className="grid grid-cols-2 gap-y-10 gap-x-4 justify-items-center">
 					<div className="flex flex-col items-start">
-						<p className="text-lg font-bold px-4">پتیار</p>
+						<p className="text-lg font-bold px-4">پت‌یار</p>
 						<ul className="space-y-1 mt-3 text-start">
 							<li>
 								<Button className="text-white" variant="link" shadow={false}>
@@ -142,7 +142,7 @@ function FooterMobile() {
 
 					<div className="flex flex-col items-start">
 						<p className="text-lg font-bold px-4 whitespace-nowrap">
-							راههای ارتباطی
+							راه های ارتباطی
 						</p>
 						<ul className="space-y-1 mt-3 text-start">
 							<li>
@@ -160,7 +160,7 @@ function FooterMobile() {
 
 					<div className="flex flex-col items-start">
 						<p className="text-lg font-bold whitespace-nowrap">
-							شبکههای اجتماعی
+							شبکه های اجتماعی
 						</p>
 						<div className="mt-3 flex items-center gap-4">
 							<a
@@ -210,7 +210,7 @@ function FooterMobile() {
 				<div className="mt-20 w-4/5 mx-auto">
 					<div className="border-b-2 border-white"></div>
 					<p className="text-right py-4 text-sm">
-						کلیه حقوق مادی و معنوی این سایت متعلق به پتیار است.
+						کلیه حقوق مادی و معنوی این سایت متعلق به پت‌یار است.
 					</p>
 				</div>
 			</div>

@@ -7,6 +7,7 @@ import { useField } from "formik";
 import { toTehranISOString } from "@/utils/toTehranISOString";
 import { cn } from "@/lib/utils";
 import { Calendar } from "lucide-react";
+import { useEffect } from "react";
 
 const inputVariants = cva(
 	"flex h-13 w-full !text-[15px] rounded-full border border-[1px] border-black/40 bg-white font-[Alibaba] font-bold px-6 pl-10 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
@@ -33,7 +34,12 @@ export default function DatePicker({
 	className,
 	...props
 }: DatePickerProps) {
-	const [field, , helpers] = useField(name || "");
+	const [field, meta, helpers] = useField(name || "");
+	const hasError = meta.error;
+
+	useEffect(() => {
+		console.log(hasError);
+	}, [hasError]);
 	return (
 		<div className="flex items-center relative w-full">
 			<MultiDatePicker
@@ -57,7 +63,14 @@ export default function DatePicker({
 				}}
 				calendar={persian}
 				locale={persian_fa}
-				inputClass={cn(inputVariants({ shadow }), className)}
+				inputClass={cn(
+					inputVariants({ shadow }),
+					hasError
+						? "drop-shadow-red-500 border-red-500 text-red-600"
+						: "border-black/40",
+
+					className,
+				)}
 				mapDays={({ date }) => {
 					const props: Partial<{ className?: string }> = {};
 
