@@ -1,6 +1,6 @@
 "use client";
 import type { ChangeEvent } from "react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Formik, Form } from "formik";
 import { Clock3, PawPrint, ChevronDown, ChevronUp } from "lucide-react";
 import { Button } from "@/components/Custom/Button/Button";
@@ -81,6 +81,7 @@ export default function FiltersBox({
   showFooter = true,
   containerClassName = "",
 }: FiltersBoxProps) {
+  const timePickerRef = useRef<HTMLDivElement | null>(null);
   const petsLabelFromArray = useMemo(
     () =>
       (arr: PetType[]): string =>
@@ -114,6 +115,20 @@ export default function FiltersBox({
   const timeTextColor =
     timeFrom || timeTo ? "text-charcoal-800" : "text-charcoal-400";
 
+  useEffect(() => {
+    if (!showTimePicker) return;
+
+    const handleOutsideClick = (event: MouseEvent) => {
+      const target = event.target as Node;
+      if (timePickerRef.current && !timePickerRef.current.contains(target)) {
+        setShowTimePicker(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showTimePicker, setShowTimePicker]);
+
   return (
     <div
       id="pet-sitter-filters"
@@ -142,7 +157,7 @@ export default function FiltersBox({
           <Form>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* ساعت */}
-              <div className={`${fieldWrapClass} relative`}>
+              <div className={`${fieldWrapClass} relative`} ref={timePickerRef}>
                 <label className={labelClass}>ساعت</label>
 
                 <button
