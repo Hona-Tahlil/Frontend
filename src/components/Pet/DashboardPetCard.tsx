@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardContent,
@@ -21,11 +21,13 @@ import { deletePetService } from "@/services/Pet/deletePetService";
 import { useQueryClient, useMutation } from "@tanstack/react-query";
 import { PETS_QUERY_KEY } from "@/queryKeys/pets";
 import MessageDialog from "../Custom/MessageDialog/MessageDialog";
-import type { Pet, PetBasicData } from "@/types/Pet/pet";
+import type { Pet, PetBasicData, PetDashboardCardProps } from "@/types/Pet/pet";
+import { useNavigate } from "react-router-dom";
 
-export default function DashboardPetCard({ pet }: { pet: PetBasicData }) {
+export default function DashboardPetCard({ pet }: { pet: PetDashboardCardProps }) {
   const isMobile = useMobile();
   const [openDelete, setOpenDelete] = React.useState(false);
+  const navigate = useNavigate();
 
   const queryClient = useQueryClient();
   const deletePetMutation = useMutation({
@@ -59,7 +61,7 @@ export default function DashboardPetCard({ pet }: { pet: PetBasicData }) {
             className="font-semibold"
           >
             {pet.name}
-          </span> {" "}
+          </span>{" "}
           را حذف کنید؟
         </span>
       </MessageDialog>
@@ -101,7 +103,12 @@ export default function DashboardPetCard({ pet }: { pet: PetBasicData }) {
           </CardContent>
           {isMobile ? (
             <CardFooter className="flex flex-col md:mt-5 px-3 pb-2 justify-end">
-              <Button className="shadow-none drop-shadow-none w-full h-9 text-xs">
+              <Button
+                className="shadow-none drop-shadow-none w-full h-9 text-xs"
+                onClick={() => {
+                  navigate(`/Pet/${pet.id}`);
+                }}
+              >
                 <Eye />
                 مشاهده
               </Button>
@@ -124,7 +131,12 @@ export default function DashboardPetCard({ pet }: { pet: PetBasicData }) {
                 <Trash />
                 حذف
               </Button>
-              <Button className="shadow-none drop-shadow-none">
+              <Button
+                className="shadow-none drop-shadow-none"
+                onClick={() => {
+                  navigate(`/Pet/${pet.id}`);
+                }}
+              >
                 <Eye />
                 مشاهده
               </Button>

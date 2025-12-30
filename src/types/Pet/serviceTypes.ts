@@ -1,10 +1,10 @@
-import type { Pet } from "./pet";
+import type { Pet, PetBasicData } from "./pet";
 
 
 export interface GetAllPetsResponse {
     statusCode: number;
     message?: string;
-    data: Pet[];
+    data: PetBasicData[];
 }
 
 

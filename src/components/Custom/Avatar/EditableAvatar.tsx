@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { PawPrint, Pencil, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -13,7 +13,7 @@ import {
 import { Button } from "../Button/Button";
 import petDefaultImage from "@/assets/images/pet-default-profile.png";
 import { useMobile } from "@/hooks/ResponsiveHooks";
-import { useFormikContext } from "formik";
+import { useField, useFormikContext } from "formik";
 
 interface EditableAvatarProps {
   className?: string;
@@ -27,6 +27,14 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className, name }) => {
   const isMobile = useMobile();
 
   const formik = useFormikContext<any>();
+
+  const [field, meta, helpers] = useField(name);
+
+  useEffect(() => {
+    if (field.value) {
+      setImage(field.value);
+    }
+  }, [field.value]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -72,7 +80,9 @@ const EditableAvatar: React.FC<EditableAvatarProps> = ({ className, name }) => {
           </DialogTrigger>
           <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl mb-10">تغییر پروفایل</DialogTitle>
+              <DialogTitle className="text-2xl mb-10">
+                تغییر پروفایل
+              </DialogTitle>
             </DialogHeader>
             <DialogFooter>
               <Button onClick={handleClick} className="w-40 h-10 text-md">

@@ -1,13 +1,13 @@
+import type { Pet } from "./pet";
 
 export type GetPetByIdResponse = {
-  id: number;
-  name: string;
-  kind: number;
-  species: number;
-  gender: number;
-  weight: number;
-  birthDate: string;
-  isAdult: boolean;
-  pictureLink: string;
-  aboutPet: string;
+  statusCode: number;
+  message: string;
+  data: Pet;
+};
+
+export type UpdatePetInfoResponse = {
+  statusCode: number;
+  message?: string;
+  data: null;
 };

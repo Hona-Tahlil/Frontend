@@ -10,7 +10,7 @@ import ForgetPassword from "@/pages/ForgetPassword";
 import ChangePassword from "@/pages/ChangePassword";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
-import ExplorePetSitter from "@/pages/ExplorePetSitter"
+import ExplorePetSitter from "@/pages/ExplorePetSitter";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
@@ -36,10 +36,10 @@ export const router = createBrowserRouter([
         path: "/temp",
         element: <Temp />,
       },
-			{
-				path: "/PetSitterLanding",
-				element: <PetSitterLanding />,
-			},
+      {
+        path: "/PetSitterLanding",
+        element: <PetSitterLanding />,
+      },
       {
         path: "/test",
         element: <Test />,
@@ -53,80 +53,80 @@ export const router = createBrowserRouter([
         path: "/AboutUs",
         element: <AboutUs />,
       },
-			{
-				path: "/Pet/:id",
-				element: <Pet />,
-			},
-			{
-				path: "/ExplorePetSitter",
-				element: <ExplorePetSitter />,
-			},
 
-			{
-				path: "/admin",
-				element: <AdminDashboard />,
-			},
-			{
-				path: "/Dashboard/pets",
-				element: <PetDashboard/>
-			}
-		],
-	},
-	{
-		element: <AuthLayout />,
-		children: [
-			{
-				path: "/login",
-				element: <Login />,
-			},
-			{
-				path: "/signup",
-				element: <Signup />,
-			},
-			{
-				path: "/forget-password",
-				element: <ForgetPassword />,
-			},
-			{
-				path: "/reset-password",
-				element: <ChangePassword />,
-			},
-		],
-	},
-	// {
-	// 	element: <PrivateLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/EditProfile",
-	// 			element: <EditProfile />,
-	// 		},
-	// 		{
-	// 			path: "/DashBoard",
-	// 			element: <DashBoard />,
-	// 		},
-	// 	],
-	// },
-	// {
-	// 	element: <AnotherLayout />,
-	// 	children: [
-	// 		{
-	// 			path: "/login",
-	// 			element: <Login />,
-	// 		},
-	// 		{
-	// 			path: "/temp",
-	// 			element: <Temp />,
-	// 		},
-	// 	],
-	// },
+      {
+        path: "/ExplorePetSitter",
+        element: <ExplorePetSitter />,
+      },
 
-  
+      {
+        path: "/admin",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/Dashboard/pets",
+        element: <PetDashboard />,
+      },
+    ],
+  },
+  {
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "/login",
+        element: <Login />,
+      },
+      {
+        path: "/signup",
+        element: <Signup />,
+      },
+      {
+        path: "/forget-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "/reset-password",
+        element: <ChangePassword />,
+      },
+    ],
+  },
+  // {
+  // 	element: <PrivateLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/EditProfile",
+  // 			element: <EditProfile />,
+  // 		},
+  // 		{
+  // 			path: "/DashBoard",
+  // 			element: <DashBoard />,
+  // 		},
+  // 	],
+  // },
+  // {
+  // 	element: <AnotherLayout />,
+  // 	children: [
+  // 		{
+  // 			path: "/login",
+  // 			element: <Login />,
+  // 		},
+  // 		{
+  // 			path: "/temp",
+  // 			element: <Temp />,
+  // 		},
+  // 	],
+  // },
+
   {
     element: <MobileLayout />,
     children: [
       {
         path: "/RegisterPet",
         element: <RegisterPetMobile />,
+      },
+      {
+        path: "/Pet/:petId",
+        element: <Pet />,
       },
     ],
   },

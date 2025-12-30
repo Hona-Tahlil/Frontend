@@ -38,7 +38,7 @@ const SelectRoot: React.FC<SelectPrimitive.SelectProps> = ({
 	return (
 		<SelectContext.Provider value={{ name: name || "", hasError }}>
 			<SelectPrimitive.Root
-				value={selfValue}
+				value={field.value ?? ""}
 				onValueChange={(v) => {
 					requestAnimationFrame(() => {
 						helpers.setValue(v);
