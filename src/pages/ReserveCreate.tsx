@@ -258,7 +258,7 @@ export default function ReserveCreate() {
 					Pelak: "",
 					calendarSlot: "",
 				}}
-				onSubmit={(values, { setErrors, setFieldError }) => {
+				onSubmit={async (values, { setErrors, setFieldError }) => {
 					const day0Ranges = dayRanges.get(0) ?? [];
 					if (dayRanges.get(0) === undefined) {
 						updateDayRanges(0, []);
@@ -306,30 +306,69 @@ export default function ReserveCreate() {
 						serviceID: parseInt(values.serviceID![0]),
 						accessToken: accessToken!,
 					});
-					createRequest({
-						petSitterUserID: parseInt(petSitterUserID as unknown as string),
-						calendarSlots: convertToCalenderSlots(
-							values.days,
-							dayRanges,
-							values.requestType === "weekly",
-						),
-						petIDs: values.petID.map((id) => parseInt(id)),
-						notes: values.notes,
-						addressInfo: {
-							provinceName: parseInt(values.Province),
-							cityName: parseInt(values.City),
-							streetAddress: values.Address,
-							houseNumber: parseInt(values.Pelak),
-							unit: parseInt(values.Vahed),
-						},
-						addressID: parseInt(values.addressID),
-						serviceID: parseInt(values.serviceID![0]),
-						accessToken: accessToken!,
-					}).catch((error) => {
+					try {
+						const response = await createRequest({
+							petSitterUserID: parseInt(petSitterUserID as unknown as string),
+							calendarSlots: convertToCalenderSlots(
+								values.days,
+								dayRanges,
+								values.requestType === "weekly",
+							),
+							petIDs: values.petID.map((id) => parseInt(id)),
+							notes: values.notes,
+							addressInfo: {
+								provinceName: parseInt(values.Province),
+								cityName: parseInt(values.City),
+								streetAddress: values.Address,
+								houseNumber: parseInt(values.Pelak),
+								unit: parseInt(values.Vahed),
+							},
+							addressID: parseInt(values.addressID),
+							serviceID: parseInt(values.serviceID![0]),
+							accessToken: accessToken!,
+						});
+						if (response.statusCode === 200) {
+							const selectedServiceId = parseInt(values.serviceID[0]);
+							const selectedService = services.find(
+								(service) => service.id === selectedServiceId,
+							);
+							const calendarSlots = convertToCalenderSlots(
+								values.days,
+								dayRanges,
+								values.requestType === "weekly",
+							);
+							const totalPrice = Math.round(
+								1.1 *
+									calculateTotalPrice(
+										values.petID.length,
+										selectedServiceId,
+										values.requestType,
+										values.days,
+									),
+							);
+							const selectedAddress = addresses.find(
+								(address) => address.id === values.addressID,
+							);
+							const addressText = addressIsChecked
+								? selectedAddress
+									? `${selectedAddress.provinceName}، ${selectedAddress.cityName}، ${selectedAddress.streetAddress}، پلاک ${selectedAddress.houseNumber}، واحد ${selectedAddress.unit}`
+									: "-"
+								: `${values.Province}، ${values.City}، ${values.Address}، پلاک ${values.Pelak}، واحد ${values.Vahed}`;
+							navigate("/Reserve-Success", {
+								state: {
+									petSitterName: "-",
+									serviceType: selectedService?.type ?? "-",
+									calendarSlots,
+									addressText,
+									totalPrice,
+								},
+							});
+						}
+					} catch (error: any) {
 						if (error.response?.data?.messages) {
 							setErrors(error.response.data.messages);
 						}
-					});
+					}
 				}}
 			>
 				{({ values, errors }) => (

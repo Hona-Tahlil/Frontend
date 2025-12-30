@@ -1,40 +1,18 @@
 import { Button } from "@/components/Custom/Button/Button";
-import { getRequestInfo } from "@/services/reserveCreateService";
-import useUserStore from "@/store/userStore/userStore";
-import type { RequestInfo } from "@/types/reserveCreateTypes";
+import type { CalenderSlot } from "@/types/reserveCreateTypes";
 import { CircleCheck } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useMemo } from "react";
+import { useLocation } from "react-router-dom";
 
 export default function ReserveSuccess() {
-	const [requestInfo, setRequestInfo] = useState<RequestInfo | null>(null);
-	const { accessToken } = useUserStore();
-	const { requestID } = useParams();
-	const navigate = useNavigate();
-
-	useEffect(() => {
-		if (!accessToken) {
-			navigate("/login");
-			return;
-		}
-		const requestIdNumber = Number(requestID);
-		if (!requestID || Number.isNaN(requestIdNumber)) {
-			return;
-		}
-		let isActive = true;
-		const loadRequestInfo = async () => {
-			const response = await getRequestInfo({
-				accessToken: accessToken!,
-				requestID: requestIdNumber,
-			});
-			if (!isActive) return;
-			setRequestInfo(response.data);
-		};
-		loadRequestInfo();
-		return () => {
-			isActive = false;
-		};
-	}, [accessToken, navigate, requestID]);
+	const location = useLocation();
+	const state = location.state as {
+		petSitterName?: string;
+		serviceType?: string;
+		calendarSlots?: CalenderSlot[];
+		addressText?: string;
+		totalPrice?: number;
+	} | null;
 
 	function mergeRanges(indices: number[]) {
 		const result: Array<{ start: number; end: number }> = [];
@@ -66,10 +44,10 @@ export default function ReserveSuccess() {
 	}
 
 	const calendarSummary = useMemo(() => {
-		if (!requestInfo?.calendarSlots?.length) {
+		if (!state?.calendarSlots?.length) {
 			return { dateText: "-", timeText: "-" };
 		}
-		const dateText = requestInfo.calendarSlots
+		const dateText = state.calendarSlots
 			.map((slot) => {
 				const date = new Date(slot.date);
 				return Number.isNaN(date.valueOf())
@@ -77,28 +55,19 @@ export default function ReserveSuccess() {
 					: date.toLocaleDateString("fa-IR");
 			})
 			.join("، ");
-		const firstSlot = requestInfo.calendarSlots[0];
+		const firstSlot = state.calendarSlots[0];
 		const timeText = mergeRanges(firstSlot.slots ?? [])
 			.map(({ start, end }) => `${indexToTime(start)} - ${indexToTime(end + 1)}`)
 			.join("، ");
 		return { dateText, timeText: timeText || "-" };
-	}, [requestInfo]);
+	}, [state]);
 
-	const addressText = useMemo(() => {
-		if (!requestInfo?.address) return "-";
-		const { provinceName, cityName, streetAddress, houseNumber, unit } =
-			requestInfo.address;
-		return `${provinceName}، ${cityName}، ${streetAddress}، پلاک ${houseNumber}، واحد ${unit}`;
-	}, [requestInfo]);
-
-	const petSitterName = requestInfo
-		? `${requestInfo.petSitterFirstName} ${requestInfo.petSitterLastName}`
-		: "-";
-
-	const serviceType = requestInfo?.service?.type ?? "-";
+	const petSitterName = state?.petSitterName ?? "-";
+	const serviceType = state?.serviceType ?? "-";
+	const addressText = state?.addressText ?? "-";
 	const totalPrice =
-		requestInfo?.totalPrice !== undefined
-			? requestInfo.totalPrice.toLocaleString("en-US")
+		state?.totalPrice !== undefined
+			? state.totalPrice.toLocaleString("en-US")
 			: "-";
 
 	return (
