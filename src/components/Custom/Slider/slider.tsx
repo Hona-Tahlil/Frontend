@@ -13,17 +13,13 @@ const Slider = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <SliderPrimitive.Root
     ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
+    className={cn("relative cursor-pointer flex w-full touch-none select-none items-center", className)}
     {...props}
   >
     <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-charcoal-100">
       <SliderPrimitive.Range className="absolute h-full bg-primary-500" />
     </SliderPrimitive.Track>
 
-    {/* دو تا thumb برای رنج */}
     <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary-500 bg-card shadow-lg transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-focus" />
     <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary-500 bg-card shadow-lg transition focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary-focus" />
   </SliderPrimitive.Root>
@@ -45,12 +41,9 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     value[1],
   ]);
 
-  /* همگام‌سازی از والد به داخل */
   React.useEffect(() => {
     setInternal(value);
   }, [value]);
-
-  /* ------------------------ ورودی‌ها ------------------------ */
 
   const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const raw = e.target.value;
@@ -66,10 +59,11 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     let num = Number(internal[0]);
     if (Number.isNaN(num)) num = min;
 
-    num = Math.max(min, Math.min(num, Number(internal[1])));
+    const currentMax = internal[1] === "" ? max : Number(internal[1]);
+    num = Math.max(min, Math.min(num, currentMax));
     num = Math.round(num / step) * step;
 
-    const next: [number, number] = [num, Number(internal[1])];
+    const next: [number, number] = [num, currentMax];
     setInternal(next);
     onChange(next);
   };
@@ -78,15 +72,14 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     let num = Number(internal[1]);
     if (Number.isNaN(num)) num = max;
 
-    num = Math.min(max, Math.max(num, Number(internal[0])));
+    const currentMin = internal[0] === "" ? min : Number(internal[0]);
+    num = Math.min(max, Math.max(num, currentMin));
     num = Math.round(num / step) * step;
 
-    const next: [number, number] = [Number(internal[0]), num];
+    const next: [number, number] = [currentMin, num];
     setInternal(next);
     onChange(next);
   };
-
-  /* ------------------------ اسلایدر ------------------------ */
 
   const handleSliderChange = (vals: number[]) => {
     const next: [number, number] = [vals[0], vals[1]];
@@ -94,70 +87,80 @@ export const PriceRangeSlider: React.FC<PriceRangeSliderProps> = ({
     onChange(next);
   };
 
+  const sliderValue: [number, number] = [
+    internal[0] === "" ? min : Number(internal[0]),
+    internal[1] === "" ? max : Number(internal[1]),
+  ];
+
   return (
-    <div className="space-y-2 text-small">
-      {/* --- Box Inputs --- */}
-      <div className="relative">
-        <div
+    <div className="space-y-2">
+      {/* Box */}
+      <div
+        className="
+          grid h-13 w-full items-center cursor-pointer
+          rounded-full border border-border bg-card shadow-sm
+          px-4 md:px-6
+          [grid-template-columns:auto_minmax(0,1fr)_auto_minmax(0,1fr)_auto]
+        "
+      >
+        {/* از */}
+        <span className="text-[12px] md:text-[13px] text-charcoal-400 whitespace-nowrap">
+          از
+        </span>
+
+        <input
+          type="number"
+          value={internal[0]}
+          onChange={handleMinChange}
+          onBlur={commitMin}
+          min={min}
+          max={internal[1] === "" ? max : Number(internal[1])}
+          step={step}
           className="
-            flex h-13 w-full items-center rounded-full border border-border
-            bg-card px-6 font-bold text-small text-charcoal-700
-            shadow-sm
+            min-w-0 w-full bg-transparent text-center outline-none
+            text-[13px] md:text-[15px]
+            font-bold text-charcoal-700
+            px-2 md:px-3
+            [appearance:textfield]
+            [&::-webkit-outer-spin-button]:appearance-none
+            [&::-webkit-inner-spin-button]:appearance-none
           "
-        >
-          {/* از */}
-          <span className="ml-2 text-small text-charcoal-400">از</span>
+        />
 
-          <input
-            type="number"
-            value={internal[0]}
-            onChange={handleMinChange}
-            onBlur={commitMin}
-            min={min}
-            max={Number(internal[1])}
-            step={step}
-            className="
-              w-24 bg-transparent text-center text-small outline-none
-              [appearance:textfield]
-              [&::-webkit-outer-spin-button]:appearance-none
-              [&::-webkit-inner-spin-button]:appearance-none
-            "
-          />
+        {/* تا */}
+        <span className="text-[12px] md:text-[13px] text-charcoal-400 whitespace-nowrap">
+          تا
+        </span>
 
-          {/* line separator */}
-          <span className="mx-4 h-4 w-px bg-charcoal-100" />
+        <input
+          type="number"
+          value={internal[1]}
+          onChange={handleMaxChange}
+          onBlur={commitMax}
+          min={internal[0] === "" ? min : Number(internal[0])}
+          max={max}
+          step={step}
+          className="
+            min-w-0 w-full bg-transparent text-center outline-none
+            text-[13px] md:text-[15px]
+            font-bold text-charcoal-700
+            px-2 md:px-3
+            [appearance:textfield]
+            [&::-webkit-outer-spin-button]:appearance-none
+            [&::-webkit-inner-spin-button]:appearance-none
+          "
+        />
 
-          {/* تا */}
-          <span className="mx-2 text-small text-charcoal-400">تا</span>
-
-          <input
-            type="number"
-            value={internal[1]}
-            onChange={handleMaxChange}
-            onBlur={commitMax}
-            min={Number(internal[0])}
-            max={max}
-            step={step}
-            className="
-              w-24 bg-transparent text-center text-small outline-none
-              [appearance:textfield]
-              [&::-webkit-outer-spin-button]:appearance-none
-              [&::-webkit-inner-spin-button]:appearance-none
-            "
-          />
-
-          {/* تومان */}
-          <span className="ml-auto text-small text-charcoal-400">تومان</span>
-        </div>
+        {/* تومان */}
+        <span className="text-[12px] md:text-[13px] text-charcoal-400 whitespace-nowrap">
+          تومان
+        </span>
       </div>
 
-      {/* اسلایدر */}
+      {/* Slider */}
       <Slider
         dir="rtl"
-        value={[
-          internal[0] === "" ? min : Number(internal[0]),
-          internal[1] === "" ? max : Number(internal[1]),
-        ]}
+        value={sliderValue}
         min={min}
         max={max}
         step={step}

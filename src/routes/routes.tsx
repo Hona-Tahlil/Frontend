@@ -12,6 +12,7 @@ import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
 import ExplorePetSitter from "@/pages/ExplorePetSitter"
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import AdminDashboard from "@/pages/AdminDashboard";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
@@ -61,6 +62,14 @@ export const router = createBrowserRouter([
 				element: <AdminDashboard />,
 			},
 			{
+				path: "/Petsitters",
+				element: <ExplorePetSitter />,
+			},
+
+			{
+				path: "/admin",
+				element: <AdminDashboard />,
+			},
 				path: "/Dashboard/pets",
 				element: <PetDashboard/>
 			}

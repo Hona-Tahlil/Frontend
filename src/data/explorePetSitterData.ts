@@ -7,7 +7,7 @@ import type { PetType } from "@/types/PetSitter";
 export const BASE_SITTERS: SitterWithTimeAndDate[] = [
   {
     id: 1,
-    name: "جیمز باند",
+    name: "پریسا رستمی",
     city: "تهران",
     rating: 4.9,
     reviewsCount: 13,
@@ -21,8 +21,8 @@ export const BASE_SITTERS: SitterWithTimeAndDate[] = [
   },
   {
     id: 2,
-    name: "الیسا",
-    city: "اصفهان",
+    name: "سارا امیری",
+    city: "شیراز",
     rating: 4.7,
     reviewsCount: 9,
     pricePerNight: 180000,
@@ -35,7 +35,7 @@ export const BASE_SITTERS: SitterWithTimeAndDate[] = [
   },
   {
     id: 3,
-    name: "مهدی",
+    name: "امیر سلیمانی",
     city: "تهران",
     rating: 4.4,
     reviewsCount: 21,
@@ -49,8 +49,8 @@ export const BASE_SITTERS: SitterWithTimeAndDate[] = [
   },
   {
     id: 4,
-    name: "سارا",
-    city: "شیراز",
+    name: "مهتاب رضایی",
+    city: "کرج",
     rating: 4.8,
     reviewsCount: 17,
     pricePerNight: 320000,
@@ -63,8 +63,8 @@ export const BASE_SITTERS: SitterWithTimeAndDate[] = [
   },
   {
     id: 5,
-    name: "آرش",
-    city: "مشهد",
+    name: "مریم نوری",
+    city: "اصفهان",
     rating: 4.2,
     reviewsCount: 7,
     pricePerNight: 120000,
@@ -104,12 +104,11 @@ export const GLOBAL_MAX_PRICE = Math.max(
   ...MOCK_SITTERS.map((s) => s.pricePerNight)
 );
 
-
 export const PET_OPTIONS: { value: PetType; label: string }[] = [
-  { value: "dog", label: "سگ‌ها" },
-  { value: "cat", label: "گربه‌ها" },
-  { value: "bird", label: "پرنده‌ها" },
-  { value: "rodent", label: "جوندگان" },
+  { value: "dog", label: "سگ" },
+  { value: "cat", label: "گربه" },
+  { value: "bird", label: "پرنده" },
+  { value: "rodent", label: "جونده" },
 ];
 
 export const SORT_FIELDS = [
@@ -117,4 +116,10 @@ export const SORT_FIELDS = [
   { value: "rating" as const, label: "امتیاز" },
 ];
 
-export const CITY_OPTIONS = ["تهران", "اصفهان", "مشهد", "شیراز", "تبریز"];
+export const CITY_OPTIONS = [
+  "ميانه",
+  "تبريز",
+  "مراغه",
+  "شبستر",
+  "CityUnknown",
+];

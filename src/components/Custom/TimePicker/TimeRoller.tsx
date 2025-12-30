@@ -163,7 +163,7 @@ export const TimePickerRoller: React.FC<TimePickerRollerProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-full bg-primary-100 px-5 py-1.5 text-small font-medium text-primary-600 transition-colors hover:bg-primary-200"
+            className="rounded-full cursor-pointer bg-primary-100 px-5 py-1.5 text-small font-medium text-primary-600 transition-colors hover:bg-primary-200"
           >
             بستن
           </button>
