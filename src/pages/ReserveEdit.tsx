@@ -168,6 +168,18 @@ export default function ReserveEdit() {
 			return next;
 		});
 	}
+	function splitRanges(ranges: number[] = []) {
+		const range1: string[] = [];
+		const range2: string[] = [];
+		ranges.forEach((range) => {
+			if (range % 2 === 0) {
+				range2.push(range.toString());
+			} else {
+				range1.push(range.toString());
+			}
+		});
+		return { range1, range2 };
+	}
 
 	function addDay() {
 		setDayCount(dayCount + 1);
@@ -758,9 +770,9 @@ export default function ReserveEdit() {
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogContent className="flex flex-col items-center">
 					<Formik
+						enableReinitialize
 						initialValues={{
-							range1: [] as string[],
-							range2: [] as string[],
+							...splitRanges(dayRanges.get(currentDay)),
 						}}
 						onSubmit={(values) => {
 							const allRanges = [values.range1, values.range2]
