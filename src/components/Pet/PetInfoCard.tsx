@@ -23,7 +23,6 @@ import { updatePetInfoByIdService } from "@/services/Pet/petService";
 import DateObject from "react-date-object";
 import persian from "react-date-object/calendars/persian";
 import persian_fa from "react-date-object/locales/persian_fa";
-import TruncatedText from "../TruncatedText/TruncatedText";
 
 type PetInfoCardProps = {
   id: number;
@@ -285,7 +284,7 @@ export default function PetInfoCard({
 
       {/* Health Section */}
       <div className="mt-4">
-        <h3 className="text-gray-500 font-medium mb-1 ">درباره پت</h3>
+        {(!editingMode && aboutPet != null) && <h3 className="text-gray-500 font-medium mb-1 ">درباره پت</h3>}
         {editingMode ? (
           <Textarea
             name="aboutPet"
