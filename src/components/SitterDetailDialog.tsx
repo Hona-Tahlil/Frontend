@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import { X } from "lucide-react";
-import { useNavigate } from 'react-router-dom';
 import type { PetSitterFull } from "@/types/PetSitter/PetSitterFull";
 import { saveAs } from 'file-saver';
 
@@ -28,25 +27,21 @@ const SitterDetailDialog: React.FC<SitterDetailDialogProps> = ({
 }) => {
   const dialogRef = useRef<HTMLDivElement>(null);
 
-  const handleOutsideClick = (e: MouseEvent) => { // استفاده از MouseEvent استاندارد
-    // اگر کلیک خارج از دیالوگ بود، دیالوگ را ببندیم
+  const handleOutsideClick = (e: MouseEvent) => { 
     if (dialogRef.current && !dialogRef.current.contains(e.target as Node)) {
-      onClose(); // فراخوانی تابع onClose
+      onClose(); 
     }
   };
 
   useEffect(() => {
-    // افزودن رویداد کلیک به سطح مستند
     document.addEventListener('click', handleOutsideClick);
 
-    // پاک کردن رویداد هنگام پاک شدن کامپوننت
     return () => {
       document.removeEventListener('click', handleOutsideClick);
     };
   }, []);
 
   const downloadFile = (url: string) => {
-    // Using FileSaver.js to handle the download
     if (url) {
       saveAs(url);
     }
