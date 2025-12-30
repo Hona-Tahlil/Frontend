@@ -13,10 +13,10 @@ import Signup from "@/pages/Signup";
 import ExplorePetSitter from "@/pages/ExplorePetSitter"
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
+import RegisterPetMobile from "@/pages/RegisterPetMobile";
+import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
 import PetDashboard from "@/pages/PetDashboard";
 import Error404 from "@/pages/Error404";
-import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
-import RegisterPetMobile from "@/pages/RegisterPetMobile";
 
 export const router = createBrowserRouter([
 	{
@@ -49,6 +49,15 @@ export const router = createBrowserRouter([
         path: "/AboutUs",
         element: <AboutUs />,
       },
+			{
+				path: "/ExplorePetSitter",
+				element: <ExplorePetSitter />,
+			},
+
+			{
+				path: "/admin",
+				element: <AdminDashboard />,
+			},
 			{
 				path: "/Petsitters",
 				element: <ExplorePetSitter />,
