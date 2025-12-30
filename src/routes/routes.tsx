@@ -10,23 +10,22 @@ import ForgetPassword from "@/pages/ForgetPassword";
 import ChangePassword from "@/pages/ChangePassword";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
-import ExplorePetSitter from "@/pages/ExplorePetSitter"
+import ExplorePetSitter from "@/pages/ExplorePetSitter";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import ReserveCreate from "@/pages/ReserveCreate";
 import ReserveEdit from "@/pages/ReserveEdit";
+import ReserveSuccess from "@/pages/ReserveSuccess";
+import AdminDashboard from "@/pages/AdminDashboard";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
-import AdminDashboard from "@/pages/AdminDashboard";
 import PetDashboard from "@/pages/PetDashboard";
+import Error404 from "@/pages/Error404";
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <PublicLayout />,
-    // errorElement: (
-    // 	<Error404 />
-    // ),
-    children: [
+	{
+		path: "/",
+		element: <PublicLayout />,
+		children: [
       {
         index: true,
         path: "/",
@@ -36,10 +35,10 @@ export const router = createBrowserRouter([
         path: "/temp",
         element: <Temp />,
       },
-			{
-				path: "/PetSitterLanding",
-				element: <PetSitterLanding />,
-			},
+      {
+        path: "/PetSitterLanding",
+        element: <PetSitterLanding />,
+      },
       {
         path: "/test",
         element: <Test />,
@@ -48,7 +47,6 @@ export const router = createBrowserRouter([
         path: "/Terms",
         element: <Terms />,
       },
-
       {
         path: "/AboutUs",
         element: <AboutUs />,
@@ -57,7 +55,6 @@ export const router = createBrowserRouter([
 				path: "/ExplorePetSitter",
 				element: <ExplorePetSitter />,
 			},
-
 			{
 				path: "/admin",
 				element: <AdminDashboard />,
@@ -70,12 +67,25 @@ export const router = createBrowserRouter([
 				path: "/reserve-edit/:requestID",
 				element: <ReserveEdit />,
 			},
+      {
+        path: "/Reserve-Success",
+        element: <ReserveSuccess />,
+      },
+      {
+        path: "/Petsitters",
+        element: <ExplorePetSitter />,
+      },
 			{
 				path: "/Dashboard/pets",
-				element: <PetDashboard/>
-			}
+        element: <PetDashboard />,
+      },
+      {
+        path: "*",
+        element: <Error404 />,
+      }
 		],
 	},
+	
 	{
 		element: <AuthLayout />,
 		children: [
