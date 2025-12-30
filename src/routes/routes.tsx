@@ -88,6 +88,10 @@ export const router = createBrowserRouter([
 		],
 	},
 	{
+		path: "/admin/verify-sitter",
+		element: <VerifySitterPage />,
+	},
+	{
 		path: "/admin/verify-sitter/:id",
 		element: <VerifySitterPage />,
 	},

@@ -20,7 +20,7 @@ import type { SortField, SortDirection } from "@/types/explorePetSitter";
 
 import { ChevronDown, ArrowUp } from "lucide-react";
 
-import { searchPetSittersService } from "@/services/petSitterService";
+import { managePetSittersService, searchPetSittersService } from "@/services/petSitterService";
 import { buildPetSitterSearchPayload } from "@/utils/buildPetSitterSearchPayload";
 
 /* ---------------- Skeleton Card ---------------- */

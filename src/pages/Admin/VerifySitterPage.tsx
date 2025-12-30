@@ -8,8 +8,8 @@ import type { Sitter, SitterStatus } from "@/data/sitterConstants";
 import SitterDetailDialog from "@/components/SitterDetailDialog";
 import SitterDetailsDrawer from "@/components/SitterDetailsDrawer";
 import { useMutation , useQueryClient} from "@tanstack/react-query";
-import { searchPetSittersService } from "@/services/petSitterService";
-import type { SearchPetSittersPayload, SearchPetSittersResponse, PetSitterListItem } from "@/types/PetSitter/searchTypes";
+import { managePetSittersService } from "@/services/petSitterService";
+import type { ManagePetSittersPayload, ManagePitSittersResponse, PetSitterListItem } from "@/types/PetSitter/searchTypes";
 import { changePetSitterStatusService } from "@/services/Sitter/verifySitterService";
 import type { ChangePetSitterStatusPayload } from "@/types/PetSitter/changeStatusTypes";
 
@@ -64,7 +64,7 @@ export default function VerifySitterPage() {
     isPending: sittersLoading,
     error: sittersError,
   } = useMutation({
-    mutationFn: (payload: SearchPetSittersPayload) => searchPetSittersService(payload),
+    mutationFn: (payload: ManagePetSittersPayload) => managePetSittersService(payload),
   });
   const pagination = sittersData?.data?.pagination;
 

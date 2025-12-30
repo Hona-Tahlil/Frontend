@@ -9,7 +9,7 @@ export type SearchFilter = {
     dir: "ASC" | "DESC";
   };
   
-  export type SearchPetSittersPayload = {
+  export type ManagePetSittersPayload = {
     page: number;
     count: number;
     filters: SearchFilter[];
@@ -28,7 +28,7 @@ export type SearchFilter = {
     created_at: string;
   };
   
-  export type SearchPetSittersResponse = {
+  export type ManagePitSittersResponse = {
     statusCode: number;
     message: string;
     data: {
