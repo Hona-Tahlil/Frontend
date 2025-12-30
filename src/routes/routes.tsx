@@ -10,11 +10,12 @@ import ForgetPassword from "@/pages/ForgetPassword";
 import ChangePassword from "@/pages/ChangePassword";
 import Terms from "@/pages/Terms";
 import Signup from "@/pages/Signup";
-import ExplorePetSitter from "@/pages/ExplorePetSitter"
+import ExplorePetSitter from "@/pages/ExplorePetSitter";
 import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
+import ReserveSuccess from "@/pages/ReserveSuccess";
+import AdminDashboard from "@/pages/AdminDashboard";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
-import AdminDashboard from "@/pages/AdminDashboard";
 import VerifySitterPage from "@/pages/Admin/VerifySitterPage";
 import SittersPage from "@/pages/Admin/SittersPage";
 import OwnersPage from "@/pages/Admin/OwnersPage";
@@ -28,15 +29,13 @@ import AccessPage from "@/pages/Admin/AccessPage";
 
 import Dashboard from "@/pages/PetDashboard";
 import PetDashboard from "@/pages/PetDashboard";
+import Error404 from "@/pages/Error404";
 
 export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <PublicLayout />,
-    // errorElement: (
-    // 	<Error404 />
-    // ),
-    children: [
+	{
+		path: "/",
+		element: <PublicLayout />,
+		children: [
       {
         index: true,
         path: "/",
@@ -58,31 +57,35 @@ export const router = createBrowserRouter([
         path: "/Terms",
         element: <Terms />,
       },
-
       {
         path: "/AboutUs",
         element: <AboutUs />,
       },
-			{
-				path: "/ExplorePetSitter",
-				element: <ExplorePetSitter />,
-			},
-
-
+      {
+        path: "/ExplorePetSitter",
+        element: <ExplorePetSitter />,
+      },
+      {
+        path: "/admin",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/Reserve-Success",
+        element: <ReserveSuccess />,
+      },
+      {
+        path: "/Petsitters",
+        element: <ExplorePetSitter />,
+      },
+      {
+        path: "/Dashboard/pets",
+        element: <PetDashboard />,
+      },
+      {
+        path: "*",
+        element: <Error404 />,
+      }
 		],
-	},
-
-	{
-		path: "/admin",
-		element: <AdminDashboard />,
-	},
-			{
-				path: "/Dashboard/pets",
-				element: <PetDashboard/>
-			},
-	{
-		path: "/admin/verify-sitter",
-		element: <VerifySitterPage />,
 	},
 	{
 		path: "/admin/verify-sitter/:id",

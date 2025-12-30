@@ -40,11 +40,11 @@ const handleToggle = (i: number) => {
 
 	return (
 		<div
-			className="w-full flex flex-col items-center justify-center mt-20 bg-primary-50"
+			className="w-full flex flex-col items-center justify-center mt-0 bg-primary-50"
 			dir="rtl"
 		>
-			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7 gap-12 lg:gap-20 pt-12 sm:pt-16">
-				<div className="lg:w-1/2 flex items-center justify-center justify-end lg:justify-end">
+			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7 gap-12 lg:gap-20 pt-0 sm:pt-2 -mt-10">
+				<div className="lg:w-1/2 flex items-center justify-center lg:justify-end">
 					<div className="lg:w-150 flex flex-col items-center gap-1">
 						<div className="text-xl sm:text-3xl font-bold text-center">
                             با عشق به حیوانات درآمد بساز    
@@ -76,7 +76,7 @@ const handleToggle = (i: number) => {
 			
 
 			
-			<div className="w-full h-auto flex flex-col items-center px-7 mt-10 ">
+			<div className="w-full h-auto flex flex-col items-center px-7 mt-5 ">
 				<p className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mt-35">
 					چرا به ما بپیوندی؟
 				</p>
@@ -160,9 +160,9 @@ const handleToggle = (i: number) => {
 					  
 			</div>
 
-            <div className="w-full flex flex-col items-center mt-50 px-7">
+            <div className="w-full flex flex-col items-center mt-25 px-7">
             	<p className="text-2xl sm:text-3xl font-bold mb-10">
-            		در سه گام پتیار شو
+            		در سه گام پت‌یار شو
             	</p>
 
             	<div className="flex flex-col lg:flex-row gap-6 lg:gap-10 justify-center items-stretch w-full max-w-5xl">

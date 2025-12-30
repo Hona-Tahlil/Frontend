@@ -322,6 +322,18 @@ html body[data-scroll-locked] {
 	}
 }
 
+/* Hide scrollbars while keeping scroll behavior */
+html,
+body {
+	-ms-overflow-style: none;
+	scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+}
+
 @layer utilities {
 	.font-app {
 		font-family: Alibaba, system-ui, Avenir, Helvetica, Arial, sans-serif;
