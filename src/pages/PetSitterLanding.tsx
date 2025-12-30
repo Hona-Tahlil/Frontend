@@ -30,12 +30,14 @@ import { useState } from "react";
 
 function PetSitterLanding() {
 
-	const [faq1Open, setFaq1Open] = useState(true);
-	const [faq2Open, setFaq2Open] = useState(false);
-	const [faq3Open, setFaq3Open] = useState(false);
-    const [faq4Open, setFaq4Open] = useState(false);
+	
+	const [openIndex, setOpenIndex] = useState<number | null>(null);
 
-	const otherSetStates = [setFaq1Open, setFaq2Open, setFaq3Open];
+const handleToggle = (i: number) => {
+	setOpenIndex(openIndex === i ? null : i);
+};
+
+
 	return (
 		<div
 			className="w-full flex flex-col items-center justify-center mt-0 bg-primary-50"
@@ -195,47 +197,49 @@ function PetSitterLanding() {
 			
 			
 			<div className="flex flex-col w-5/6 sm:w-3/4 lg:w-full h-auto sm:px-7 mt-50 max-w-250 mb-30">
-				<p className="text-xl font-bold">سوالات متداول</p>
-				<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
-					<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
-						<FaqItem
-							index={0}
-							open={faq1Open}
-							setOpen={setFaq1Open}
-							otherSetStates={otherSetStates}
-							text="چطور می‌تونم پت‌یار بشم؟"
-							answer="برای شروع فقط کافیه تو پلتفرم ثبت‌نام کنی، اطلاعات شخصی‌ات (نام، سن، شهر، شماره تماس و…) رو وارد کنی و پروفایل حرفه‌ای‌ات رو کامل کنی. بعد از بارگذاری مدارک هویتی و یک بررسی کوتاه، حساب پت‌یاریت فعال می‌شه و می‌تونی خدماتت رو تعریف کنی و درخواست بگیری."
-						/>
-						<FaqItem
-							index={1}
-							open={faq2Open}
-							setOpen={setFaq2Open}
-							otherSetStates={otherSetStates}
-							text="پت‌یار چه خدماتی می‌تونه ارائه بده؟"
-							answer="به‌عنوان پت‌یار می‌تونی بسته به تجربه‌ات خدمات مختلفی مثل نگهداری از پت، پیاده‌روی، بازی و اجتماعی‌سازی، آرایش و گرومینگ، آموزش، و مراقبت‌های ساده‌ی پزشکی یا پیگیری وضعیت سلامت رو ارائه بدی. نوع خدمات و نرخ هر کدوم رو خودت در پروفایلت مشخص می‌کنی تا صاحبان پت بتونن راحت‌تر انتخاب کنن."
-						/>
-						<FaqItem
-							index={2}
-							open={faq3Open}
-							setOpen={setFaq3Open}
-							otherSetStates={otherSetStates}
-							text="پرداخت‌ها چطور انجام می‌شه و پول رو کی دریافت می‌کنم؟"
-							answer="پرداخت به‌صورت امن و درون پلتفرم انجام می‌شه. صاحب پت مبلغ سرویس رو قبل از شروع کار پرداخت می‌کنه، اما پول تا پایان موفقِ سرویس در سیستم به‌صورت مشروط نگه داشته می‌شه. بعد از ثبت پایان خدمت، مبلغ از کیف پول صاحب پت به کیف پول تو منتقل می‌شه و هر زمان خواستی می‌تونی اون رو برداشت کنی."
-						/>
-                        <FaqItem
-							index={3}
-							open={faq4Open}
-							setOpen={setFaq4Open}
-							otherSetStates={otherSetStates}
-							text="اگر با صاحب پت به مشکل بخورم یا پت دچار مشکل بشه چی می‌شه؟"
-							answer="در طول فرایند، چت امن درون برنامه‌ای و امکان ریپورت و ثبت شکایت وجود داره. تیم پشتیبانی با بررسی گزارش‌ها و نظرات، سعی می‌کنه اختلاف‌ها رو مدیریت کنه. همچنین سیستم امتیازدهی باعث می‌شه پت‌یارها و صاحبان پت خوش‌حساب و مسئولیت‌پذیر بیشتر دیده بشن و همکاری‌های بعدی با خیال راحت‌تری انجام بشه."
-						/>
-					</div>
-					<div className="row-start-1 col-start-1 w-full lg:w-auto flex items-end justify-center">
-						<img src={Image4} />
-					</div>
-				</div>
-			</div>
+	<p className="text-xl font-bold">سوالات متداول</p>
+
+	<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
+
+		<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
+
+			<FaqItem
+				open={openIndex === 0}
+				onToggle={() => handleToggle(0)}
+				text="چطور می‌تونم پت‌یار بشم؟"
+				answer="برای شروع فقط کافیه تو پلتفرم ثبت‌نام کنی، اطلاعات شخصی‌ات (نام، سن، شهر، شماره تماس و…) رو وارد کنی و پروفایل حرفه‌ای‌ات رو کامل کنی. بعد از بارگذاری مدارک هویتی و یک بررسی کوتاه، حساب پت‌یاریت فعال می‌شه و می‌تونی خدماتت رو تعریف کنی و درخواست بگیری."
+			/>
+
+			<FaqItem
+				open={openIndex === 1}
+				onToggle={() => handleToggle(1)}
+				text="پت‌یار چه خدماتی می‌تونه ارائه بده؟"
+				answer="به‌عنوان پت‌یار می‌تونی بسته به تجربه‌ات خدمات مختلفی مثل نگهداری از پت، پیاده‌روی، بازی و اجتماعی‌سازی، آرایش و گرومینگ، آموزش، و مراقبت‌های ساده‌ی پزشکی یا پیگیری وضعیت سلامت رو ارائه بدی. نوع خدمات و نرخ هر کدوم رو خودت در پروفایلت مشخص می‌کنی تا صاحبان پت بتونن راحت‌تر انتخاب کنن."
+			/>
+
+			<FaqItem
+				open={openIndex === 2}
+				onToggle={() => handleToggle(2)}
+				text="پرداخت‌ها چطور انجام می‌شه و پول رو کی دریافت می‌کنم؟"
+				answer="پرداخت به‌صورت امن و درون پلتفرم انجام می‌شه. صاحب پت مبلغ سرویس رو قبل از شروع کار پرداخت می‌کنه، اما پول تا پایان موفقِ سرویس در سیستم به‌صورت مشروط نگه داشته می‌شه. بعد از ثبت پایان خدمت، مبلغ از کیف پول صاحب پت به کیف پول تو منتقل می‌شه و هر زمان خواستی می‌تونی اون رو برداشت کنی."
+			/>
+
+			<FaqItem
+				open={openIndex === 3}
+				onToggle={() => handleToggle(3)}
+				text="اگر با صاحب پت به مشکل بخورم چی می‌شه؟"
+				answer="در طول فرایند، چت امن درون برنامه‌ای و امکان ریپورت و ثبت شکایت وجود داره. تیم پشتیبانی با بررسی گزارش‌ها و نظرات، سعی می‌کنه اختلاف‌ها رو مدیریت کنه. همچنین سیستم امتیازدهی باعث می‌شه پت‌یارها و صاحبان پت خوش‌حساب و مسئولیت‌پذیر بیشتر دیده بشن و همکاری‌های بعدی با خیال راحت‌تری انجام بشه."
+			/>
+
+		</div>
+
+		<div className="row-start-1 col-start-1 w-full lg:w-auto flex items-end justify-center">
+			<img src={Image4} />
+		</div>
+
+	</div>
+</div>
+
 		</div>
 	);
 }

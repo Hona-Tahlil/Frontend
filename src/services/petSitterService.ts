@@ -11,6 +11,22 @@ import { postData } from "./services";
 
 /* -------------------- search pet sitters -------------------- */
 
+
+import type {
+  ManagePetSittersPayload,
+  ManagePitSittersResponse,
+} from "@/types/PetSitter/searchTypes";
+
+
+export const managePetSittersService = async (
+  payload: ManagePetSittersPayload,
+): Promise<ManagePitSittersResponse> => {
+  return postData({
+    endPoint: "v1/petsitters/search",
+    data: payload,
+  });
+};
+
 export const searchPetSittersService = async (
   payload: SearchPetSittersPayload
 ): Promise<SearchPetSittersResponse> => {
