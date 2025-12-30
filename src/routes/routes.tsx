@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
 				element: <ReserveEdit />,
 			},
       {
-        path: "/Reserve-Success",
+        path: "/Reserve-Success/:requestID",
         element: <ReserveSuccess />,
       },
       {
