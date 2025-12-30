@@ -31,6 +31,7 @@ import AccessPage from "@/pages/Admin/AccessPage";
 
 import Dashboard from "@/pages/PetDashboard";
 import PetDashboard from "@/pages/PetDashboard";
+import Pet from "@/pages/Pet";
 import Error404 from "@/pages/Error404";
 
 export const router = createBrowserRouter([
@@ -180,13 +181,16 @@ export const router = createBrowserRouter([
 	// 	],
 	// },
 
-  
   {
     element: <MobileLayout />,
     children: [
       {
         path: "/RegisterPet",
         element: <RegisterPetMobile />,
+      },
+      {
+        path: "/Pet/:petId",
+        element: <Pet />,
       },
     ],
   },
