@@ -10,7 +10,7 @@ import type {
 	ResetPasswordPayload,
   	ResetPasswordResponse,
 } from "@/types/authTypes";
-import { postData } from "./services";
+import { postData , getData  } from "./services";
 import { putData } from "./services";
 
 
@@ -82,4 +82,12 @@ export const resetPasswordService = async (
   
 
   
+  
+
+
+
+
+
+
+
   

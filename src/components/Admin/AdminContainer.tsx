@@ -9,7 +9,7 @@ export function AdminContainer({
   className,
 }: AdminContainerProps) {
   return (
-    <section className="flex-1 px-8 py-6" dir="rtl">
+    <section className="flex-1 px-1 md:px-8 py-6" dir="rtl">
       {title && (
         <header className="mb-4">
           <h1 className="text-section font-extrabold text-charcoal-900">
@@ -25,7 +25,7 @@ export function AdminContainer({
 
       <div
         className={cn(
-          "mt-6 rounded-xl border border-border bg-card shadow-lg px-6 py-5",
+          "mt-6 rounded-xl  px-1 py-5",
           className
         )}
       >

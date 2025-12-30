@@ -14,13 +14,14 @@ import type {
 } from "../types/apiTypes";
 import useUserStore from "@/store/userStore/userStore";
 
-export const baseURL = "https://api.hona-petyar.ir"; // backend URL
+export const baseURL = "https://api.hona-petyar.ir/"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,
 	timeout: 20000,
 	headers: {
 		"Content-Type": "application/json",
+		"ngrok-skip-browser-warning": "true",
 	},
 });
 
@@ -104,6 +105,20 @@ export const putData = async ({ endPoint, data }: PutParams) => {
 		throw error;
 	}
 };
+
+// ✅ PUT image/form-data
+export const putImageData = async ({ endPoint, data }: PutParams) => {
+  try {
+    const response: AxiosResponse = await apiClient.put(endPoint, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("error in putImageData", error);
+    throw error;
+  }
+};
+
 
 // ✅ DELETE
 export const deleteData = async ({ endPoint, data, headers }: DeleteParams) => {

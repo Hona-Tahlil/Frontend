@@ -20,7 +20,7 @@ const PublicLayout = () => {
       />
       <GlobalProviders>
         <Navbar isUserLoggedin={true} />
-        <div className="mt-13 absolute w-screen">
+        <div className="absolute w-screen mt-13">
           <Outlet />
           <Footer />
         </div>

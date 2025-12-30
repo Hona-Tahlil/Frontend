@@ -9,10 +9,12 @@ import { useMobile } from "@/hooks/ResponsiveHooks";
 import { PETS_QUERY_KEY } from "@/queryKeys/pets";
 import { ageYearsMonths } from "@/utils/getYearMonthFromDate";
 import LoadingPetCard from "@/components/Pet/LoadingPetCard";
+import useUserStore from "@/store/userStore/userStore";
 
 export default function Dashboard() {
   const isMobile = useMobile();
   const test = true;
+  const {accessToken} = useUserStore();
   const { data, isLoading, error } = useQuery<GetAllPetsResponse>({
     queryKey: PETS_QUERY_KEY,
     queryFn: () => {
@@ -25,6 +27,7 @@ export default function Dashboard() {
 
   const pets = data?.data;
 
+  console.log(accessToken);
   return (
     <div className="flex justify-center items-center w-screen ml-5">
       {!isMobile && <aside className="sticky w-2/5 bg-white h-40"></aside>}

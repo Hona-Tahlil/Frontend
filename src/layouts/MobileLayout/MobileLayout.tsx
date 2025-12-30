@@ -22,8 +22,10 @@ export default function MobileLayout() {
       />
       <GlobalProviders>
         {!isMobile && <Navbar isUserLoggedin={true} />}
-        <Outlet />
-        {!isMobile && <Footer />}
+        <div className="absolute w-screen md:mt-20">
+          <Outlet />
+          {!isMobile && <Footer />}
+        </div>
       </GlobalProviders>
     </div>
   );
