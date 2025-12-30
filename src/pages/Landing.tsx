@@ -1,4 +1,4 @@
-import Image1 from "@/assets/landing/Image1.png";
+﻿import Image1 from "@/assets/landing/Image1.png";
 import Image2 from "@/assets/landing/Image2.png";
 import Image3 from "@/assets/landing/Image3.png";
 import Image4 from "@/assets/landing/Image4.png";
@@ -41,14 +41,14 @@ function Landing() {
 	const otherSetStates = [setFaq1Open, setFaq2Open, setFaq3Open];
 	return (
 		<div
-			className="w-full flex flex-col items-center justify-center mt-20"
+			className="w-full min-h-screen flex flex-col items-center justify-center mt-0 bg-second-background"
 			dir="rtl"
 		>
-			<div className="flex flex-col items-center lg:items-stretch lg:flex-row w-full h-auto lg:h-180 px-7">
-				<div className="lg:w-1/2 flex justify-end">
+			<div className="flex flex-col items-center lg:items-center lg:flex-row w-full h-auto lg:h-180 px-7 gap-6">
+				<div className="lg:w-1/2 flex justify-end items-center">
 					<div className="lg:w-150 flex flex-col items-center gap-1">
 						<div className="text-xl sm:text-3xl text-center mt-5">
-							پتیار، پلتفرم امن برای مراقبت از پت شما
+							پت‌یار، پلتفرم امن برای مراقبت از پت شما
 						</div>
 						<div className="text-xl sm:text-3xl font-bold text-center leading-20 lg:leading-normal">
 							به سادگی پرستاری را در نزدیکی خود پیدا کنید، مستقیما چت کنید و با
@@ -66,8 +66,8 @@ function Landing() {
 						)}
 					</div>
 				</div>
-				<div className="lg:w-1/2 flex">
-					<div className="lg:w-160 flex items-center justify-center mt-0 lg:mt-0">
+				<div className="lg:w-1/2 flex items-center">
+					<div className="lg:w-160 flex items-center justify-center">
 						<img src={Image1} alt="Landing" className="w-auto h-auto" />
 					</div>
 				</div>
@@ -82,7 +82,7 @@ function Landing() {
 
 			<div className="bg-secondary-200 w-full flex flex-col items-center gap-3 py-3">
 				<div className="flex w-9/10 lg:w-8/10 justify-between items-center">
-					<p className="text-2xl font-bold">پتیار های برگزیده</p>
+					<p className="text-2xl font-bold">پت‌یار های برگزیده</p>
 					<p className="text-lg flex items-center">
 						مشاهده همه
 						<ChevronLeft />
@@ -131,11 +131,11 @@ function Landing() {
 				</Carousel>
 			</div>
 			<div className="w-full h-auto flex flex-col items-center px-7">
-				<p className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mt-35">
-					خدمات محبوب پتیار
+				<p className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mt-50">
+					خدمات محبوب پت‌یار
 				</p>
 				<p className="text-xl mt-5 text-center">
-					مجموعهای از سرویسهای کاربردی برای مراقبت بهتر از پتها
+					مجموعه ای از سرویس های کاربردی برای مراقبت بهتر از پت ها
 				</p>
 
 				<div className="flex flex-col sm:flex-row lg:flex-col gap-5 lg:gap-0 mt-20 sm:mt-0">
@@ -152,24 +152,24 @@ function Landing() {
 						/>
 						<FeatureCard
 							Icon={Volleyball}
-							text="پلیدیت و تحرک سالم برای انرژیسوزی."
+							text="پلیدیت و تحرک سالم برای انرژی سوزی."
 							title="بازی و اجتماع سازی"
 						/>
 					</div>
 					<div className="flex flex-col lg:flex-row gap-5 xl:gap-15 sm:mt-20">
 						<FeatureCard
 							Icon={Footprints}
-							text="قدمزدن روزانه با گزارش مسیر و زمان."
+							text="قدم زدن روزانه با گزارش مسیر و زمان."
 							title="پیاده روی"
 						/>
 						<FeatureCard
 							Icon={House}
 							text="مراقبت شبانه روزی در خانه یا پانسیون."
-							title="پتنشینی/پانسیون"
+							title="پت نشینی/پانسیون"
 						/>
 						<FeatureCard
 							Icon={Dumbbell}
-							text="فرمانپذیری و اصلاح رفتار با مربی مجرب."
+							text="فرمان پذیری و اصلاح رفتار با مربی مجرب."
 							title="آموزش"
 						/>
 					</div>
@@ -185,14 +185,14 @@ function Landing() {
 							<div className="lg:max-w-115 text-center lg:text-right">
 								<div className="w-full">
 									<p className="font-bold text-2xl">
-										توهم چالش پیدا کردن مراقب برای پت داری؟
+										تو هم چالش پیدا کردن مراقب برای پت داری؟
 									</p>
 								</div>
 								<p className="mt-5 text-center lg:text-justify">
 									پیدا کردن پرستار مناسب برای پت، میتونه کلی استرس داشته باشه…
 									<br />
-									شاید مهمترین چیزی که مانعت میشه با خیال راحت سفر کنی یا ساعتها
-									تو کارت غرق بشی، اینه که نمیدونی چجوری یک پرستار حرفهای و
+									شاید مهمترین چیزی که مانعت میشه با خیال راحت سفر کنی یا ساعت ها
+									تو کارت غرق بشی، اینه که نمیدونی چجوری یک پرستار حرفه ای و
 									دلسوز، که با نیازهای پتت هماهنگ باشه پیدا کنی.
 								</p>
 							</div>
@@ -201,7 +201,7 @@ function Landing() {
 				</div>
 			</div>
 			<div
-				className="w-full h-auto flex flex-col items-center px-15 mt-50"
+				className="w-full h-auto flex flex-col items-center px-15 mt-30"
 				dir="ltr"
 			>
 				<div className="flex flex-col gap-0 lg:gap-8 lg:flex-row w-full max-w-300">
@@ -220,7 +220,7 @@ function Landing() {
 									</p>
 								</div>
 								<p className="text-center lg:text-justify mt-5">
-									ما پلتفرمی هستیم که به تو کمک میکنه در کمترین زمان، به جامعهای
+									ما پلتفرمی هستیم که به تو کمک میکنه در کمترین زمان، به جامعه ای
 									از پرستاران تأییدشده و عاشق حیوانات دسترسی پیدا کنی. پرستارانی
 									که پروفایل، سوابق و نظرات کاربران قبلیشون رو میبینی و میتونی
 									مستقیما باهاشون چت کنی تا درنهایت، با اعتماد کامل انتخاب کنی.
@@ -235,7 +235,7 @@ function Landing() {
 					</div>
 				</div>
 			</div>
-			<div className="flex flex-col lg:flex-row gap-10 lg:gap-0 lg:items-stretch items-center justify-center w-full h-auto px-7 mt-20 max-w-250">
+			<div className="flex flex-col lg:flex-row gap-10 lg:gap-0 lg:items-stretch items-center justify-center w-full h-auto px-7 mt-60 max-w-250">
 				{isDesktop && (
 					<>
 						<div className="flex flex-col w-full bg-secondary-200 rounded-3xl p-7">
@@ -254,7 +254,7 @@ function Landing() {
 						<div className="flex flex-col w-full h-auto px-7">
 							<div className="flex w-full">
 								<div className="w-1/2 flex flex-col gap-3">
-									<p className="text-2xl font-bold">مجله پتیار</p>
+									<p className="text-2xl font-bold">مجله پت‌یار</p>
 									<p className="text-2xl">یادگیری بی حد مرز</p>
 								</div>
 								<div className="w-1/2 flex justify-end">
@@ -340,9 +340,9 @@ function Landing() {
 					</>
 				)}
 			</div>
-			<div className="flex flex-col w-5/6 sm:w-3/4 lg:w-full h-auto sm:px-7 mt-20 max-w-250 mb-30">
-				<p className="text-xl font-bold">سوالات متداول</p>
-				<div className="w-full rounded-3xl h-auto mt-3 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
+			<div className="flex flex-col w-5/6 sm:w-3/4 lg:w-full h-auto sm:px-7 mt-30 max-w-250 mb-30">
+				<p className="text-title font-bold">سوالات متداول</p>
+				<div className="w-full rounded-3xl h-auto mt-6 px-7 pt-7 bg-primary-300 grid grid-cols-1 grid-rows-1 lg:flex justify-between">
 					<div className="flex flex-col h-auto min-h-100 gap-3 items-center lg:items-start row-start-1 col-start-1 z-10">
 						<FaqItem
 							index={0}
