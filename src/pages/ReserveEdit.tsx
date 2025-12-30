@@ -120,6 +120,7 @@ export default function ReserveEdit() {
 		if (requestType === "weekly") {
 			const dayKeys = Object.keys(days);
 			dayKeys.forEach((dayKey, dayIndex) => {
+				if (dayIndex > dayCount) return;
 				const daySlots = dayRanges.get(dayIndex);
 				if (!daySlots || daySlots.length === 0) return;
 
@@ -179,11 +180,20 @@ export default function ReserveEdit() {
 	function addDay() {
 		setDayCount(dayCount + 1);
 	}
-	function removeDay() {
-		if (dayCount > 0) {
-			setDayCount(dayCount - 1);
+function removeDay(setFieldValue?: (field: string, value: string) => void) {
+	if (dayCount > 0) {
+		const removedIndex = dayCount;
+		setDayCount(dayCount - 1);
+		setDayRanges((prev) => {
+			const next = new Map(prev);
+			next.delete(removedIndex);
+			return next;
+		});
+		if (setFieldValue) {
+			setFieldValue(`days.day${removedIndex}`, "");
 		}
 	}
+}
 
 	const isDesktop = useDesktop();
 	const isMobile = useMobile();
@@ -203,6 +213,7 @@ export default function ReserveEdit() {
 
 		if (!weekly) {
 			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				if (dayIndex > dayCount) return;
 				const dayKey = dayKeys[dayIndex];
 				if (!dayKey) {
 					console.warn(
@@ -214,6 +225,7 @@ export default function ReserveEdit() {
 			});
 		} else {
 			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				if (dayIndex > dayCount) return;
 				const dayKey = dayKeys[dayIndex];
 				if (!dayKey) return;
 
@@ -365,7 +377,7 @@ export default function ReserveEdit() {
 				enableReinitialize
 				validationSchema={validationSchema}
 				initialValues={initialValues}
-				onSubmit={(values, { setErrors, setFieldError }) => {
+				onSubmit={async (values, { setErrors, setFieldError }) => {
 					const day0Ranges = dayRanges.get(0) ?? [];
 					if (dayRanges.get(0) === undefined) {
 						updateDayRanges(0, []);
@@ -391,37 +403,79 @@ export default function ReserveEdit() {
 						return;
 					}
 					setFieldError("addressSelection", "");
-					editRequest({
-						requestID: requestInfo?.requestID ?? Number(requestID),
-						calendarSlots: convertToCalenderSlots(
-							values.days,
-							dayRanges,
-							values.requestType === "weekly",
-						),
-						petIDs: values.petID.map((id) => parseInt(id)),
-						notes: values.note,
-						addressInfo: addressIsChecked
-							? undefined
-							: {
-									provinceName: parseInt(values.Province),
-									cityName: parseInt(values.City),
-									streetAddress: values.Address,
-									houseNumber: parseInt(values.Pelak),
-									unit: parseInt(values.Vahed),
+					try {
+						const response = await editRequest({
+							requestID: requestInfo?.requestID ?? Number(requestID),
+							calendarSlots: convertToCalenderSlots(
+								values.days,
+								dayRanges,
+								values.requestType === "weekly",
+							),
+							petIDs: values.petID.map((id) => parseInt(id)),
+							notes: values.note,
+							addressInfo: addressIsChecked
+								? undefined
+								: {
+										provinceName: parseInt(values.Province),
+										cityName: parseInt(values.City),
+										streetAddress: values.Address,
+										houseNumber: parseInt(values.Pelak),
+										unit: parseInt(values.Vahed),
+									},
+							addressID: addressIsChecked
+								? parseInt(values.addressID)
+								: undefined,
+							serviceID: parseInt(values.serviceID![0]),
+							accessToken: accessToken!,
+						});
+						if (response.statusCode === 200) {
+							const selectedServiceId = parseInt(values.serviceID[0]);
+							const selectedService = services.find(
+								(service) => service.id === selectedServiceId,
+							);
+							const calendarSlots = convertToCalenderSlots(
+								values.days,
+								dayRanges,
+								values.requestType === "weekly",
+							);
+							const totalPrice = Math.round(
+								1.1 *
+									calculateTotalPrice(
+										values.petID.length,
+										selectedServiceId,
+										values.requestType,
+										values.days,
+									),
+							);
+							const selectedAddress = addresses.find(
+								(address) => address.id === values.addressID,
+							);
+							const addressText = addressIsChecked
+								? selectedAddress
+									? `${selectedAddress.provinceName}، ${selectedAddress.cityName}، ${selectedAddress.streetAddress}، پلاک ${selectedAddress.houseNumber}، واحد ${selectedAddress.unit}`
+									: "-"
+								: `${values.Province}، ${values.City}، ${values.Address}، پلاک ${values.Pelak}، واحد ${values.Vahed}`;
+							const petSitterName = requestInfo
+								? `${requestInfo.petSitterFirstName} ${requestInfo.petSitterLastName}`.trim()
+								: "-";
+							navigate("/Reserve-Success", {
+								state: {
+									petSitterName: petSitterName || "-",
+									serviceType: selectedService?.type ?? "-",
+									calendarSlots,
+									addressText,
+									totalPrice,
 								},
-						addressID: addressIsChecked
-							? parseInt(values.addressID)
-							: undefined,
-						serviceID: parseInt(values.serviceID![0]),
-						accessToken: accessToken!,
-					}).catch((error) => {
+							});
+						}
+					} catch (error: any) {
 						if (error.response?.data?.messages) {
 							setErrors(error.response.data.messages);
 						}
-					});
+					}
 				}}
 			>
-				{({ values, errors }) => (
+				{({ values, errors, setFieldValue }) => (
 					<Form>
 						<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
 							<div
@@ -522,8 +576,8 @@ export default function ReserveEdit() {
 												<p className="font-bold leading-10">
 													بازه های انتخاب شده
 												</p>
-												{dayRanges.get(0) &&
-													mergeRanges(dayRanges.get(0)!).map(
+												{dayRanges.get(index + 1) &&
+													mergeRanges(dayRanges.get(index + 1)!).map(
 														({ start, end }, i) => (
 															<div key={i} className="font-bold leading-10">
 																{indexToTime(start - 1)} - {indexToTime(end)}
@@ -543,7 +597,12 @@ export default function ReserveEdit() {
 								))}
 								{dayCount > 0 && (
 									<div className="flex justify-center">
-										<Button onClick={removeDay} shadow className="bg-red-500">
+										<Button
+											type="button"
+											onClick={() => removeDay(setFieldValue)}
+											shadow
+											className="bg-red-500"
+										>
 											حذف روز
 											<CircleX />
 										</Button>
@@ -551,6 +610,7 @@ export default function ReserveEdit() {
 								)}
 								<div className="flex justify-center">
 									<Button
+										type="button"
 										onClick={addDay}
 										shadow
 										className={`

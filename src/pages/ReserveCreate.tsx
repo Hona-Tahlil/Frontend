@@ -84,10 +84,11 @@ export default function ReserveCreate() {
 		if (requestType === "weekly") {
 			console.log("Yeeees");
 			// For weekly: for each selected day, count repetitions and multiply by slot count
-			const dayKeys = Object.keys(days);
-			dayKeys.forEach((dayKey, dayIndex) => {
-				const daySlots = dayRanges.get(dayIndex);
-				if (!daySlots || daySlots.length === 0) return;
+		const dayKeys = Object.keys(days);
+		dayKeys.forEach((dayKey, dayIndex) => {
+			if (dayIndex > dayCount) return;
+			const daySlots = dayRanges.get(dayIndex);
+			if (!daySlots || daySlots.length === 0) return;
 
 				const dateString = days[dayKey];
 				if (!dateString) return;
@@ -147,11 +148,20 @@ export default function ReserveCreate() {
 	function addDay() {
 		setDayCount(dayCount + 1);
 	}
-	function removeDay() {
-		if (dayCount > 0) {
-			setDayCount(dayCount - 1);
+function removeDay(setFieldValue?: (field: string, value: string) => void) {
+	if (dayCount > 0) {
+		const removedIndex = dayCount;
+		setDayCount(dayCount - 1);
+		setDayRanges((prev) => {
+			const next = new Map(prev);
+			next.delete(removedIndex);
+			return next;
+		});
+		if (setFieldValue) {
+			setFieldValue(`days.day${removedIndex}`, "");
 		}
 	}
+}
 
 	const isDesktop = useDesktop();
 	const isMobile = useMobile();
@@ -188,6 +198,7 @@ export default function ReserveCreate() {
 		if (!weekly) {
 			// Normal behavior
 			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				if (dayIndex > dayCount) return;
 				const dayKey = dayKeys[dayIndex];
 				if (!dayKey) {
 					console.warn(
@@ -200,6 +211,7 @@ export default function ReserveCreate() {
 		} else {
 			// Weekly behavior: repeat same weekday until end of Persian month
 			dayRanges.forEach((slots: number[], dayIndex: number) => {
+				if (dayIndex > dayCount) return;
 				const dayKey = dayKeys[dayIndex];
 				if (!dayKey) return;
 
@@ -384,7 +396,7 @@ export default function ReserveCreate() {
 					}
 				}}
 			>
-				{({ values, errors }) => (
+				{({ values, errors, setFieldValue }) => (
 					<Form>
 						<div className="w-full flex flex-col lg:flex-row gap-6 py-12 px-3 sm:p-12 justify-center">
 							<div
@@ -485,8 +497,8 @@ export default function ReserveCreate() {
 												<p className="font-bold leading-10">
 													بازه های انتخاب شده
 												</p>
-												{dayRanges.get(0) &&
-													mergeRanges(dayRanges.get(0)!).map(
+												{dayRanges.get(index + 1) &&
+													mergeRanges(dayRanges.get(index + 1)!).map(
 														({ start, end }, i) => (
 															<div key={i} className="font-bold leading-10">
 																{indexToTime(start - 1)} - {indexToTime(end)}
@@ -506,7 +518,12 @@ export default function ReserveCreate() {
 								))}
 								{dayCount > 0 && (
 									<div className="flex justify-center">
-										<Button onClick={removeDay} shadow className="bg-red-500">
+										<Button
+											type="button"
+											onClick={() => removeDay(setFieldValue)}
+											shadow
+											className="bg-red-500"
+										>
 											حذف روز
 											<CircleX />
 										</Button>
@@ -514,6 +531,7 @@ export default function ReserveCreate() {
 								)}
 								<div className="flex justify-center">
 									<Button
+										type="button"
 										onClick={addDay}
 										shadow
 										className={`
