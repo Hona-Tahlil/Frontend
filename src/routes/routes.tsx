@@ -15,11 +15,8 @@ import AuthLayout from "@/layouts/PublicLayout/AuthLayout";
 import AdminDashboard from "@/pages/AdminDashboard";
 import RegisterPetMobile from "@/pages/RegisterPetMobile";
 import MobileLayout from "@/layouts/MobileLayout/MobileLayout";
-import AdminDashboard from "@/pages/AdminDashboard";
-import Dashboard from "@/pages/PetDashboard";
 import PetDashboard from "@/pages/PetDashboard";
 import Error404 from "@/pages/Error404";
-
 
 export const router = createBrowserRouter([
 	{
@@ -70,6 +67,15 @@ export const router = createBrowserRouter([
 				path: "/admin",
 				element: <AdminDashboard />,
 			},
+			{
+				path: "/Petsitters",
+				element: <ExplorePetSitter />,
+			},
+
+			{
+				path: "/admin",
+				element: <AdminDashboard />,
+			},{
 				path: "/Dashboard/pets",
 				element: <PetDashboard/>
 			}
@@ -80,6 +86,7 @@ export const router = createBrowserRouter([
 			}
 		],
 	},
+	
 	{
 		element: <AuthLayout />,
 		children: [

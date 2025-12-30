@@ -14,7 +14,7 @@ import type {
 } from "../types/apiTypes";
 import useUserStore from "@/store/userStore/userStore";
 
-export const baseURL = "https://api.hona-petyar.ir/"; // backend URL
+export const baseURL = "https://api.hona-petyar.ir"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,
