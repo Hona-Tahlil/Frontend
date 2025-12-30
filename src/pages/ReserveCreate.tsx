@@ -57,6 +57,7 @@ export default function ReserveCreate() {
 	const [pets, setPets] = useState([] as Pet[]);
 	const [services, setServices] = useState([] as Service[]);
 	const [addresses, setAddresses] = useState<AddressInfoWithId[]>([]);
+	const [petSitterName, setPetSitterName] = useState("-");
 
 	const [currentDay, setCurrentDay] = useState<number>(0);
 	const [dayRanges, setDayRanges] = useState<Map<number, number[]>>(new Map());
@@ -189,6 +190,10 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 				setPets(response.data.pets ?? []);
 				setServices(response.data.services ?? []);
 				setAddresses(response.data.addresses ?? []);
+				const firstName = response.data.petSitterFirstName ?? "";
+				const lastName = response.data.petSitterLastName ?? "";
+				const fullName = `${firstName} ${lastName}`.trim();
+				setPetSitterName(fullName || "-");
 			})
 			.finally(() => {
 				setIsLoading(false);
@@ -400,7 +405,7 @@ function removeDay(setFieldValue?: (field: string, value: string) => void) {
 								: `${values.Province}، ${values.City}، ${values.Address}، پلاک ${values.Pelak}، واحد ${values.Vahed}`;
 							navigate("/Reserve-Success", {
 								state: {
-									petSitterName: "-",
+									petSitterName,
 									serviceType: selectedService?.type ?? "-",
 									calendarSlots,
 									addressText,

@@ -72,6 +72,8 @@ export interface GetCreateRequestInfo {
 	addresses: AddressInfoWithId[];
 	pets: Pet[];
 	freeCalendarSlots: CalenderSlot[];
+	petSitterFirstName: string;
+	petSitterLastName: string;
 }
 export interface GetRequestInfoResponse {
 	statusCode: number;
