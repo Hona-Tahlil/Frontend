@@ -25,6 +25,7 @@ import ReviewsPage from "@/pages/Admin/ReviewsPage";
 import ComplaintsPage from "@/pages/Admin/ComplaintsPage";
 import BookingsPage from "@/pages/Admin/BookingsPage";
 import AccessPage from "@/pages/Admin/AccessPage";
+import Chat from "@/pages/Chat";
 
 
 
@@ -56,6 +57,7 @@ export const router = createBrowserRouter([
         path: "/test",
         element: <Test />,
       },
+	
       {
         path: "/Terms",
         element: <Terms />,
@@ -98,6 +100,10 @@ export const router = createBrowserRouter([
       }
 		],
 	},
+	{
+        path: "/chat",
+        element: <Chat />,
+      },
 	{
 		path: "/admin/verify-sitter",
 		element: <VerifySitterPage />,
