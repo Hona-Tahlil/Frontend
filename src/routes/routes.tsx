@@ -33,6 +33,7 @@ import Dashboard from "@/pages/PetDashboard";
 import PetDashboard from "@/pages/PetDashboard";
 import Pet from "@/pages/Pet";
 import Error404 from "@/pages/Error404";
+import OwnerBookings from "@/pages/OwnerBookings";
 
 export const router = createBrowserRouter([
 	{
@@ -88,9 +89,13 @@ export const router = createBrowserRouter([
         path: "/Petsitters",
         element: <ExplorePetSitter />,
       },
-			{
-				path: "/Dashboard/pets",
+      {
+        path: "/Dashboard/pets",
         element: <PetDashboard />,
+      },
+      {
+        path: "/Dashboard/bookings",
+        element: <OwnerBookings />,
       },
       {
         path: "*",
