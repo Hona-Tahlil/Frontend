@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
         element: <ExplorePetSitter />,
       },
 			{
-				path: "/Reserve-Details",
+				path: "/reserve-details/:requestID",
 				element: <ReserveDetails />,
 			},
 			{

@@ -2,6 +2,10 @@ import { Button } from "@/components/Custom/Button/Button";
 import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { useMobile } from "@/hooks/ResponsiveHooks";
+import { Spinner } from "@/components/ui/spinner";
+import { getRequestInfo } from "@/services/reserveCreateService";
+import useUserStore from "@/store/userStore/userStore";
+import type { RequestInfo } from "@/types/reserveCreateTypes";
 import { Form, Formik } from "formik";
 import {
 	Bone,
@@ -15,19 +19,148 @@ import {
 	PawPrint,
 	RefreshCw,
 } from "lucide-react";
-import type { ReactNode } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-export const ReserveDetails = (props: {}) => {
+export const ReserveDetails = () => {
 	const isMobile = useMobile();
+	const { accessToken } = useUserStore();
+	const { requestID } = useParams();
+	const navigate = useNavigate();
+	const [requestInfo, setRequestInfo] = useState<RequestInfo | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+
+	function mergeRanges(indices: number[]) {
+		const result: Array<{ start: number; end: number }> = [];
+		if (indices.length === 0) return result;
+
+		const sorted = [...indices].sort((a, b) => a - b);
+
+		let start = sorted[0];
+		let prev = sorted[0];
+
+		for (let i = 1; i < sorted.length; i++) {
+			if (sorted[i] === prev + 1) {
+				prev = sorted[i];
+			} else {
+				result.push({ start, end: prev });
+				start = sorted[i];
+				prev = sorted[i];
+			}
+		}
+
+		result.push({ start, end: prev });
+		return result;
+	}
+
+	function indexToTime(index: number) {
+		const safeIndex = Math.max(index, 0);
+		const hour = Math.floor(safeIndex / 2) % 24;
+		const minute = safeIndex % 2 === 0 ? "00" : "30";
+		return `${hour}:${minute}`;
+	}
+
+	function formatDate(dateString: string) {
+		const date = new Date(dateString);
+		return Number.isNaN(date.valueOf())
+			? dateString
+			: date.toLocaleDateString("fa-IR");
+	}
+
+	const calendarSummary = useMemo(() => {
+		if (!requestInfo?.calendarSlots?.length) {
+			return { startDate: "-", endDate: "-", startTime: "-", endTime: "-" };
+		}
+		const sortedSlots = [...requestInfo.calendarSlots].sort(
+			(a, b) => new Date(a.date).valueOf() - new Date(b.date).valueOf(),
+		);
+		const firstSlot = sortedSlots[0];
+		const lastSlot = sortedSlots[sortedSlots.length - 1];
+		const firstTimeRange = mergeRanges(firstSlot.slots ?? []);
+		const lastTimeRange = mergeRanges(lastSlot.slots ?? []);
+		const startTime = firstTimeRange.length
+			? indexToTime(firstTimeRange[0].start - 1)
+			: "-";
+		const endTime = lastTimeRange.length
+			? indexToTime(lastTimeRange[lastTimeRange.length - 1].end)
+			: "-";
+
+		return {
+			startDate: formatDate(firstSlot.date),
+			endDate: formatDate(lastSlot.date),
+			startTime,
+			endTime,
+		};
+	}, [requestInfo]);
+
+	const petSitterName = requestInfo
+		? `${requestInfo.petSitterFirstName} ${requestInfo.petSitterLastName}`.trim()
+		: "-";
+	const totalPrice =
+		requestInfo?.totalPrice !== undefined
+			? requestInfo.totalPrice.toLocaleString("en-US")
+			: "-";
+	const totalPriceText = requestInfo ? `${totalPrice} تومان` : "-";
+	const addressText = requestInfo?.address
+		? `${requestInfo.address.provinceName}، ${requestInfo.address.cityName}، ${requestInfo.address.streetAddress}، پلاک ${requestInfo.address.houseNumber}، واحد ${requestInfo.address.unit}`
+		: "-";
+
+	useEffect(() => {
+		if (!accessToken) {
+			setIsLoading(false);
+			navigate("/login");
+			return;
+		}
+		const requestIdNumber = Number(requestID);
+		if (!requestID || Number.isNaN(requestIdNumber)) {
+			setIsLoading(false);
+			return;
+		}
+		let isActive = true;
+		const loadRequestInfo = async () => {
+			try {
+				setIsLoading(true);
+				const response = await getRequestInfo({
+					accessToken: accessToken!,
+					requestID: requestIdNumber,
+				});
+				if (!isActive) return;
+				setRequestInfo(response.data);
+			} finally {
+				if (isActive) {
+					setIsLoading(false);
+				}
+			}
+		};
+		loadRequestInfo();
+		return () => {
+			isActive = false;
+		};
+	}, [accessToken, navigate, requestID]);
+
+	if (isLoading) {
+		return (
+			<div className="min-h-screen flex items-center justify-center">
+				<Spinner className="size-8" />
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex justify-center p-5" dir="rtl">
 			<div className="w-7/8 max-w-300 rounded-md bg-white drop-shadow-lg flex flex-col p-5">
 				<div className="flex justify-between">
 					<p className="font-bold text-lg">جزئیات رزرو</p>
-					<p className="text-lg flex items-center gap-2">
+					<button
+						type="button"
+						className="text-lg flex items-center gap-2"
+						onClick={() =>
+							navigate(`/reserve-edit/${requestInfo?.requestID ?? requestID}`)
+						}
+					>
 						ویرایش
 						<Edit size={20} />
-					</p>
+					</button>
 				</div>
 				<div className="w-full h-0.5 bg-black/20"></div>
 				<div className="flex flex-col sm:flex-row gap-3 sm:gap-0 items-start justify-around sm:justify-around py-3">
@@ -35,7 +168,9 @@ export const ReserveDetails = (props: {}) => {
 						{isMobile && <Bone className="text-primary"></Bone>}
 						<div className="flex flex-col flex-1 sm:items-center justify-center">
 							<p className="text-gray-500">نوع سرویس</p>
-							<p className="text-black">نوع سرویس</p>
+							<p className="text-black">
+								{requestInfo?.service?.type ?? "-"}
+							</p>
 						</div>
 					</div>
 					<div className="w-full sm:w-0.5 h-0.5 sm:h-full bg-black/20"></div>
@@ -44,15 +179,20 @@ export const ReserveDetails = (props: {}) => {
 						<div className="flex flex-col flex-1 sm:items-center justify-center">
 							<p className="text-gray-500">پت ها</p>
 							<div className="flex w-full flex-wrap justify-center gap-2">
-								<div className="rounded-full bg-primary-300 px-3 py-0.2 text-white border border-primary">
-									فندق
-								</div>
-								<div className="rounded-full bg-primary-300 px-3 py-0.2 text-white border border-primary">
-									فندق
-								</div>
-								<div className="rounded-full bg-primary-300 px-3 py-0.2 text-white border border-primary">
-									فندق
-								</div>
+								{requestInfo?.pets?.length ? (
+									requestInfo.pets.map((pet) => (
+										<div
+											key={pet.id}
+											className="rounded-full bg-primary-300 px-3 py-0.2 text-white border border-primary"
+										>
+											{pet.name}
+										</div>
+									))
+								) : (
+									<div className="rounded-full bg-primary-300 px-3 py-0.2 text-white border border-primary">
+										-
+									</div>
+								)}
 							</div>
 						</div>
 					</div>
@@ -61,8 +201,8 @@ export const ReserveDetails = (props: {}) => {
 				<RowHolder
 					right="نام پت سیتر"
 					left="قیمت"
-					rightValue="تست"
-					leftValue="تست"
+					rightValue={petSitterName || "-"}
+					leftValue={totalPriceText}
 					RightIcon={CircleUserRound}
 					LeftIcon={CirclePercent}
 				/>
@@ -70,8 +210,8 @@ export const ReserveDetails = (props: {}) => {
 				<RowHolder
 					right="تاریخ شروع"
 					left="تاریخ پایان"
-					rightValue="تست"
-					leftValue="تست"
+					rightValue={calendarSummary.startDate}
+					leftValue={calendarSummary.endDate}
 					RightIcon={CalendarFold}
 					LeftIcon={CalendarFold}
 				/>
@@ -79,8 +219,8 @@ export const ReserveDetails = (props: {}) => {
 				<RowHolder
 					right="ساعت شروع"
 					left="ساعت پایان"
-					rightValue="تست"
-					leftValue="تست"
+					rightValue={calendarSummary.startTime}
+					leftValue={calendarSummary.endTime}
 					RightIcon={Clock}
 					LeftIcon={Clock}
 				/>
@@ -88,15 +228,16 @@ export const ReserveDetails = (props: {}) => {
 				<RowHolder
 					right="نوع رزور"
 					left="آدرس"
-					rightValue="تست"
-					leftValue="تست"
+					rightValue={requestInfo?.status ?? "-"}
+					leftValue={addressText}
 					RightIcon={RefreshCw}
 					LeftIcon={MapPin}
 				/>
 				<div className="w-full h-0.5 bg-black/20"></div>
 
 				<Formik
-					initialValues={{ body: "" }}
+					enableReinitialize
+					initialValues={{ body: requestInfo?.comment?.text ?? "" }}
 					onSubmit={(values) => console.log(values)}
 				>
 					<Form>
@@ -114,7 +255,10 @@ export const ReserveDetails = (props: {}) => {
 										placeholder="خودتان بنویسید"
 									></Textarea>
 
-									<Rating defaultValue={1} className="self-center">
+									<Rating
+										defaultValue={requestInfo?.comment?.rating ?? 1}
+										className="self-center"
+									>
 										{Array.from({ length: 5 }).map((_, index) => (
 											<RatingButton
 												className="text-primary"
