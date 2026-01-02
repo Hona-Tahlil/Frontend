@@ -20,6 +20,7 @@ import {
 import { useState } from "react";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { Form, Formik } from "formik";
+import { useNavigate } from "react-router-dom";
 
 export default function BookingCard({
 	cardStatus,
@@ -31,8 +32,10 @@ export default function BookingCard({
 	location,
 	date,
 	time,
+	requestID,
 }: BookingCardProps) {
 	const isMobile = useMobile();
+	const navigate = useNavigate();
 
 	const [cancelReservelDialogOpen, setCancelReserveDialogOpen] =
 		useState(false);
@@ -161,6 +164,7 @@ export default function BookingCard({
 								shadow={false}
 								variant={"outline"}
 								className="shadow-none h-8 py-0"
+								onClick={() => navigate(`/reserve-details/${requestID}`)}
 							>
 								مشاهده جزئیات
 							</Button>

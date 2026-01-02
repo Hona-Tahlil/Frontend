@@ -17,6 +17,7 @@ export interface BookingCardProps {
 	location: string;
 	date: string;
 	time: string;
+	requestID: number;
 }
 
 export interface Reserve {

@@ -122,6 +122,7 @@ export default function OwnerBookings() {
             key={item.requestID}
             side="petowner"
             cardStatus={item.cardStatus}
+            requestID={item.requestID}
             title={item.title}
             services={item.services}
             location={item.location}
