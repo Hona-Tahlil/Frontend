@@ -21,6 +21,9 @@ import { useState } from "react";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { Form, Formik } from "formik";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cancelRequestService } from "@/services/Requests/cancelRequestService";
+import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
 
 export default function BookingCard({
 	cardStatus,
@@ -36,6 +39,15 @@ export default function BookingCard({
 }: BookingCardProps) {
 	const isMobile = useMobile();
 	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+
+	const { mutate: cancelRequest, isPending: isCanceling } = useMutation({
+		mutationFn: cancelRequestService,
+		onSuccess: () => {
+			setCancelRequestDialogOpen(false);
+			queryClient.invalidateQueries({ queryKey: REQUESTS_QUERY_KEY });
+		},
+	});
 
 	const [cancelReservelDialogOpen, setCancelReserveDialogOpen] =
 		useState(false);
@@ -228,10 +240,16 @@ export default function BookingCard({
 							variant={"outline"}
 							shadow={false}
 							className="shadow-none h-8 py-5 w-40"
+							onClick={() => setCancelRequestDialogOpen(false)}
 						>
 							انصراف
 						</Button>
-						<Button shadow={false} className="shadow-none h-8 py-5 w-40">
+						<Button
+							shadow={false}
+							className="shadow-none h-8 py-5 w-40"
+							isLoading={isCanceling}
+							onClick={() => cancelRequest({ requestID })}
+						>
 							لغو درخواست
 						</Button>
 					</div>
