@@ -15,6 +15,7 @@ import { useMobile } from "@/hooks/ResponsiveHooks";
 import logoImage from "@/assets/images/Logo.svg";
 import NavbarProfileDropdonwMenu from "./NavbarProfile";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
+import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import type { NavbarProps } from "@/types/navbarTypes";
 import { getNameEmailService } from "@/services/navbarService";
@@ -91,22 +92,24 @@ export default function Navbar() {
   const { setProfile } = useUserStore();
   const navigate = useNavigate();
 
-  getNameEmailService()
-    .then((response) => {
-      if (response.statusCode == 200) {
-        console.log("success");
+  useEffect(() => {
+    if (!isUserLoggedin) return;
 
-        setProfile({
-          firstName: response.data.firstName,
-          lastName: response.data.lastName,
-          email: response.data.email,
-        });
-      }
-    })
-    .catch((error) => {
-      if (error) console.log(error);
-      else console.log("خطایی رخ داد");
-    });
+    getNameEmailService()
+      .then((response) => {
+        if (response.statusCode == 200) {
+          setProfile({
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            email: response.data.email,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error) console.log(error);
+        else console.log("خطایی رخ داد");
+      });
+  }, [isUserLoggedin, setProfile]);
   return (
     <nav
       dir="rtl"
