@@ -7,7 +7,7 @@ import Footer from "@/components/Footer/Footer";
 
 const PublicLayout = () => {
   return (
-    <div className="font-[alibaba] w-screen h-screen">
+    <div className="font-[alibaba] w-screen h-screen" dir="rtl">
       <Toaster
         position="bottom-right"
         richColors={true}
@@ -20,7 +20,7 @@ const PublicLayout = () => {
       />
       <GlobalProviders>
         <Navbar isUserLoggedin={true} />
-        <div className="mt-13 absolute w-screen">
+        <div className="absolute w-screen mt-13">
           <Outlet />
           <Footer />
         </div>

@@ -15,8 +15,11 @@ import { useMobile } from "@/hooks/ResponsiveHooks";
 import logoImage from "@/assets/images/Logo.svg";
 import NavbarProfileDropdonwMenu from "./NavbarProfile";
 import MobileSidebar from "../Custom/MobileSidebar/MobileSidebar";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import type { NavbarProps } from "@/types/navbarTypes";
+import { getNameEmailService } from "@/services/navbarService";
+import useUserStore from "@/store/userStore/userStore";
 
 const MOBILE_NAV_LINKS = [
   {
@@ -49,7 +52,7 @@ const MOBILE_NAV_LINKS = [
 const DESKTOP_NAV_LINKS = [
   {
     label: "خانه",
-    href: "/landing",
+    href: "/",
     icon: <Home className="h-5" />,
   },
   {
@@ -82,8 +85,31 @@ const USER_OPTIONS = [
   },
 ];
 
-export default function Navbar({ isUserLoggedin }: NavbarProps) {
+export default function Navbar() {
   const isMobile = useMobile();
+
+  const isUserLoggedin = useUserStore((s) => s.isAuthenticated());
+  const { setProfile } = useUserStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isUserLoggedin) return;
+
+    getNameEmailService()
+      .then((response) => {
+        if (response.statusCode == 200) {
+          setProfile({
+            firstName: response.data.firstName,
+            lastName: response.data.lastName,
+            email: response.data.email,
+          });
+        }
+      })
+      .catch((error) => {
+        if (error) console.log(error);
+        else console.log("خطایی رخ داد");
+      });
+  }, [isUserLoggedin, setProfile]);
   return (
     <nav
       dir="rtl"
@@ -124,7 +150,7 @@ export default function Navbar({ isUserLoggedin }: NavbarProps) {
         </div>
       ) : (
         <div className="flex h-full items-center">
-          <Button className="rounded-xl h-[70%] flex items-center gap-1 ">
+          <Button type={"button"} className="rounded-xl h-[70%] flex items-center gap-1 " onClick={()=>{navigate('/login')}}>
             <LogOut strokeWidth={3} />
             <span className="font-bold text-sm w-fit">ورود</span>
             <div className="bg-white w-0.5 h-full rounded-4xl"></div>
