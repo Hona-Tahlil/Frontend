@@ -61,6 +61,7 @@ export const Textarea = React.forwardRef<HTMLTextAreaElement, TextareaProps>(
 			<div
 				className={cn(
 					"relative flex gap-3 flex-col items-center justify-center w-full h-full",
+					className,
 				)}
 			>
 				<style>{scrollbarStyles}</style>

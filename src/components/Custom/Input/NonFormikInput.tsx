@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useDesktop, useTabletMobile } from "@/hooks/ResponsiveHooks";
 import { useState } from "react";
+import type { InputClass } from "@/types/inputTypes";
 
 const inputVariants = cva(
 	"flex h-13 w-full !text-[15px] rounded-full border border-[1px] border-black/40 bg-white font-[Alibaba] font-bold px-6 py-1 text-base transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm",
@@ -38,11 +39,6 @@ export interface InputProps
 	) => (event: React.ChangeEvent<HTMLInputElement>) => void)[];
 	hasError?: boolean;
 	error?: string;
-}
-
-export interface InputClass {
-	className?: string;
-	errorClassName?: string;
 }
 
 function NonFormikInput({
@@ -102,6 +98,7 @@ function NonFormikInput({
 					className={cn(
 						inputVariants({ shadow }),
 						"h-full",
+						classes?.inputClassName,
 						customStyles.input,
 						hasError ? "border-red-500 text-red-500 drop-shadow-red-500" : "",
 						hasError && isDesktop ? "pr-10.5" : "",

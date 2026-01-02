@@ -12,21 +12,23 @@ import type {
 	PostParams,
 	PutParams,
 } from "../types/apiTypes";
+import useUserStore from "@/store/userStore/userStore";
 
-export const baseURL = "http://185.60.136.50:8080"; // backend URL
+export const baseURL = "https://api.hona-petyar.ir/"; // backend URL
 
 const apiClient: AxiosInstance = axios.create({
 	baseURL,
 	timeout: 20000,
 	headers: {
 		"Content-Type": "application/json",
+		"ngrok-skip-browser-warning": "true",
 	},
 });
 
 apiClient.interceptors.request.use(
 	(config: InternalAxiosRequestConfig) => {
-		// const token = getTokenFromStore();
-		// if (token) config.headers.Authorization = `Bearer ${token}`;
+		const token = useUserStore.getState().accessToken;
+		if (token) config.headers.Authorization = `Bearer ${token}`;
 		return config;
 	},
 	(error) => Promise.reject(error),
@@ -67,7 +69,7 @@ export const postData = async ({ endPoint, data, headers }: PostParams) => {
 	}
 };
 
-// ✅ POST image/form-data
+//✅ POST image/form-data
 export const postImageData = async ({ endPoint, data }: PostParams) => {
 	try {
 		const response: AxiosResponse = await apiClient.post(endPoint, data, {
@@ -103,6 +105,20 @@ export const putData = async ({ endPoint, data }: PutParams) => {
 		throw error;
 	}
 };
+
+// ✅ PUT image/form-data
+export const putImageData = async ({ endPoint, data }: PutParams) => {
+  try {
+    const response: AxiosResponse = await apiClient.put(endPoint, data, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("error in putImageData", error);
+    throw error;
+  }
+};
+
 
 // ✅ DELETE
 export const deleteData = async ({ endPoint, data, headers }: DeleteParams) => {
