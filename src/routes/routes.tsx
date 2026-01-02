@@ -25,6 +25,7 @@ import ReviewsPage from "@/pages/Admin/ReviewsPage";
 import ComplaintsPage from "@/pages/Admin/ComplaintsPage";
 import BookingsPage from "@/pages/Admin/BookingsPage";
 import AccessPage from "@/pages/Admin/AccessPage";
+import EditPetOwnerProfile from "@/pages/profile/edit/editPetOwnerProfile";
 
 
 
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
 				path: "/Dashboard/pets",
         element: <PetDashboard />,
       },
+			{
+				path: "/profile/edit",
+				element: <EditPetOwnerProfile />,
+			},
       {
         path: "*",
         element: <Error404 />,
