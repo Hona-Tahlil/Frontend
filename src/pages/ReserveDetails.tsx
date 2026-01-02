@@ -153,7 +153,7 @@ export const ReserveDetails = () => {
 					<p className="font-bold text-lg">جزئیات رزرو</p>
 					<button
 						type="button"
-						className="text-lg flex items-center gap-2"
+						className="text-lg flex items-center gap-2 hover:text-primary hover:underline"
 						onClick={() =>
 							navigate(`/reserve-edit/${requestInfo?.requestID ?? requestID}`)
 						}
