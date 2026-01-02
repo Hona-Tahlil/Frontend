@@ -19,7 +19,7 @@ const sidebarItems = [
 
 export default function OwnerDashboardSidebar() {
   return (
-    <aside className="w-full max-w-sm lg:sticky lg:top-10 lg:w-72">
+    <aside className="w-full max-w-sm lg:sticky lg:top-24 lg:w-72">
       <div className="overflow-hidden rounded-2xl border border-black/10 bg-white shadow-[0_12px_30px_-22px_rgba(0,0,0,0.4)]">
         <div
           className="flex h-24 items-center justify-center bg-[#f8a65b] text-white"
