@@ -27,7 +27,7 @@ const sidebarItems = [
 export default function OwnerBookings() {
   return (
     <div className="min-h-screen bg-[#fff4ef] px-5 py-10" dir="rtl">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:flex-row lg:items-start">
+      <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:flex-row-reverse lg:items-start">
         <main className="flex-1">
           <h1 className="mb-6 text-right text-2xl font-semibold text-[#2f2a28]">
             رزرو های من
