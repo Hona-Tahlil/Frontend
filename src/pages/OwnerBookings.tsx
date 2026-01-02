@@ -1,4 +1,5 @@
 import BookingCard from "@/components/Booking/PetOwner/BookingCard";
+import type { CardStatus } from "@/types/bookingCardTypes";
 import {
   Tabs,
   TabsContent,
@@ -6,8 +7,133 @@ import {
   TabsTrigger,
 } from "@/components/Custom/Tabs/Tabs";
 import OwnerDashboardSidebar from "@/components/Dashboard/OwnerDashboardSidebar";
+import { searchRequestsService } from "@/services/Requests/searchRequestsService";
+import {
+  RequestStatus,
+  type SearchRequestsApiItem,
+  type SearchRequestsPayload,
+} from "@/types/Requests/searchRequests";
+import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
+import { useQuery } from "@tanstack/react-query";
+
+const requestPayload: SearchRequestsPayload = {
+  page: 1,
+  count: 20,
+  filters: [],
+  sorts: [
+    {
+      field: "created_at",
+      dir: "DESC",
+    },
+  ],
+};
+
+const mapRequestStatusToCardStatus = (status: RequestStatus): CardStatus => {
+  switch (status) {
+    case RequestStatus.Pending:
+      return "pending";
+    case RequestStatus.Accepted:
+      return "accepted";
+    case RequestStatus.Paid:
+    case RequestStatus.Finished:
+      return "done";
+    case RequestStatus.Canceled:
+      return "canceled";
+    case RequestStatus.Dismissed:
+      return "rejected";
+    case RequestStatus.Conflict:
+      return "pending";
+    default:
+      return "pending";
+  }
+};
+
+const formatDateTime = (value: string) => {
+  if (!value) {
+    return { date: "-", time: "-" };
+  }
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    const [datePart = "-", timePart = "-"] = value.split("T");
+    return {
+      date: datePart.replace(/-/g, "/"),
+      time: timePart.slice(0, 5),
+    };
+  }
+  const date = parsed.toISOString().slice(0, 10).replace(/-/g, "/");
+  const time = parsed.toISOString().slice(11, 16);
+  return { date, time };
+};
+
+const mapRequestToCard = (item: SearchRequestsApiItem) => {
+  const { date, time } = formatDateTime(item.updatedAt);
+  return {
+    requestID: item.requestID,
+    title: `${item.petSitterFirstName} ${item.petSitterLastName}`,
+    services: item.service.type,
+    location: "-",
+    date,
+    time,
+    cost: item.totalPrice || item.service.price,
+    cardStatus: mapRequestStatusToCardStatus(item.status.num),
+  };
+};
 
 export default function OwnerBookings() {
+  const { data, isLoading, isError } = useQuery({
+    queryKey: REQUESTS_QUERY_KEY,
+    queryFn: () => searchRequestsService(requestPayload),
+  });
+  const cards = (data?.data.data ?? []).map(mapRequestToCard);
+  const activeCards = cards.filter(
+    (card) => card.cardStatus === "pending" || card.cardStatus === "accepted",
+  );
+  const pastCards = cards.filter((card) => card.cardStatus === "done");
+  const canceledCards = cards.filter(
+    (card) => card.cardStatus === "canceled" || card.cardStatus === "rejected",
+  );
+
+  const renderCards = (items: ReturnType<typeof mapRequestToCard>[]) => {
+    if (isLoading) {
+      return (
+        <div className="flex h-40 items-center justify-center text-sm text-black/50">
+          در حال بارگذاری...
+        </div>
+      );
+    }
+    if (isError) {
+      return (
+        <div className="flex h-40 items-center justify-center text-sm text-black/50">
+          خطا در دریافت اطلاعات.
+        </div>
+      );
+    }
+    if (!items.length) {
+      return (
+        <div className="flex h-40 items-center justify-center text-sm text-black/50">
+          موردی برای نمایش نیست.
+        </div>
+      );
+    }
+    return (
+      <div className="space-y-6">
+        {items.map((item) => (
+          <BookingCard
+            key={item.requestID}
+            side="petowner"
+            cardStatus={item.cardStatus}
+            title={item.title}
+            services={item.services}
+            location={item.location}
+            date={item.date}
+            time={item.time}
+            cost={item.cost}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen bg-[#fff4ef] px-5 py-10" dir="rtl">
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-6 lg:flex-row-reverse lg:items-start">
@@ -23,38 +149,13 @@ export default function OwnerBookings() {
                 <TabsTrigger value="canceled">لغو شده</TabsTrigger>
               </TabsList>
               <TabsContent value="active">
-                <div className="flex h-40 items-center justify-center text-sm text-black/50">
-                  موردی برای نمایش نیست.
-                </div>
+                {renderCards(activeCards)}
               </TabsContent>
               <TabsContent value="past">
-                <div className="flex h-40 items-center justify-center text-sm text-black/50">
-                  موردی برای نمایش نیست.
-                </div>
+                {renderCards(pastCards)}
               </TabsContent>
               <TabsContent value="canceled">
-                <div className="space-y-6">
-                  <BookingCard
-                    side="petowner"
-                    cardStatus="canceled"
-                    title="جمیز باند"
-                    services="نگهداری، آرایش"
-                    location="تهران، نیاوران"
-                    date="1403/08/20"
-                    time="10:00"
-                    cost={123000}
-                  />
-                  <BookingCard
-                    side="petowner"
-                    cardStatus="rejected"
-                    title="جمیز باند"
-                    services="نگهداری، آرایش"
-                    location="تهران، نیاوران"
-                    date="1403/08/20"
-                    time="10:00"
-                    cost={123000}
-                  />
-                </div>
+                {renderCards(canceledCards)}
               </TabsContent>
             </Tabs>
           </section>
