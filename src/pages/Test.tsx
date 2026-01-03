@@ -306,7 +306,7 @@ function Test() {
         trigger={<Button> salam </Button>}
       >
         <div className="flex w-full flex-col gap-6">
-          <Tabs defaultValue="requestInfo" className="rtl">
+          <Tabs defaultValue="requestInfo" className="rtl" isPetsitter>
             <TabsList>
               <TabsTrigger value="requestInfo">مشخصات درخواست </TabsTrigger>
               <TabsTrigger value="password">پت ها </TabsTrigger>
