@@ -30,7 +30,7 @@ export default function RequestPetCard({
         </Avatar>
       </div>
 
-      <div className="grid grid-cols-2 w-full  ">
+      <div className="grid grid-cols-2 w-full px-2  ">
         <div className=" border-b border-gray-300 relative flex flex-col justify-center items-center">
           <p className="text-xs sm:text-sm">نام: {name}</p>
 

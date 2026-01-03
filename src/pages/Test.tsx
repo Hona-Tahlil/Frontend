@@ -337,7 +337,7 @@ function Test() {
             </TabsContent>
             <TabsContent value="password">
               <ScrollArea className="h-50" dir="rtl">
-                <div className="h-full flex flex-col gap-4">
+                <div className="h-full flex flex-col gap-4 pr-3">
                   <RequestPetCard
                     name="salam"
                     species="دلقک"
@@ -368,7 +368,6 @@ function Test() {
                   ></RequestPetCard>
                 </div>
 
-                <ScrollBar orientation="vertical" />
               </ScrollArea>
             </TabsContent>
           </Tabs>
