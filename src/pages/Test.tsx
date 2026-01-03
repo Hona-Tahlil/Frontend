@@ -72,6 +72,8 @@ import PetRegisterForm from "@/components/PetRegister/PetRegisterForm";
 
 import DashboardPetCard from "@/components/Pet/DashboardPetCard";
 import BookingCard from "@/components/Booking/PetOwner/BookingCard";
+import RequestPetCard from "@/components/Booking/PetSitter/RequestPetCard";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -304,12 +306,12 @@ function Test() {
         trigger={<Button> salam </Button>}
       >
         <div className="flex w-full flex-col gap-6">
-          <Tabs defaultValue="account" className="rtl">
+          <Tabs defaultValue="requestInfo" className="rtl">
             <TabsList>
-              <TabsTrigger value="account">مشخصات درخواست </TabsTrigger>
+              <TabsTrigger value="requestInfo">مشخصات درخواست </TabsTrigger>
               <TabsTrigger value="password">پت ها </TabsTrigger>
             </TabsList>
-            <TabsContent value="account">
+            <TabsContent value="requestInfo">
               <div className="mt-4 flex flex-col gap-1">
                 <div>
                   <span className="font-bold">نوع سرویس: </span>
@@ -333,7 +335,42 @@ function Test() {
                 </div>
               </div>
             </TabsContent>
-            <TabsContent value="password">naaaaa</TabsContent>
+            <TabsContent value="password">
+              <ScrollArea className="h-50" dir="rtl">
+                <div className="h-full flex flex-col gap-4">
+                  <RequestPetCard
+                    name="salam"
+                    species="دلقک"
+                    gender={2}
+                    pictureLink="dalghak"
+                    isAdult={true}
+                  ></RequestPetCard>
+                  <RequestPetCard
+                    name="salam"
+                    species="دلقک"
+                    gender={2}
+                    pictureLink="dalghak"
+                    isAdult={true}
+                  ></RequestPetCard>
+                  <RequestPetCard
+                    name="salam"
+                    species="دلقک"
+                    gender={2}
+                    pictureLink="dalghak"
+                    isAdult={true}
+                  ></RequestPetCard>
+                  <RequestPetCard
+                    name="salam"
+                    species="دلقک"
+                    gender={2}
+                    pictureLink="dalghak"
+                    isAdult={true}
+                  ></RequestPetCard>
+                </div>
+
+                <ScrollBar orientation="vertical" />
+              </ScrollArea>
+            </TabsContent>
           </Tabs>
         </div>
       </RequestDialogboxLayout>
