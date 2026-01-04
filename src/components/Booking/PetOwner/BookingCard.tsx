@@ -6,6 +6,7 @@ import type { BookingCardProps } from "@/types/bookingCardTypes";
 import { formatNumber } from "@/utils/formatNumber";
 import { translateNumber } from "@/utils/translateNumber";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import {
 	Dialog,
@@ -28,6 +29,7 @@ import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
 export default function BookingCard({
 	cardStatus,
 	commentStatus,
+	disableCancelRequest,
 	side,
 	title,
 	services,
@@ -191,14 +193,34 @@ export default function BookingCard({
 								</Button>
 							)}
 							{cardStatus == "pending" && (
-								<Button
-									variant={"outline"}
-									shadow={false}
-									className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
-									onClick={openCancelRequestDialog}
-								>
-									لغو درخواست
-								</Button>
+								disableCancelRequest ? (
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<span className="inline-flex">
+												<Button
+													variant={"outline"}
+													shadow={false}
+													disabled
+													className="shadow-none h-8 py-0 text-rejected-red border-rejected-red opacity-60"
+												>
+													لغو درخواست
+												</Button>
+											</span>
+										</TooltipTrigger>
+										<TooltipContent className="font-[Alibaba]">
+											امکان لغو درخواست وجود ندارد.
+										</TooltipContent>
+									</Tooltip>
+								) : (
+									<Button
+										variant={"outline"}
+										shadow={false}
+										className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
+										onClick={openCancelRequestDialog}
+									>
+										لغو درخواست
+									</Button>
+								)
 							)}
 							{cardStatus == "done" && !commentStatus && (
 								<Button

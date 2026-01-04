@@ -10,6 +10,7 @@ export type Side = "petowner" | "petsitter";
 export interface BookingCardProps {
 	cardStatus?: CardStatus;
 	commentStatus?: CommentStatus;
+	disableCancelRequest?: boolean;
 	side: Side;
 	title: string;
 	services: string;

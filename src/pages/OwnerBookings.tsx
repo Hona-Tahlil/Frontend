@@ -55,6 +55,18 @@ const formatJalaliDate = (value: Date) => {
   return `${jy}/${pad(jm)}/${pad(jd)}`;
 };
 
+const isCancelRequestDisabled = (value?: string) => {
+  if (!value) {
+    return false;
+  }
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return false;
+  }
+  const diffMs = parsed.getTime() - Date.now();
+  return diffMs < 24 * 60 * 60 * 1000;
+};
+
 const formatDateTime = (value: string) => {
   if (!value) {
     return { date: "-", time: "-" };
@@ -92,6 +104,7 @@ const mapRequestToCard = (item: SearchRequestsApiItem) => {
     time,
     cost: item.totalPrice || item.service.price,
     cardStatus: mapRequestStatusToCardStatus(item.status.num),
+    disableCancelRequest: isCancelRequestDisabled(item.calendarSlots?.[0]?.date),
   };
 };
 
@@ -138,6 +151,7 @@ export default function OwnerBookings() {
             key={item.requestID}
             side="petowner"
             cardStatus={item.cardStatus}
+            disableCancelRequest={item.disableCancelRequest}
             requestID={item.requestID}
             title={item.title}
             services={item.services}
