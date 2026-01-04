@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -14,12 +15,7 @@ import { Button } from "../Button/Button";
 import petDefaultImage from "@/assets/images/pet-default-profile.png";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { useField, useFormikContext } from "formik";
-
-interface PreviewableAvatarProps {
-  className?: string;
-  name: string;
-  canEdit?: boolean;
-}
+import type { PreviewableAvatarProps } from "@/types/avatarTypes";
 
 const PreviewableAvatar: React.FC<PreviewableAvatarProps> = ({
   className,
@@ -88,13 +84,14 @@ const PreviewableAvatar: React.FC<PreviewableAvatarProps> = ({
           </div>
         </DialogTrigger>
         <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
-          {canEdit && (
-            <DialogHeader>
-              <DialogTitle className="text-2xl mb-10">
-                {"\u0627\u0646\u062a\u062e\u0627\u0628 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
-              </DialogTitle>
-            </DialogHeader>
-          )}
+          <DialogHeader>
+            <DialogTitle className={canEdit ? "text-2xl mb-10" : "sr-only"}>
+              {"\u0627\u0646\u062a\u062e\u0627\u0628 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
+            </DialogTitle>
+            <DialogDescription className="sr-only">
+              {"\u067e\u06cc\u0634\u200c\u0646\u0645\u0627\u06cc\u0634 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
+            </DialogDescription>
+          </DialogHeader>
           <div className="mb-6 h-40 w-40 overflow-hidden rounded-full shadow-md">
             <img
               src={image || petDefaultImage}
@@ -155,13 +152,14 @@ const PreviewableAvatar: React.FC<PreviewableAvatarProps> = ({
         </div>
       </DialogTrigger>
       <DialogContent className="flex flex-col justify-center items-center w-fit py-5 px-15 md:px-30 rounded-2xl">
-        {canEdit && (
-          <DialogHeader>
-            <DialogTitle className="text-2xl mb-10">
-              {"\u0627\u0646\u062a\u062e\u0627\u0628 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
-            </DialogTitle>
-          </DialogHeader>
-        )}
+        <DialogHeader>
+          <DialogTitle className={canEdit ? "text-2xl mb-10" : "sr-only"}>
+            {"\u0627\u0646\u062a\u062e\u0627\u0628 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            {"\u067e\u06cc\u0634\u200c\u0646\u0645\u0627\u06cc\u0634 \u0639\u06a9\u0633 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644"}
+          </DialogDescription>
+        </DialogHeader>
         <div className="mb-6 h-48 w-48 overflow-hidden rounded-full shadow-md">
           <img
             src={image || petDefaultImage}
