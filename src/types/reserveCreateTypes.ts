@@ -154,3 +154,15 @@ export interface ReserveCreateResponse {
 	statusCode: number;
 	message: string;
 }
+
+export interface CreateCommentRequest {
+	accessToken: string;
+	requestID: number;
+	text: string;
+	rating: number;
+}
+
+export interface CreateCommentResponse {
+	statusCode: number;
+	message: string;
+}

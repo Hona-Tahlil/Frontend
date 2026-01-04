@@ -3,7 +3,7 @@ import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { Spinner } from "@/components/ui/spinner";
-import { getRequestInfo } from "@/services/reserveCreateService";
+import { createComment, getRequestInfo } from "@/services/reserveCreateService";
 import useUserStore from "@/store/userStore/userStore";
 import type { RequestInfo } from "@/types/reserveCreateTypes";
 import { Form, Formik } from "formik";
@@ -235,10 +235,35 @@ export const ReserveDetails = () => {
 
 				<Formik
 					enableReinitialize
-					initialValues={{ body: requestInfo?.comment?.text ?? "" }}
-					onSubmit={(values) => console.log(values)}
+					initialValues={{
+						body: requestInfo?.comment?.text ?? "",
+						rating: requestInfo?.comment?.rating ?? 1,
+					}}
+					onSubmit={async (values, { setSubmitting }) => {
+						const requestIdNumber = Number(requestID);
+						if (!accessToken || !requestID || Number.isNaN(requestIdNumber)) {
+							setSubmitting(false);
+							return;
+						}
+						try {
+							await createComment({
+								accessToken,
+								requestID: requestIdNumber,
+								text: values.body,
+								rating: values.rating,
+							});
+							const response = await getRequestInfo({
+								accessToken,
+								requestID: requestIdNumber,
+							});
+							setRequestInfo(response.data);
+						} finally {
+							setSubmitting(false);
+						}
+					}}
 				>
-					<Form>
+					{({ isSubmitting, setFieldValue, values }) => (
+						<Form>
 						<div className="w-full flex justify-start">
 							<div className="flex flex-1 sm:items-center justify-start gap-3 pt-3 sm:pt-0">
 								{isMobile && <Book className="text-primary"></Book>}
@@ -254,7 +279,10 @@ export const ReserveDetails = () => {
 									></Textarea>
 
 									<Rating
-										defaultValue={requestInfo?.comment?.rating ?? 1}
+										value={values.rating}
+										onValueChange={(value) =>
+											setFieldValue("rating", value)
+										}
 										className="self-center"
 									>
 										{Array.from({ length: 5 }).map((_, index) => (
@@ -266,13 +294,19 @@ export const ReserveDetails = () => {
 										))}
 									</Rating>
 									<div className="w-full flex justify-center gap-3">
-										<Button className="w-full" shadow={false}>
+										<Button
+											className="w-full"
+											shadow={false}
+											disabled={isSubmitting}
+										>
 											تایید
 										</Button>
 										<Button
 											className="w-full"
 											variant={"outline"}
 											shadow={false}
+											type="button"
+											disabled={isSubmitting}
 										>
 											انصراف
 										</Button>
@@ -281,6 +315,7 @@ export const ReserveDetails = () => {
 							</div>
 						</div>
 					</Form>
+					)}
 				</Formik>
 			</div>
 		</div>
