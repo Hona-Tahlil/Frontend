@@ -168,9 +168,7 @@ export const ReserveDetails = () => {
 						{isMobile && <Bone className="text-primary"></Bone>}
 						<div className="flex flex-col flex-1 sm:items-center justify-center">
 							<p className="text-gray-500">نوع سرویس</p>
-							<p className="text-black">
-								{requestInfo?.service?.type ?? "-"}
-							</p>
+							<p className="text-black">{requestInfo?.service?.type ?? "-"}</p>
 						</div>
 					</div>
 					<div className="w-full sm:w-0.5 h-0.5 sm:h-full bg-black/20"></div>
@@ -226,9 +224,9 @@ export const ReserveDetails = () => {
 				/>
 				<div className="w-full h-0.5 bg-black/20"></div>
 				<RowHolder
-					right="نوع رزور"
+					right="وضعیت رزرو"
 					left="آدرس"
-					rightValue={requestInfo?.status ?? "-"}
+					rightValue={requestInfo?.status?.name ?? "-"}
 					leftValue={addressText}
 					RightIcon={RefreshCw}
 					LeftIcon={MapPin}

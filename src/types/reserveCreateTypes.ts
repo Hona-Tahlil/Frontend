@@ -125,9 +125,9 @@ export interface RequestInfo {
 	calendarSlots: RequestCalendarSlot[];
 	notes: string;
 	totalPrice: number;
-	comment: RequestComment;
+	comment: RequestComment | null;
 	address: RequestAddress;
-	status: string;
+	status: { num: number; name: string };
 	transferID: number | null;
 	updatedAt: string;
 }
