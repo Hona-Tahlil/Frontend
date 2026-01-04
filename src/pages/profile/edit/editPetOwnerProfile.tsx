@@ -126,6 +126,9 @@ export default function EditPetOwnerProfile() {
   const inputClassName = `h-12 border-1 border-gray-400/20 ${readOnlyFieldClasses}`;
   const textareaClassName = `h-30 drop-shadow-lg border-1 border-gray-400/20 ${readOnlyFieldClasses}`;
   const valueTextClass = "text-small font-bold text-charcoal-700";
+  const addressRowClass = "relative flex items-center";
+  const addressLabelClass =
+    "absolute -right-14 top-1/2 -translate-y-1/2 min-w-12 whitespace-nowrap text-small font-medium text-charcoal-600 text-right";
   const [initialValues, setInitialValues] = useState<ProfileFormValues>(defaultValues);
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [mappedProvinceId, setMappedProvinceId] = useState("");
@@ -543,54 +546,55 @@ export default function EditPetOwnerProfile() {
                         )}
 
                         {isEditing ? (
-                          <Input
-                            name="streetAddress"
-                            placeholder="خیابان، کوچه"
-                            shadow
-                            readOnly={!isEditing}
-                            classes={{ className: "h-12", inputClassName }}
-                          />
-                        ) : (
-                          <div className={valueTextClass}>
-                            {values.streetAddress
-                              ? values.streetAddress
-                              : "آدرس وارد نشده"}
-                          </div>
-                        )}
-
-                        <div
-                          className={isEditing ? "flex flex-wrap gap-3" : "flex flex-col gap-2"}
-                        >
-                          {isEditing ? (
-                            <>
+                          <div className="flex flex-col gap-3">
+                            <div className={addressRowClass}>
+                              <span className={addressLabelClass}>پلاک</span>
                               <Input
                                 name="houseNumber"
                                 placeholder="پلاک"
                                 shadow
                                 readOnly={!isEditing}
-                                classes={{ className: "h-12", inputClassName }}
+                                classes={{ className: "flex-1", inputClassName }}
                               />
+                            </div>
+                            <div className={addressRowClass}>
+                              <span className={addressLabelClass}>واحد</span>
                               <Input
                                 name="unit"
                                 placeholder="واحد"
                                 shadow
                                 readOnly={!isEditing}
-                                classes={{ className: "h-12", inputClassName }}
+                                classes={{ className: "flex-1", inputClassName }}
                               />
-                            </>
-                          ) : (
-                            <>
-                              <div className={valueTextClass}>
-                                {values.houseNumber
-                                  ? `پلاک ${values.houseNumber}`
-                                  : "پلاک وارد نشده"}
-                              </div>
-                              <div className={valueTextClass}>
-                                {values.unit ? `واحد ${values.unit}` : "واحد وارد نشده"}
-                              </div>
-                            </>
-                          )}
-                        </div>
+                            </div>
+                            <div className={addressRowClass}>
+                              <span className={addressLabelClass}>آدرس</span>
+                              <Input
+                                name="streetAddress"
+                                placeholder="خیابان، کوچه"
+                                shadow
+                                readOnly={!isEditing}
+                                classes={{ className: "flex-1", inputClassName }}
+                              />
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex flex-col gap-2">
+                            <div className={valueTextClass}>
+                              {values.houseNumber
+                                ? `پلاک ${values.houseNumber}`
+                                : "پلاک وارد نشده"}
+                            </div>
+                            <div className={valueTextClass}>
+                              {values.unit ? `واحد ${values.unit}` : "واحد وارد نشده"}
+                            </div>
+                            <div className={valueTextClass}>
+                              {values.streetAddress
+                                ? values.streetAddress
+                                : "آدرس وارد نشده"}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
