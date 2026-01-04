@@ -173,7 +173,7 @@ export default function OwnerBookings() {
             رزرو های من
           </h1>
           <section className="rounded-3xl border border-black/10 bg-white p-5 shadow-[0_14px_30px_-25px_rgba(0,0,0,0.4)] sm:p-8">
-            <Tabs defaultValue="canceled">
+            <Tabs defaultValue="active">
               <TabsList className="mb-6 gap-6">
                 <TabsTrigger value="active">رزرو های فعال</TabsTrigger>
                 <TabsTrigger value="past">رزرو های گذشته</TabsTrigger>
