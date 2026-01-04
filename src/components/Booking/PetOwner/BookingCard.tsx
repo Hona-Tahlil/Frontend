@@ -6,6 +6,7 @@ import type { BookingCardProps } from "@/types/bookingCardTypes";
 import { formatNumber } from "@/utils/formatNumber";
 import { translateNumber } from "@/utils/translateNumber";
 import { Calendar, Clock, MapPin } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 import {
 	Dialog,
@@ -20,10 +21,15 @@ import {
 import { useState } from "react";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { Form, Formik } from "formik";
+import { useNavigate } from "react-router-dom";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cancelRequestService } from "@/services/Requests/cancelRequestService";
+import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
 
 export default function BookingCard({
 	cardStatus,
 	commentStatus,
+	disableCancelRequest,
 	side,
 	title,
 	services,
@@ -31,8 +37,19 @@ export default function BookingCard({
 	location,
 	date,
 	time,
+	requestID,
 }: BookingCardProps) {
 	const isMobile = useMobile();
+	const navigate = useNavigate();
+	const queryClient = useQueryClient();
+
+	const { mutate: cancelRequest, isPending: isCanceling } = useMutation({
+		mutationFn: cancelRequestService,
+		onSuccess: () => {
+			setCancelRequestDialogOpen(false);
+			queryClient.invalidateQueries({ queryKey: REQUESTS_QUERY_KEY });
+		},
+	});
 
 	const [cancelReservelDialogOpen, setCancelReserveDialogOpen] =
 		useState(false);
@@ -161,6 +178,7 @@ export default function BookingCard({
 								shadow={false}
 								variant={"outline"}
 								className="shadow-none h-8 py-0"
+								onClick={() => navigate(`/reserve-details/${requestID}`)}
 							>
 								مشاهده جزئیات
 							</Button>
@@ -175,14 +193,34 @@ export default function BookingCard({
 								</Button>
 							)}
 							{cardStatus == "pending" && (
-								<Button
-									variant={"outline"}
-									shadow={false}
-									className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
-									onClick={openCancelRequestDialog}
-								>
-									لغو درخواست
-								</Button>
+								disableCancelRequest ? (
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<span className="inline-flex">
+												<Button
+													variant={"outline"}
+													shadow={false}
+													disabled
+													className="shadow-none h-8 py-0 text-rejected-red border-rejected-red opacity-60"
+												>
+													لغو درخواست
+												</Button>
+											</span>
+										</TooltipTrigger>
+										<TooltipContent className="font-[Alibaba]">
+											امکان لغو درخواست وجود ندارد.
+										</TooltipContent>
+									</Tooltip>
+								) : (
+									<Button
+										variant={"outline"}
+										shadow={false}
+										className="shadow-none h-8 py-0 text-rejected-red border-rejected-red hover:bg-rejected-red"
+										onClick={openCancelRequestDialog}
+									>
+										لغو درخواست
+									</Button>
+								)
 							)}
 							{cardStatus == "done" && !commentStatus && (
 								<Button
@@ -224,10 +262,16 @@ export default function BookingCard({
 							variant={"outline"}
 							shadow={false}
 							className="shadow-none h-8 py-5 w-40"
+							onClick={() => setCancelRequestDialogOpen(false)}
 						>
 							انصراف
 						</Button>
-						<Button shadow={false} className="shadow-none h-8 py-5 w-40">
+						<Button
+							shadow={false}
+							className="shadow-none h-8 py-5 w-40"
+							isLoading={isCanceling}
+							onClick={() => cancelRequest({ requestID })}
+						>
 							لغو درخواست
 						</Button>
 					</div>

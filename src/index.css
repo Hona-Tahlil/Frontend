@@ -138,7 +138,7 @@ html body[data-scroll-locked] {
 	--secondary-700: #325e5c;
 	--secondary-800: #274947;
 	--secondary-900: #22403e;
-	--secondary: oklch(0.97 0 0);
+	--secondary: #386d6a;
 	--secondary-foreground: oklch(0.205 0 0);
 	--charcoal-50: #e6f1ed;
 	--charcoal-100: #c8c7c3;
