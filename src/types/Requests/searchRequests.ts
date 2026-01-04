@@ -40,12 +40,33 @@ export interface RequestStatusInfo {
   name: string;
 }
 
+export interface RequestCalendarSlot {
+  id: number;
+  date: string;
+  slots: number[];
+  status: number;
+}
+
+export interface RequestAddressInfo {
+  id: number;
+  provinceName: string;
+  cityName: string;
+  streetAddress: string;
+  houseNumber: number | null;
+  unit: number | null;
+  postalCode: string | null;
+}
+
 export interface SearchRequestsApiItem {
   requestID: number;
   petSitterUserID: number;
   petSitterFirstName: string;
   petSitterLastName: string;
+  petSitterPictureLink: string;
+  userPictureLink: string;
   service: RequestServiceInfo;
+  calendarSlots: RequestCalendarSlot[];
+  address: RequestAddressInfo;
   totalPrice: number;
   status: RequestStatusInfo;
   updatedAt: string;

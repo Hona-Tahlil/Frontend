@@ -15,6 +15,7 @@ import {
 } from "@/types/Requests/searchRequests";
 import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
 import { useQuery } from "@tanstack/react-query";
+import { convertGregorianToJalaliDate } from "@/utils/convertJalaliToGeorgian";
 
 const requestPayload: SearchRequestsPayload = {
   page: 1,
@@ -48,30 +49,45 @@ const mapRequestStatusToCardStatus = (status: RequestStatus): CardStatus => {
   }
 };
 
+const formatJalaliDate = (value: Date) => {
+  const { jy, jm, jd } = convertGregorianToJalaliDate(value);
+  const pad = (num: number) => String(num).padStart(2, "0");
+  return `${jy}/${pad(jm)}/${pad(jd)}`;
+};
+
 const formatDateTime = (value: string) => {
   if (!value) {
     return { date: "-", time: "-" };
   }
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
-    const [datePart = "-", timePart = "-"] = value.split("T");
     return {
-      date: datePart.replace(/-/g, "/"),
-      time: timePart.slice(0, 5),
+      date: "-",
+      time: "-",
     };
   }
-  const date = parsed.toISOString().slice(0, 10).replace(/-/g, "/");
-  const time = parsed.toISOString().slice(11, 16);
+  const date = formatJalaliDate(parsed);
+  const time = `${String(parsed.getHours()).padStart(2, "0")}:${String(
+    parsed.getMinutes(),
+  ).padStart(2, "0")}`;
   return { date, time };
 };
 
+const formatLocation = (item: SearchRequestsApiItem) => {
+  const parts = [item.address?.provinceName, item.address?.cityName].filter(
+    Boolean,
+  );
+  return parts.length ? parts.join("، ") : "-";
+};
+
 const mapRequestToCard = (item: SearchRequestsApiItem) => {
-  const { date, time } = formatDateTime(item.updatedAt);
+  const slotDate = item.calendarSlots?.[0]?.date || item.updatedAt;
+  const { date, time } = formatDateTime(slotDate);
   return {
     requestID: item.requestID,
     title: `${item.petSitterFirstName} ${item.petSitterLastName}`,
     services: item.service.type,
-    location: "-",
+    location: formatLocation(item),
     date,
     time,
     cost: item.totalPrice || item.service.price,
