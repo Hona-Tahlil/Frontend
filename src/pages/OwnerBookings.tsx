@@ -192,7 +192,7 @@ export default function OwnerBookings() {
           </section>
         </main>
 
-        <OwnerDashboardSidebar />
+        <OwnerDashboardSidebar activeItem="bookings" />
       </div>
     </div>
   );
