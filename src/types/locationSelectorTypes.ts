@@ -11,4 +11,5 @@ export const LocationContext = createContext<LocationContextType | undefined>(
 
 export type LocationSelectorProps = {
 	children: ReactNode;
+	initialProvince?: string;
 };
