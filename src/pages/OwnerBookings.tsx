@@ -14,20 +14,16 @@ import {
   type SearchRequestsPayload,
 } from "@/types/Requests/searchRequests";
 import { REQUESTS_QUERY_KEY } from "@/queryKeys/requests";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { convertGregorianToJalaliDate } from "@/utils/convertJalaliToGeorgian";
 
-const requestPayload: SearchRequestsPayload = {
-  page: 1,
-  count: 20,
-  filters: [],
-  sorts: [
-    {
-      field: "created_at",
-      dir: "DESC",
-    },
-  ],
-};
+const defaultSorts: SearchRequestsPayload["sorts"] = [
+  {
+    field: "created_at",
+    dir: "DESC",
+  },
+];
 
 const mapRequestStatusToCardStatus = (status: RequestStatus): CardStatus => {
   switch (status) {
@@ -109,11 +105,21 @@ const mapRequestToCard = (item: SearchRequestsApiItem) => {
 };
 
 export default function OwnerBookings() {
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
+  const requestPayload: SearchRequestsPayload = {
+    page,
+    count: pageSize,
+    filters: [],
+    sorts: defaultSorts,
+  };
+
   const { data, isLoading, isError } = useQuery({
-    queryKey: REQUESTS_QUERY_KEY,
+    queryKey: [...REQUESTS_QUERY_KEY, page, pageSize],
     queryFn: () => searchRequestsService(requestPayload),
   });
   const cards = (data?.data.data ?? []).map(mapRequestToCard);
+  const pagination = data?.data.pagination;
   const activeCards = cards.filter(
     (card) => card.cardStatus === "pending" || card.cardStatus === "accepted",
   );
@@ -189,6 +195,29 @@ export default function OwnerBookings() {
                 {renderCards(canceledCards)}
               </TabsContent>
             </Tabs>
+            {pagination && (
+              <div className="mt-6 flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  disabled={!pagination.hasPrevPage}
+                  onClick={() => setPage((current) => current - 1)}
+                  className="rounded border px-3 py-1 text-sm disabled:opacity-40"
+                >
+                  قبلی
+                </button>
+                <span className="text-sm">
+                  صفحه {pagination.currentPage} از {pagination.totalPages}
+                </span>
+                <button
+                  type="button"
+                  disabled={!pagination.hasNextPage}
+                  onClick={() => setPage((current) => current + 1)}
+                  className="rounded border px-3 py-1 text-sm disabled:opacity-40"
+                >
+                  بعدی
+                </button>
+              </div>
+            )}
           </section>
         </main>
 
