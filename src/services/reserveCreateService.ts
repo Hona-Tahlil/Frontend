@@ -8,6 +8,7 @@ import type {
 	ReserveCreateRequest,
 	ReserveCreateResponse,
 	ReserveEditRequest,
+	EditCommentRequest,
 } from "@/types/reserveCreateTypes";
 import { getData, postData, putData } from "./services";
 
@@ -54,6 +55,17 @@ export const createComment = async (
 ): Promise<CreateCommentResponse> => {
 	const { accessToken, ...body } = credentials;
 	return postData({
+		endPoint: `/v1/comments/`,
+		data: body,
+		headers: { Authorization: `Bearer ${accessToken}` },
+	});
+};
+
+export const editComment = async (
+	credentials: EditCommentRequest,
+): Promise<CreateCommentResponse> => {
+	const { accessToken, ...body } = credentials;
+	return putData({
 		endPoint: `/v1/comments/`,
 		data: body,
 		headers: { Authorization: `Bearer ${accessToken}` },

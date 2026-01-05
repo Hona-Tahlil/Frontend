@@ -3,7 +3,12 @@ import { Rating, RatingButton } from "@/components/Custom/Rating/Rating";
 import { Textarea } from "@/components/Custom/Textarea/Textarea";
 import { useMobile } from "@/hooks/ResponsiveHooks";
 import { Spinner } from "@/components/ui/spinner";
-import { createComment, getRequestInfo } from "@/services/reserveCreateService";
+import CustomToast from "@/components/Custom/CustomToast";
+import {
+	createComment,
+	editComment,
+	getRequestInfo,
+} from "@/services/reserveCreateService";
 import useUserStore from "@/store/userStore/userStore";
 import type { RequestInfo } from "@/types/reserveCreateTypes";
 import { Form, Formik } from "formik";
@@ -93,6 +98,7 @@ export const ReserveDetails = () => {
 		};
 	}, [requestInfo]);
 
+	const hasExistingComment = Boolean(requestInfo?.comment);
 	const petSitterName = requestInfo
 		? `${requestInfo.petSitterFirstName} ${requestInfo.petSitterLastName}`.trim()
 		: "-";
@@ -242,16 +248,35 @@ export const ReserveDetails = () => {
 					onSubmit={async (values, { setSubmitting }) => {
 						const requestIdNumber = Number(requestID);
 						if (!accessToken || !requestID || Number.isNaN(requestIdNumber)) {
+							CustomToast("اطلاعات رزرو معتبر نیست.", "warning");
 							setSubmitting(false);
 							return;
 						}
 						try {
-							await createComment({
-								accessToken,
-								requestID: requestIdNumber,
-								text: values.body,
-								rating: values.rating,
-							});
+							if (hasExistingComment) {
+								const commentID =
+									requestInfo?.comment?.commentID ??
+									requestInfo?.comment?.id ??
+									requestInfo?.comment?.commentId;
+								if (commentID === undefined) {
+									CustomToast("شناسه نظر پیدا نشد.", "warning");
+									setSubmitting(false);
+									return;
+								}
+								await editComment({
+									accessToken,
+									commentID,
+									text: values.body,
+									rating: values.rating,
+								});
+							} else {
+								await createComment({
+									accessToken,
+									requestID: requestIdNumber,
+									text: values.body,
+									rating: values.rating,
+								});
+							}
 							const response = await getRequestInfo({
 								accessToken,
 								requestID: requestIdNumber,
@@ -298,8 +323,9 @@ export const ReserveDetails = () => {
 											className="w-full"
 											shadow={false}
 											disabled={isSubmitting}
+											type="submit"
 										>
-											تایید
+											{hasExistingComment ? "ویرایش" : "تایید"}
 										</Button>
 										<Button
 											className="w-full"

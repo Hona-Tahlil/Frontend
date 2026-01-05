@@ -97,6 +97,9 @@ export interface RequestCalendarSlot {
 	status: number;
 }
 export interface RequestComment {
+	commentID?: number;
+	id?: number;
+	commentId?: number;
 	userID: number;
 	userFirstName: string;
 	userLastName: string;
@@ -158,6 +161,13 @@ export interface ReserveCreateResponse {
 export interface CreateCommentRequest {
 	accessToken: string;
 	requestID: number;
+	text: string;
+	rating: number;
+}
+
+export interface EditCommentRequest {
+	accessToken: string;
+	commentID: number;
 	text: string;
 	rating: number;
 }
